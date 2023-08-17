@@ -1,14 +1,12 @@
 <?php
 
 use App\Models\User;
-use App\Models\Module;
 use App\Models\admin\Log;
-use App\Models\UserGroup;
 use Illuminate\Support\Str;
-use App\Models\ModuleAccess;
 use Illuminate\Http\Request;
+use App\Models\admin\UserGroup;
+use App\Models\admin\ModuleAccess;
 use Illuminate\Support\Facades\DB;
-use App\Models\UserGroupPermission;
 
 function asset_administrator($url)
 {
@@ -79,7 +77,7 @@ function getDefaultPermission()
 function getPermissionGroup($user_group_id)
 {
 	$data_akses = ModuleAccess::select(DB::raw('
-    modules.identifiers as module_identifiers,
+    module.identifiers as module_identifiers,
     module_access.*,
     user_group_permissions.user_group_id,
     user_group_permissions.status'))
@@ -90,7 +88,7 @@ function getPermissionGroup($user_group_id)
                 ->where("user_group_permissions.user_group_id", "=", $user_group_id);
 			}
 		)
-		->leftJoin(DB::raw("modules"), "modules.id", "=", "module_access.module_id")
+		->leftJoin(DB::raw("module"), "module.id", "=", "module_access.module_id")
 		->get();
 	$permission = [];
 	$index = 0;
@@ -111,7 +109,7 @@ function getPermissionGroup($user_group_id)
 function getPermissionGroup2($x)
 {
 	$data_akses = ModuleAccess::select(DB::raw('
-    modules.identifiers as module_identifiers,
+    module.identifiers as module_identifiers,
     module_access.*,
     user_group_permissions.user_group_id,
     user_group_permissions.status'))
@@ -122,7 +120,7 @@ function getPermissionGroup2($x)
                 ->where("user_group_permissions.user_group_id", "=", $x);
 			}
 		)
-		->leftJoin(DB::raw("modules"), "modules.id", "=", "module_access.module_id")
+		->leftJoin(DB::raw("module"), "module.id", "=", "module_access.module_id")
 		->get();
         // dd($x);
 	$permission = [];
@@ -144,7 +142,7 @@ function getPermissionModuleGroup()
 	$data_user = User::find(auth()->user()->id);
 	$grup_pengguna_id = $data_user->user_group_id;
 	$data_akses = ModuleAccess::select(DB::raw('
-    modules.identifiers as module_identifiers, 
+    module.identifiers as module_identifiers, 
     COUNT(user_group_permissions.id) as permission_given'))
 		->leftJoin(
 			DB::raw("user_group_permissions"),
@@ -154,8 +152,8 @@ function getPermissionModuleGroup()
                 ->where("user_group_permissions.status", 1);
 			}
 		)
-		->leftJoin(DB::raw("modules"), "modules.id", "=", "module_access.module_id")
-		->groupBy("modules.id")
+		->leftJoin(DB::raw("module"), "module.id", "=", "module_access.module_id")
+		->groupBy("module.id")
 		->get();
 
 	$permission = [];
