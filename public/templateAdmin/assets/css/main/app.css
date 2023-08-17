@@ -18020,3 +18020,10 @@ a {
 .z-1 {
     z-index: 1;
 }
+
+
+/* Custom */
+
+.table-invalid {
+    border: 2px solid red !important;
+}
