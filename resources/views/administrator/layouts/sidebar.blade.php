@@ -44,7 +44,7 @@
                 <li class="sidebar-title">Menu</li>
 
                 <li class="sidebar-item active ">
-                    <a href="index.html" class='sidebar-link'>
+                    <a href="{{route('admin.dashboard')}}" class='sidebar-link'>
                         <i class="bi bi-grid-fill"></i>
                         <span>Dashboard</span>
                     </a>
@@ -131,23 +131,14 @@
                 <li class="sidebar-item  has-sub">
                     <a href="#" class='sidebar-link'>
                         <i class="bi bi-grid-1x2-fill"></i>
-                        <span>Layouts</span>
+                        <span>User Management</span>
                     </a>
                     <ul class="submenu ">
                         <li class="submenu-item ">
-                            <a href="layout-default.html">Default Layout</a>
+                            <a href="{{route('admin.user_groups')}}">User Groups</a>
                         </li>
                         <li class="submenu-item ">
-                            <a href="layout-vertical-1-column.html">1 Column</a>
-                        </li>
-                        <li class="submenu-item ">
-                            <a href="layout-vertical-navbar.html">Vertical Navbar</a>
-                        </li>
-                        <li class="submenu-item ">
-                            <a href="layout-rtl.html">RTL Layout</a>
-                        </li>
-                        <li class="submenu-item ">
-                            <a href="layout-horizontal.html">Horizontal Menu</a>
+                            <a href="{{route('admin.users')}}">Users</a>
                         </li>
                     </ul>
                 </li>

@@ -1,11 +1,11 @@
 <footer>
     <div class="footer clearfix mb-0 text-muted">
         <div class="float-start">
-            <p>2021 &copy; Mazer</p>
+            <p>2023 &copy; Daysf</p>
         </div>
         <div class="float-end">
-            <p>Crafted with <span class="text-danger"><i class="bi bi-heart"></i></span> by <a
-                    href="https://saugi.me">Saugi</a></p>
+            <p>Dibuat dengan <span class="text-danger"><i class="bi bi-heart"></i></span> oleh <a
+                target="_blank"    href="http://ikhsannawawi.epizy.com">ikhsannwwi</a></p>
         </div>
     </div>
 </footer>
