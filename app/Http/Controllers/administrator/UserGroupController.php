@@ -32,7 +32,7 @@ class UserGroupController extends Controller
         $data = UserGroup::query();
 
         if ($request->status != "") {
-            $status = $request->status == "active" ? 1 : 0;
+            $status = $request->status == "Aktif" ? 1 : 0;
             $data->where("status", $status)->get();
         }
 

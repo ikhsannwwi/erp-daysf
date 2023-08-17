@@ -17,9 +17,12 @@
                         </nav>
                     </div>
                     <div class="col-6">
-                        <a href="{{ route('admin.user_groups.add') }}" class="btn btn-primary float-end">Tambah Data</a>
+                        <a href="{{ route('admin.user_groups.add') }}" class="btn btn-primary mx-3 float-end">Tambah
+                            Data</a>
+                        <a href="javascript:void(0)" class="btn btn-primary float-end" id="filterButton">Filter</a>
                     </div>
                 </div>
+                @include('administrator.user_groups.filter.main')
             </div>
             <div class="card-body">
                 <table class="table" id="datatable">
@@ -63,10 +66,9 @@
                     url: '{{ route('admin.user_groups.getData') }}',
                     dataType: "JSON",
                     type: "GET",
-                    // data: function(d) {
-                    //     d.status = getStatus();
-                    //     d.user = getUser();
-                    // }
+                    data: function(d) {
+                        d.status = getStatus();
+                    }
 
                 },
                 columns: [{
@@ -200,6 +202,26 @@
                     }
                 });
             });
+
+            $('#filterButton').on('click', function() {
+                $('#filter_section').slideToggle();
+            });
+
+            $('#filter_submit').on('click', function(event) {
+                event.preventDefault(); // Prevent the default form submission behavior
+
+                // Get the filter value using the getStatus() function
+                var filterStatus = getStatus();
+
+                // Update the DataTable with the filtered data
+                data_table.ajax.url('{{ route('admin.user_groups.getData') }}?status=' + filterStatus)
+                .load();
+            });
+
+            function getStatus() {
+                return $("#filterstatus").val();
+            }
+
         });
     </script>
 @endpush

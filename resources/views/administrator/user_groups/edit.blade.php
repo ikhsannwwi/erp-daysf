@@ -119,8 +119,7 @@
                                         </label>
                                         <div class="form-check">
                                             <input class="form-check-input" type="radio" name="status" value="1"
-                                                id="flexRadioDefault1" {{ $edit->status ? 'checked' : '' }}
-                                                data-parsley-required="true">
+                                                id="flexRadioDefault1" {{ $edit->status ? 'checked' : '' }}>
                                             <label class="form-check-label form-label" for="flexRadioDefault1">
                                                 Aktif
                                             </label>
