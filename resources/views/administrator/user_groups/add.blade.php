@@ -69,24 +69,24 @@
                                                         $checked = '';
                                                     
                                                         echo '<span class="akses">
-                                                                                                                                                                                                                                                                                                                                                                                              <label>
-                                                                                                                                                                                                                                                                                                                                                                                                  <input class="access_' .
+                                                                                                                                                                                                                                                                                                                                                                                                                                                  <label>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                      <input class="access_' .
                                                             $index .
                                                             '"
-                                                                                                                                                                                                                                                                                                                                                                                                         type="checkbox"
-                                                                                                                                                                                                                                                                                                                                                                                                         name="access[' .
+                                                                                                                                                                                                                                                                                                                                                                                                                                                             type="checkbox"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                             name="access[' .
                                                             $index .
                                                             '][module_access][' .
                                                             $row->id .
                                                             ']"
-                                                                                                                                                                                                                                                                                                                                                                                                         value="1" ' .
+                                                                                                                                                                                                                                                                                                                                                                                                                                                             value="1" ' .
                                                             $checked .
                                                             '>
-                                                                                                                                                                                                                                                                                                                                                                                                  ' .
+                                                                                                                                                                                                                                                                                                                                                                                                                                                      ' .
                                                             $row->name .
                                                             '
-                                                                                                                                                                                                                                                                                                                                                                                              </label>
-                                                                                                                                                                                                                                                                                                                                                                                          </span>';
+                                                                                                                                                                                                                                                                                                                                                                                                                                                  </label>
+                                                                                                                                                                                                                                                                                                                                                                                                                                              </span>';
                                                         $ind++;
                                                     }
                                                     ?>
@@ -209,7 +209,7 @@
                         submitButton.querySelector('.indicator-label').style.display =
                             'inline-block';
                         submitButton.querySelector('.indicator-progress').style.display =
-                        'none';
+                            'none';
 
                         // Submit the form
                         form.submit();
@@ -245,10 +245,16 @@
                     });
 
                     // Assuming the response is JSON and contains a "valid" key
-                    return response.valid === true;
+                    return {
+                        valid: response.valid === true,
+                        errorMessage: response.message
+                    };
                 } catch (error) {
                     console.error("Remote validation error:", error);
-                    return false;
+                    return {
+                        valid: false,
+                        errorMessage: "An error occurred during validation."
+                    };
                 }
             }
 

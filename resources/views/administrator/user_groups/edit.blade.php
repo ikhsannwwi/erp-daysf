@@ -57,17 +57,17 @@
                                                 <td>
                                                     <?php
                                                     echo '
-                                                                                                                                                        <span class="akses">
-                                                                                                                                                            <label>
-                                                                                                                                                                <input class="check_all check_all_' .
+                                                                                                                                                                                                            <span class="akses">
+                                                                                                                                                                                                                <label>
+                                                                                                                                                                                                                    <input class="check_all check_all_' .
                                                         $index .
                                                         '" data-key_all="' .
                                                         $index .
                                                         '" value="' .
                                                         $index .
                                                         '" type="checkbox">
-                                                                                                                                                            </label>
-                                                                                                                                                        </span>';
+                                                                                                                                                                                                                </label>
+                                                                                                                                                                                                            </span>';
                                                     ?>
                                                 </td>
                                                 <td>
@@ -79,8 +79,8 @@
                                                         $checked = $permission[$edit->id][$module->identifiers][$row->identifiers] == 1 ? 'checked' : '';
                                                     
                                                         echo '<span class="akses">
-                                                                                                                                                                                                                <label>
-                                                                                                                                                                                                                <input class="access_' .
+                                                                                                                                                                                                                                                                    <label>
+                                                                                                                                                                                                                                                                    <input class="access_' .
                                                             $index .
                                                             '" type="checkbox" name="access[' .
                                                             $index .
@@ -91,8 +91,8 @@
                                                             '> ' .
                                                             $row->name .
                                                             '
-                                                                                                                                                                                                                </label>
-                                                                                                                                                                                                                </span>';
+                                                                                                                                                                                                                                                                    </label>
+                                                                                                                                                                                                                                                                    </span>';
                                                         $ind++;
                                                     }
                                                     ?>
@@ -138,7 +138,7 @@
                                     </span>
                                 </button>
                                 <button type="reset" class="btn btn-light-secondary me-1 mb-1">Reset</button>
-                                <a href="{{route('admin.user_groups')}}" class="btn btn-danger me-1 mb-1">Cancel</a>
+                                <a href="{{ route('admin.user_groups') }}" class="btn btn-danger me-1 mb-1">Cancel</a>
                             </div>
                         </div>
                     </form>
@@ -177,7 +177,7 @@
                     accessErrorName.addClass('invalid-feedback');
                     firstNameColumn.addClass('is-invalid');
 
-                    accessErrorName.text('Nama sudah dipakai');
+                    accessErrorName.text(remoteValidationResult.errorMessage);
 
                     return;
                 } else {
@@ -216,7 +216,7 @@
                         submitButton.querySelector('.indicator-label').style.display =
                             'inline-block';
                         submitButton.querySelector('.indicator-progress').style.display =
-                        'none';
+                            'none';
 
                         // Submit the form
                         form.submit();
@@ -254,10 +254,16 @@
                     });
 
                     // Assuming the response is JSON and contains a "valid" key
-                    return response.valid === true;
+                    return {
+                        valid: response.valid === true,
+                        errorMessage: response.message
+                    };
                 } catch (error) {
                     console.error("Remote validation error:", error);
-                    return false;
+                    return {
+                        valid: false,
+                        errorMessage: "An error occurred during validation."
+                    };
                 }
             }
 
