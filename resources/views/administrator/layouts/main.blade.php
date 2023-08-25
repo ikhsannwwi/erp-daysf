@@ -22,6 +22,9 @@
 
     <link rel="stylesheet" href="{{ asset('templateAdmin/assets/extensions/toastify-js/src/toastify.css') }}">
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+
 
 
     @stack('css')
@@ -59,13 +62,13 @@
 
 
     <script>
-        var toastMessages = {!! json_encode([
-            'errors' => session('errors', []),
-            'error' => session('error'),
-            'success' => session('success'),
-            'warning' => session('warning'),
-            'info' => session('info')
-        ]) !!};
+        var toastMessages = {
+            errors: [],
+            error: @json(session('error')),
+            success: @json(session('success')),
+            warning: @json(session('warning')),
+            info: @json(session('info'))
+        };
     </script>
 
     @stack('js')
