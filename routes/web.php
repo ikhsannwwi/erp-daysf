@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\administrator\UserController;
 use App\Http\Controllers\administrator\DashboardController;
 use App\Http\Controllers\administrator\UserGroupController;
 
@@ -43,6 +44,7 @@ Route::prefix('admin')->group(function () {
     Route::put('users/update', [UserController::class, 'update'])->name('admin.users.update');
     Route::delete('users/delete', [UserController::class, 'delete'])->name('admin.users.delete');
     Route::get('users/getDetail-{id}', [UserController::class, 'getDetail'])->name('admin.users.getDetail');
+    Route::get('users/getUserGroup', [UserController::class, 'getUserGroup'])->name('admin.users.getUserGroup');
     Route::post('users/changeStatus',[UserController::class, 'changeStatus'])->name('admin.users.changeStatus');
-    Route::post('users/checkName',[UserController::class, 'checkName'])->name('admin.users.checkName');
+    Route::post('users/checkEmail',[UserController::class, 'checkEmail'])->name('admin.users.checkEmail');
 });
