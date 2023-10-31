@@ -1,6 +1,7 @@
 <?php
 
-use App\Models\User;
+use Jenssegers\Agent\Agent;
+use App\Models\admin\User;
 use App\Models\admin\Log;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -18,15 +19,79 @@ function asset_frontpage($url)
 	return asset('frontpage/' . $url);
 }
 
-function createLog($module, $action, $data_id)
+function upload_path($type = '', $file = '')
 {
-	$log['ip_address'] 	= request()->ip();
-	$log['user_id'] 	= auth()->check() ? auth()->user()->id : 1;
-	$log['module'] 		= $module;
-	$log['action'] 		= $action;
-	$log['data_id'] 	= $data_id;
-	$log['created_at'] 	= date('Y-m-d H:i:s');
-	Log::create($log);
+	switch ($type) {
+		case 'settings':
+			$target_folder = 'settings';
+			break;
+		case 'profile':
+			$target_folder = 'profile';
+			break;
+		case 'member':
+			$target_folder = 'member';
+			break;
+		default:
+			$target_folder = '';
+			break;
+	}
+
+	return Str::finish('administrator/assets/media/' . $target_folder, '/') . $file;
+}
+
+function img_src($image = '', $img_type = '')
+{
+	$file_notfound = 'media/notfound.jpg';
+
+	if (filter_var($image, FILTER_VALIDATE_URL)) {
+		return $image;
+	} else {
+		switch ($img_type) {
+			case 'settings':
+				$folder = '/settings/';
+				break;
+			case 'profile':
+				$folder = '/profile/';
+				break;
+			case 'member':
+				$folder = '/member/';
+				break;
+			default:
+				$folder = '/';
+				break;
+		}
+		$file = 'administrator/assets/media' . $folder . $image;
+		//echo $file;
+		if ($image === true) {
+			return url('media' . $folder);
+		} else if (file_exists($file) && !is_dir($file)) {
+			return url($file);
+		} elseif (file_exists($file_notfound)) {
+			return url($file_notfound);
+		} else {
+			return 'http://placehold.it/500x500?text=Not Found';
+		}
+	}
+}
+
+function createLog($module, $action, $data_id,$data)
+{
+    $log['ip_address'] = request()->ip();
+    $log['user_id'] = auth()->check() ? auth()->user()->id : 1;	
+
+    // Use Jenssegers/Agent to get device and browser information
+    $agent = new Agent();
+    $log['device'] = $agent->device();
+    $log['browser_name'] = $agent->browser();
+    $log['browser_version'] = $agent->version($log['browser_name']); // Add browser version
+
+    $log['module'] = $module;
+    $log['action'] = $action;
+    $log['data_id'] = $data_id;
+    $log['data'] = json_encode($data);;
+    $log['created_at'] = now(); // Use Carbon for date and time
+
+    Log::create($log);
 }
 
 function isAllowed($modul, $modul_akses)

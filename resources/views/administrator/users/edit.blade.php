@@ -56,6 +56,33 @@
                         <div class="row">
                             <div class="col-md-6 col-12">
                                 <div class="form-group mandatory">
+                                    <label for="kodeField" class="form-label">Kode</label>
+                                    <div class="row">
+                                        <div class="col-8">
+                                            <input type="text" id="kodeField" class="form-control"
+                                                placeholder="Masukan Kode" name="kode" autocomplete="off"
+                                                data-parsley-required="true" value="{{ $data->kode }}">
+                                            <div class="" style="color: #dc3545" id="accessErrorKode"></div>
+                                        </div>
+                                        <div class="col-2">
+                                            <a href="javascript:void(0)" class="btn btn-primary"
+                                                id="buttonGenerateKode"><span class="indicator-label-kode">Generate</span>
+                                                <span class="indicator-progress-kode" style="display: none;">
+                                                    <div class="d-flex">
+                                                        Generate...
+                                                        <span
+                                                            class="spinner-border spinner-border-sm align-middle ms-2 mt-1"></span>
+                                                    </div>
+                                                </span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 col-12">
+                                <div class="form-group mandatory">
                                     <label for="passwordField" class="form-label">Password</label>
                                     <input type="text" id="passwordField" class="form-control"
                                         placeholder="Masukan Password" name="password" autocomplete="off">
@@ -69,7 +96,7 @@
                                     <label for="konfirmasiPasswordField" class="form-label">Konfirmasi Password</label>
                                     <input type="text" id="konfirmasiPasswordField" class="form-control"
                                         placeholder="Masukan Konfirmasi Password" name="konfirmasi_password"
-                                        autocomplete="off" >
+                                        autocomplete="off">
                                     <div class="" style="color: #dc3545" id="accessErrorKonfirmasiPasssword"></div>
                                 </div>
                             </div>
@@ -82,15 +109,17 @@
                                             Status
                                         </label>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="status" 
-                                                id="flexRadioDefault1" {{ $data->status ? 'checked' : '' }} value="1">
+                                            <input class="form-check-input" type="radio" name="status"
+                                                id="flexRadioDefault1" {{ $data->status ? 'checked' : '' }}
+                                                value="1">
                                             <label class="form-check-label form-label" for="flexRadioDefault1">
                                                 Aktif
                                             </label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="status" 
-                                                id="flexRadioDefault2" {{ !$data->status ? 'checked' : '' }} value="0">
+                                            <input class="form-check-input" type="radio" name="status"
+                                                id="flexRadioDefault2" {{ !$data->status ? 'checked' : '' }}
+                                                value="0">
                                             <label class="form-check-label form-label" for="flexRadioDefault2">
                                                 Tidak Aktif
                                             </label>
@@ -129,10 +158,50 @@
 
     <script type="text/javascript">
         $(document).ready(function() {
+            // Add an event listener to the "Generate" button
+            const generateKodeButton = document.getElementById("buttonGenerateKode");
+            const kodeField = document.getElementById("kodeField");
+            const indicatorLabelKode = document.querySelector(".indicator-label-kode");
+            const indicatorProgressKode = document.querySelector(".indicator-progress-kode");
+            const remoteGenerateKodeUrl = "{{ route('admin.users.generateKode') }}";
+
+            generateKodeButton.addEventListener("click", async function() {
+                // Show the indicator when the button is clicked
+                indicatorLabelKode.style.display = "none";
+                indicatorProgressKode.style.display = "inline-block";
+
+                // Make an AJAX request to generate the code
+                try {
+                    const response = await $.ajax({
+                        method: "GET",
+                        url: remoteGenerateKodeUrl,
+                    });
+
+                    // Assuming the response is JSON and contains a "generateKode" key
+                    kodeField.value = response.generateKode;
+                } catch (error) {
+                    console.error("Generate error:", error);
+                    // Handle errors as needed
+                } finally {
+                    // Hide the indicator when the AJAX request is complete
+                    indicatorLabelKode.style.display = "inline-block";
+                    indicatorProgressKode.style.display = "none";
+                }
+            });
+
+
+
+            //validate parsley form
             const form = document.getElementById("form");
             const validator = $(form).parsley();
 
             const submitButton = document.getElementById("formSubmit");
+
+            form.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                }
+            });
 
             submitButton.addEventListener("click", async function(e) {
                 e.preventDefault();
@@ -140,9 +209,7 @@
                 // Perform remote validation
                 const remoteValidationResult = await validateRemoteEmail();
                 const emailField = $("#emailField");
-                const passwordField = $('#passwordField').val().trim();
                 const accessErrorEmail = $("#accessErrorEmail");
-
                 if (!remoteValidationResult.valid) {
                     // Remote validation failed, display the error message
                     accessErrorEmail.addClass('invalid-feedback');
@@ -158,13 +225,49 @@
                     accessErrorEmail.text('');
                 }
 
-                if (passwordField !== '') {
-                    if (!validatePasswordConfirmation()) {
+                const remoteValidationResultKode = await validateRemoteKode();
+                const kodeField = $("#kodeField");
+                const accessErrorKode = $("#accessErrorKode");
+                if (!remoteValidationResultKode.valid) {
+                    // Remote validation failed, display the error message
+                    accessErrorKode.addClass('invalid-feedback');
+                    kodeField.addClass('is-invalid');
+
+                    accessErrorKode.text(remoteValidationResultKode
+                        .errorMessage); // Set the error message from the response
+
                     return;
+                } else {
+                    accessErrorKode.removeClass('invalid-feedback');
+                    kodeField.removeClass('is-invalid');
+                    accessErrorKode.text('');
                 }
+                // Get the value from the kode field
+                const kodeValue = kodeField.val().trim();
+
+                // Validate the length and format of the kode
+                if (kodeValue.length !== 12 || !kodeValue.startsWith('sanapp-') || kodeValue.substring(
+                        7).length !== 5) {
+                    accessErrorKode.addClass('invalid-feedback');
+                    kodeField.addClass('is-invalid');
+
+                    accessErrorKode.text('Kode harus 12 characters dan diawali dengan sanapp- lalu diakhiri oleh 5 uniqid.');
+                    return;
+                } else {
+                    accessErrorKode.removeClass('invalid-feedback');
+                    kodeField.removeClass('is-invalid');
+                    accessErrorKode.text('');
                 }
 
-                
+                const passwordField = $('#passwordField').val().trim();
+
+                if (passwordField !== '') {
+                    if (!validatePasswordConfirmation()) {
+                        return;
+                    }
+                }
+
+
 
                 // Validate the form using Parsley
                 if ($(form).parsley().validate()) {
@@ -214,6 +317,37 @@
                         data: {
                             _token: csrfToken,
                             email: emailInput.val(),
+                            id: inputId.val()
+                        }
+                    });
+
+                    // Assuming the response is JSON and contains a "valid" key
+                    return {
+                        valid: response.valid === true,
+                        errorMessage: response.message
+                    };
+                } catch (error) {
+                    console.error("Remote validation error:", error);
+                    return {
+                        valid: false,
+                        errorMessage: "An error occurred during validation."
+                    };
+                }
+            }
+
+            async function validateRemoteKode() {
+                const kodeInput = $('#kodeField');
+                const inputId = $('#inputId');
+                const remoteValidationUrl = "{{ route('admin.users.checkKode') }}";
+                const csrfToken = "{{ csrf_token() }}";
+
+                try {
+                    const response = await $.ajax({
+                        method: "POST",
+                        url: remoteValidationUrl,
+                        data: {
+                            _token: csrfToken,
+                            kode: kodeInput.val(),
                             id: inputId.val()
                         }
                     });
@@ -308,7 +442,7 @@
 
                     // Set the selected option based on the value of $data->id
                     if ('{{ $data->user_group }}') {
-                        optionUserGroup.val('{{ $data->user_group->id ?? ""}}');
+                        optionUserGroup.val('{{ $data->user_group->id ?? '' }}');
                     } else {
                         optionUserGroup.prepend('<option value="" selected>Pilih Data</option>');
                     }

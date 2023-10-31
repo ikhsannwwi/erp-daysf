@@ -19,6 +19,16 @@ class PermissionSeeder extends Seeder
         ModuleAccess::truncate();
         $modules = [
             [
+                "identifiers"   => "log_system",
+                "name"          => "Log System",
+                "access"        => [
+                    [
+                        "identifiers" => "view",
+                        "name"        => "View",
+                    ]
+                ]
+            ],
+            [
                 "identifiers"   => "user_group",
                 "name"          => "User Group",
                 "access"        => [
@@ -35,12 +45,20 @@ class PermissionSeeder extends Seeder
                         "name"        => "Edit",
                     ],
                     [
+                        "identifiers" => "status",
+                        "name"        => "Status",
+                    ],
+                    [
                         "identifiers" => "detail",
                         "name"        => "Detail",
                     ],
                     [
                         "identifiers" => "delete",
                         "name"        => "Delete",
+                    ],
+                    [
+                        "identifiers" => "status",
+                        "name"        => "Status",
                     ]
                 ]
             ],
@@ -61,13 +79,29 @@ class PermissionSeeder extends Seeder
                         "name"        => "Edit",
                     ],
                     [
+                        "identifiers" => "status",
+                        "name"        => "Status",
+                    ],
+                    [
                         "identifiers" => "detail",
                         "name"        => "Detail",
                     ],
                     [
                         "identifiers" => "delete",
                         "name"        => "Delete",
-                    ]
+                    ],
+                    [
+                        "identifiers" => "status",
+                        "name"        => "Status",
+                    ],
+                    [
+                        "identifiers" => "arsip",
+                        "name"        => "Arsip",
+                    ],
+                    [
+                        "identifiers" => "restore",
+                        "name"        => "Restore",
+                    ],
                 ]
             ],
         ];

@@ -1,7 +1,7 @@
 <footer>
     <div class="footer clearfix mb-0 text-muted">
         <div class="float-start">
-            <p>2023 &copy; Daysf</p>
+            <p>{{ array_key_exists('footer_app_admin', $settings) ? $settings['footer_app_admin'] : '' }}</p>
         </div>
         <div class="float-end">
             <p>Dibuat dengan <span class="text-danger"><i class="bi bi-heart"></i></span> oleh <a

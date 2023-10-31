@@ -46,7 +46,18 @@ class RouteServiceProvider extends ServiceProvider
             Route::middleware('web')
                 ->namespace($this->namespace)
                 ->group(base_path('routes/web.php'));
+
+            // Tambahkan kode berikut untuk mendaftarkan route admin
+            $this->mapAdminRoutes();
         });
+    }
+
+    // Tambahkan method berikut di dalam class RouteServiceProvider
+    protected function mapAdminRoutes()
+    {
+        Route::middleware('web')
+            ->namespace('App\Http\Controllers\admin') // Gantilah dengan namespace controller admin Anda
+            ->group(base_path('routes/admin.php'));
     }
 
     /**

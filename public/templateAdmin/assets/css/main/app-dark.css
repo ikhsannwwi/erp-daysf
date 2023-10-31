@@ -8430,6 +8430,210 @@ body.theme-dark .was-validated :invalid ~ .invalid-tooltip {
 
 
 
-.table-invalid {
+body.theme-dark .table-invalid {
     border: 2px solid red !important;
 }
+
+
+body.theme-dark .nice-select {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    background-color: #1b1b29;
+    border-radius: 5px;
+    border: solid 1px #35354f;
+    box-sizing: border-box;
+    clear: both;
+    cursor: pointer;
+    display: block;
+    float: left;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: normal;
+    height: 38px;
+    line-height: 36px;
+    outline: none;
+    padding-left: 18px;
+    padding-right: 30px;
+    position: relative;
+    text-align: left !important;
+    transition: all 0.2s ease-in-out;
+    user-select: none;
+    white-space: nowrap;
+    width: auto;
+}
+body.theme-dark .nice-select:hover {
+    border-color: #dbdbdb;
+}
+body.theme-dark .nice-select:active,
+body.theme-dark .nice-select.open,
+body.theme-dark .nice-select:focus {
+    border-color: #999;
+}
+body.theme-dark .nice-select:after {
+    border-bottom: 2px solid #999;
+    border-right: 2px solid #999;
+    content: "";
+    display: block;
+    height: 5px;
+    margin-top: -4px;
+    pointer-events: none;
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform-origin: 66% 66%;
+    transform: rotate(45deg);
+    transition: all 0.15s ease-in-out;
+    width: 5px;
+}
+body.theme-dark .nice-select.open:after {
+    transform: rotate(-135deg);
+}
+body.theme-dark .nice-select.open .nice-select-dropdown {
+    opacity: 1;
+    pointer-events: auto;
+    transform: scale(1) translateY(0);
+}
+body.theme-dark .nice-select.disabled {
+    border-color: #ededed;
+    color: #999;
+    pointer-events: none;
+}
+body.theme-dark .nice-select.disabled:after {
+    border-color: #ccc;
+}
+body.theme-dark .nice-select.wide {
+    width: 100%;
+}
+body.theme-dark .nice-select.wide .nice-select-dropdown {
+    left: 0 !important;
+    right: 0 !important;
+}
+body.theme-dark .nice-select.right {
+    float: right;
+}
+.nice-select.right .nice-select-dropdown {
+    left: auto;
+    right: 0;
+}
+body.theme-dark .nice-select.small {
+    font-size: 12px;
+    height: 36px;
+    line-height: 34px;
+}
+body.theme-dark .nice-select.small:after {
+    height: 4px;
+    width: 4px;
+}
+body.theme-dark .nice-select.small .option {
+    line-height: 34px;
+    min-height: 34px;
+}
+body.theme-dark .nice-select .nice-select-dropdown {
+    margin-top: 4px;
+    background-color: #1b1b29;
+    border-radius: 5px;
+    box-shadow: 0 0 0 1px rgba(68, 68, 68, 0.11);
+    pointer-events: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    transform-origin: 50% 0;
+    transform: scale(0.75) translateY(19px);
+    transition: all 0.2s cubic-bezier(0.5, 0, 0, 1.25), opacity 0.15s ease-out;
+    z-index: 9;
+    opacity: 0;
+}
+body.theme-dark .nice-select .list {
+    border-radius: 5px;
+    box-sizing: border-box;
+    overflow: hidden;
+    padding: 0;
+    max-height: 210px;
+    overflow-y: auto;
+}
+body.theme-dark .nice-select .list:hover .option:not(:hover) {
+    background-color: rgba(0, 0, 0, 0) !important;
+}
+body.theme-dark .nice-select .option {
+    cursor: pointer;
+    font-weight: 400;
+    line-height: 40px;
+    list-style: none;
+    outline: none;
+    padding-left: 18px;
+    padding-right: 29px;
+    text-align: left;
+    transition: all 0.2s;
+}
+body.theme-dark .nice-select .option:hover,
+body.theme-dark .nice-select .option.focus,
+body.theme-dark .nice-select .option.selected.focus {
+    background-color: #35354f;
+}
+body.theme-dark .nice-select .option.selected {
+    font-weight: bold;
+}
+body.theme-dark .nice-select .option.disabled {
+    background-color: rgba(0, 0, 0, 0);
+    color: #999;
+    cursor: default;
+}
+body.theme-dark .nice-select .optgroup {
+    font-weight: bold;
+}
+body.theme-dark .no-csspointerevents .nice-select .nice-select-dropdown {
+    display: none;
+}
+body.theme-dark .no-csspointerevents .nice-select.open .nice-select-dropdown {
+    display: block;
+}
+body.theme-dark .nice-select .list::-webkit-scrollbar {
+    width: 0;
+}
+body.theme-dark .nice-select .has-multiple {
+    white-space: inherit;
+    height: auto;
+    padding: 7px 12px;
+    min-height: 36px;
+    line-height: 22px;
+}
+body.theme-dark .nice-select .has-multiple span.current {
+    border: 1px solid #ccc;
+    background: #eee;
+    padding: 0 10px;
+    border-radius: 3px;
+    display: inline-block;
+    line-height: 24px;
+    font-size: 14px;
+    margin-bottom: 3px;
+    margin-right: 3px;
+}
+body.theme-dark .nice-select .has-multiple .multiple-options {
+    display: block;
+    line-height: 24px;
+    padding: 0;
+}
+body.theme-dark .nice-select .nice-select-search-box {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 5px;
+    pointer-events: none;
+    border-radius: 5px 5px 0 0;
+}
+body.theme-dark .nice-select .nice-select-search {
+    box-sizing: border-box;
+    background-color: #1b1b29;
+    border: 1px solid #35354f;
+    border-radius: 3px;
+    color: #444;
+    display: inline-block;
+    vertical-align: middle;
+    padding: 7px 12px;
+    margin: 0 10px 0 0;
+    width: 100%;
+    min-height: 36px;
+    line-height: 22px;
+    height: auto;
+    outline: 0 !important;
+    font-size: 14px;
+}
+

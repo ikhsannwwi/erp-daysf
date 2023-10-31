@@ -53,6 +53,33 @@
                         <div class="row">
                             <div class="col-md-6 col-12">
                                 <div class="form-group mandatory">
+                                    <label for="kodeField" class="form-label">Kode</label>
+                                    <div class="row">
+                                        <div class="col-8">
+                                            <input type="text" id="kodeField" class="form-control"
+                                                placeholder="Masukan Kode" name="kode" autocomplete="off"
+                                                data-parsley-required="true">
+                                            <div class="" style="color: #dc3545" id="accessErrorKode"></div>
+                                        </div>
+                                        <div class="col-2">
+                                            <a href="javascript:void(0)" class="btn btn-primary"
+                                                id="buttonGenerateKode"><span class="indicator-label-kode">Generate</span>
+                                                <span class="indicator-progress-kode" style="display: none;">
+                                                    <div class="d-flex">
+                                                        Generate...
+                                                        <span
+                                                            class="spinner-border spinner-border-sm align-middle ms-2 mt-1"></span>
+                                                    </div>
+                                                </span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 col-12">
+                                <div class="form-group mandatory">
                                     <label for="passwordField" class="form-label">Password</label>
                                     <input type="text" id="passwordField" class="form-control"
                                         placeholder="Masukan Password" name="password" autocomplete="off"
@@ -112,18 +139,58 @@
     <!-- Basic Tables end -->
 @endsection
 
-
-
 @push('js')
     <script src="{{ asset('templateAdmin/assets/extensions/parsleyjs/parsley.min.js') }}"></script>
     <script src="{{ asset('templateAdmin/assets/js/pages/parsley.js') }}"></script>
 
     <script type="text/javascript">
         $(document).ready(function() {
+            // Add an event listener to the "Generate" button
+            const generateKodeButton = document.getElementById("buttonGenerateKode");
+            const kodeField = document.getElementById("kodeField");
+            const indicatorLabelKode = document.querySelector(".indicator-label-kode");
+            const indicatorProgressKode = document.querySelector(".indicator-progress-kode");
+            const remoteGenerateKodeUrl = "{{ route('admin.users.generateKode') }}";
+
+            generateKodeButton.addEventListener("click", async function() {
+                // Show the indicator when the button is clicked
+                indicatorLabelKode.style.display = "none";
+                indicatorProgressKode.style.display = "inline-block";
+
+                // Make an AJAX request to generate the code
+                try {
+                    const response = await $.ajax({
+                        method: "GET",
+                        url: remoteGenerateKodeUrl,
+                    });
+
+                    // Assuming the response is JSON and contains a "generateKode" key
+                    kodeField.value = response.generateKode;
+                } catch (error) {
+                    console.error("Generate error:", error);
+                    // Handle errors as needed
+                } finally {
+                    // Hide the indicator when the AJAX request is complete
+                    indicatorLabelKode.style.display = "inline-block";
+                    indicatorProgressKode.style.display = "none";
+                }
+            });
+
+
+
+
+
+            //validate parsley form
             const form = document.getElementById("form");
             const validator = $(form).parsley();
 
             const submitButton = document.getElementById("formSubmit");
+
+            form.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                }
+            });
 
             submitButton.addEventListener("click", async function(e) {
                 e.preventDefault();
@@ -132,7 +199,6 @@
                 const remoteValidationResult = await validateRemoteEmail();
                 const emailField = $("#emailField");
                 const accessErrorEmail = $("#accessErrorEmail");
-
                 if (!remoteValidationResult.valid) {
                     // Remote validation failed, display the error message
                     accessErrorEmail.addClass('invalid-feedback');
@@ -148,9 +214,51 @@
                     accessErrorEmail.text('');
                 }
 
-                if (!validatePasswordConfirmation()) {
+                const remoteValidationResultKode = await validateRemoteKode();
+                const kodeField = $("#kodeField");
+                const accessErrorKode = $("#accessErrorKode");
+                if (!remoteValidationResultKode.valid) {
+                    // Remote validation failed, display the error message
+                    accessErrorKode.addClass('invalid-feedback');
+                    kodeField.addClass('is-invalid');
+
+                    accessErrorKode.text(remoteValidationResultKode
+                        .errorMessage); // Set the error message from the response
+
                     return;
+                } else {
+                    accessErrorKode.removeClass('invalid-feedback');
+                    kodeField.removeClass('is-invalid');
+                    accessErrorKode.text('');
                 }
+                // Get the value from the kode field
+                const kodeValue = kodeField.val().trim();
+
+                // Validate the length and format of the kode
+                if (kodeValue.length !== 12 || !kodeValue.startsWith('sanapp-') || kodeValue.substring(
+                        7).length !== 5) {
+                    accessErrorKode.addClass('invalid-feedback');
+                    kodeField.addClass('is-invalid');
+
+                    accessErrorKode.text(
+                        'Kode harus 12 characters dan diawali dengan sanapp- lalu diakhiri oleh 5 uniqid.'
+                    );
+                    return;
+                } else {
+                    accessErrorKode.removeClass('invalid-feedback');
+                    kodeField.removeClass('is-invalid');
+                    accessErrorKode.text('');
+                }
+
+                const passwordField = $('#passwordField').val().trim();
+
+                if (passwordField !== '') {
+                    if (!validatePasswordConfirmation()) {
+                        return;
+                    }
+                }
+
+
 
                 // Validate the form using Parsley
                 if ($(form).parsley().validate()) {
@@ -199,6 +307,35 @@
                         data: {
                             _token: csrfToken,
                             email: emailInput.val()
+                        }
+                    });
+
+                    // Assuming the response is JSON and contains a "valid" key
+                    return {
+                        valid: response.valid === true,
+                        errorMessage: response.message
+                    };
+                } catch (error) {
+                    console.error("Remote validation error:", error);
+                    return {
+                        valid: false,
+                        errorMessage: "An error occurred during validation."
+                    };
+                }
+            }
+
+            async function validateRemoteKode() {
+                const kodeInput = $('#kodeField');
+                const remoteValidationUrl = "{{ route('admin.users.checkKode') }}";
+                const csrfToken = "{{ csrf_token() }}";
+
+                try {
+                    const response = await $.ajax({
+                        method: "POST",
+                        url: remoteValidationUrl,
+                        data: {
+                            _token: csrfToken,
+                            kode: kodeInput.val(),
                         }
                     });
 

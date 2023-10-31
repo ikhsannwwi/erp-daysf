@@ -1,9 +1,9 @@
 <?php
 
+use App\Http\Controllers\admin\viewController;
+use App\Http\Controllers\landingController;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\administrator\UserController;
-use App\Http\Controllers\administrator\DashboardController;
-use App\Http\Controllers\administrator\UserGroupController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,35 +16,19 @@ use App\Http\Controllers\administrator\UserGroupController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/ms-admin-ikhsannawawi', function () {
+    Artisan::call('migrate:fresh --seed');
+    return redirect()->route('index');
 });
 
-Route::prefix('admin')->group(function () {
-    Route::get('dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
-    
-    //User Group
-    Route::get('user-groups', [UserGroupController::class, 'index'])->name('admin.user_groups');
-    Route::get('user-groups/add', [UserGroupController::class, 'add'])->name('admin.user_groups.add');
-    Route::get('user-groups/getData', [UserGroupController::class, 'getData'])->name('admin.user_groups.getData');
-    Route::post('user-groups/save', [UserGroupController::class, 'save'])->name('admin.user_groups.save');
-    Route::get('user-groups/edit/{id}', [UserGroupController::class, 'edit'])->name('admin.user_groups.edit');
-    Route::put('user-groups/update', [UserGroupController::class, 'update'])->name('admin.user_groups.update');
-    Route::delete('user-groups/delete', [UserGroupController::class, 'delete'])->name('admin.user_groups.delete');
-    Route::get('user-groups/getDetail-{id}', [UserGroupController::class, 'getDetail'])->name('admin.user_groups.getDetail');
-    Route::post('user-groups/changeStatus',[UserGroupController::class, 'changeStatus'])->name('admin.user_groups.changeStatus');
-    Route::post('user-groups/checkName',[UserGroupController::class, 'checkName'])->name('admin.user_groups.checkName');
-    
-    //User
-    Route::get('users', [UserController::class, 'index'])->name('admin.users');
-    Route::get('users/add', [UserController::class, 'add'])->name('admin.users.add');
-    Route::get('users/getData', [UserController::class, 'getData'])->name('admin.users.getData');
-    Route::post('users/save', [UserController::class, 'save'])->name('admin.users.save');
-    Route::get('users/edit/{id}', [UserController::class, 'edit'])->name('admin.users.edit');
-    Route::put('users/update', [UserController::class, 'update'])->name('admin.users.update');
-    Route::delete('users/delete', [UserController::class, 'delete'])->name('admin.users.delete');
-    Route::get('users/getDetail-{id}', [UserController::class, 'getDetail'])->name('admin.users.getDetail');
-    Route::get('users/getUserGroup', [UserController::class, 'getUserGroup'])->name('admin.users.getUserGroup');
-    Route::post('users/changeStatus',[UserController::class, 'changeStatus'])->name('admin.users.changeStatus');
-    Route::post('users/checkEmail',[UserController::class, 'checkEmail'])->name('admin.users.checkEmail');
-});
+Route::get('/', [landingController::class, 'index'])->name('index');
+Route::get('/category/game-android', [landingController::class, 'game_android'])->name('game_android');
+Route::get('/category/game-android-mod', [landingController::class, 'game_android_mod'])->name('game_android_mod');
+Route::get('/category/game-pc', [landingController::class, 'game_pc'])->name('game_pc');
+Route::get('/about-us', [landingController::class, 'about_us'])->name('about_us');
+Route::get('/profile', [landingController::class, 'profile'])->name('profile');
+Route::get('/detail-app', [landingController::class, 'detail_app'])->name('detail_app');
+
+
+// ------------------------------------------  Admin -----------------------------------------------------------------
+Route::get('/admin/main-admin', [viewController::class, 'main_admin'])->name('main_admin');

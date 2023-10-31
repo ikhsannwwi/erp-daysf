@@ -1,0 +1,263 @@
+Data Master:
+
+
+Tabel kategori:
+
+id: int (kunci utama)
+nama_kategori: varchar
+
+
+Tabel produk:
+
+id: int (kunci utama)
+nama_produk: varchar
+deskripsi: teks
+kategori_id: int (kunci asing ke tabel kategori)
+harga: desimal
+stok: int
+barcode: varchar
+
+
+Tabel pelanggan:
+
+id: int (kunci utama)
+nama_pelanggan: varchar
+email: varchar
+nomor_telepon: varchar
+alamat: teks
+
+
+Tabel pemasok:
+
+id: int (kunci utama)
+nama_pemasok: varchar
+email: varchar
+nomor_telepon: varchar
+alamat: teks
+
+
+Data Transaksional:
+
+
+Tabel pesanan_penjualan:
+
+id: int (kunci utama)
+id_pelanggan: int (kunci asing ke tabel pelanggan)
+tanggal_pesanan: tanggal
+status: varchar
+
+
+Tabel item_pesanan:
+
+id: int (kunci utama)
+id_pesanan_penjualan: int (kunci asing ke tabel pesanan_penjualan)
+id_produk: int (kunci asing ke tabel produk)
+jumlah: int
+
+
+Tabel faktur:
+
+id: int (kunci utama)
+id_pesanan_penjualan: int (kunci asing ke tabel pesanan_penjualan)
+jumlah_total: desimal
+status: varchar
+
+
+Tabel pembayaran:
+
+id: int (kunci utama)
+id_faktur: int (kunci asing ke tabel faktur)
+jumlah: desimal
+tanggal_pembayaran: tanggal
+
+
+Tabel catatan_pembelian:
+
+id: int (kunci utama)
+id_pemasok: int (kunci asing ke tabel pemasok)
+id_produk: int (kunci asing ke tabel produk)
+jumlah: int
+tanggal_pembelian: tanggal
+
+
+Tabel transaksi_penjualan_titik_penjualan:
+
+id: int (kunci utama)
+tanggal_transaksi: datetime
+id_pelanggan: int (kunci asing ke tabel pelanggan)
+jumlah_total: desimal
+
+
+Tabel item_penjualan_titik_penjualan:
+
+id: int (kunci utama)
+id_transaksi: int (kunci asing ke tabel transaksi_penjualan_titik_penjualan)
+id_produk: int (kunci asing ke tabel produk)
+jumlah: int
+harga_satuan: desimal
+harga_total: desimal
+
+
+# Data Transaksional:
+
+# Tabel pesanan_penjualan:
+
+# id: int (kunci utama)
+# id_pelanggan: int (kunci asing ke tabel pelanggan)
+# tanggal_pesanan: tanggal
+# status: varchar
+
+
+# Tabel item_pesanan:
+
+# id: int (kunci utama)
+# id_pesanan_penjualan: int (kunci asing ke tabel pesanan_penjualan)
+# id_produk: int (kunci asing ke tabel produk)
+# jumlah: int
+
+
+# Tabel faktur:
+
+# id: int (kunci utama)
+# id_pesanan_penjualan: int (kunci asing ke tabel pesanan_penjualan)
+# jumlah_total: desimal
+# tanggal_jatuh_tempo: tanggal
+# status: varchar
+
+
+# Tabel pembayaran:
+
+# id: int (kunci utama)
+# id_faktur: int (kunci asing ke tabel faktur)
+# jumlah: desimal
+# tanggal_pembayaran: tanggal
+
+
+# Tabel catatan_pembelian:
+
+# id: int (kunci utama)
+# id_pemasok: int (kunci asing ke tabel pemasok)
+# id_produk: int (kunci asing ke tabel produk)
+# jumlah: int
+# tanggal_pembelian: tanggal
+
+
+# Data Transaksional:
+
+# Tabel transaksi_penjualan_titik_penjualan:
+
+# id: int (kunci utama)
+# tanggal_transaksi: datetime
+# id_pelanggan: int (kunci asing ke tabel pelanggan)
+# jumlah_total: desimal
+
+
+# Tabel item_penjualan_titik_penjualan:
+
+# id: int (kunci utama)
+# id_transaksi: int (kunci asing ke tabel transaksi_penjualan_titik_penjualan)
+# id_produk: int (kunci asing ke tabel produk)
+# jumlah: int
+# harga_satuan: desimal
+# harga_total: desimal
+
+
+# Data Master:
+
+# Tabel products:
+
+# id: int (primary key)
+# product_name: varchar
+# description: text
+# category_id: int (foreign key to categories table)
+# price: decimal
+# stock: int
+# barcode: varchar
+
+
+# Tabel categories:
+
+# id: int (primary key)
+# category_name: varchar
+
+
+# Tabel customers:
+
+# id: int (primary key)
+# customer_name: varchar
+# email: varchar
+# phone_number: varchar
+# address: text
+
+
+# Tabel suppliers:
+
+# id: int (primary key)
+# supplier_name: varchar
+# email: varchar
+# phone_number: varchar
+# address: text
+
+
+
+# Data Transaksional:
+
+
+
+# Tabel sales_orders:
+
+# id: int (primary key)
+# customer_id: int (foreign key to customers table)
+# order_date: date
+# status: varchar
+
+
+# Tabel order_items:
+
+# id: int (primary key)
+# sales_order_id: int (foreign key to sales_orders table)
+# product_id: int (foreign key to products table)
+# quantity: int
+
+
+# Tabel invoices:
+
+# id: int (primary key)
+# sales_order_id: int (foreign key to sales_orders table)
+# total_amount: decimal
+# due_date: date
+# status: varchar
+
+
+# Tabel payments:
+
+# id: int (primary key)
+# invoice_id: int (foreign key to invoices table)
+# amount: decimal
+# payment_date: date
+
+
+# Tabel purchase_records:
+
+# id: int (primary key)
+# supplier_id: int (foreign key to suppliers table)
+# product_id: int (foreign key to products table)
+# quantity: int
+# purchase_date: date
+
+# Data Transaksional:
+
+# Tabel point_of_sale_transactions:
+
+# id: int (primary key)
+# transaction_date: datetime
+# customer_id: int (foreign key to customers table)
+# total_amount: decimal
+# Tabel point_of_sale_items:
+
+# id: int (primary key)
+# transaction_id: int (foreign key to point_of_sale_transactions table)
+# product_id: int (foreign key to products table)
+# quantity: int
+# unit_price: decimal
+# total_price: decimal
