@@ -127,9 +127,9 @@
 
             function indicatorSubmit() {
                 submitButton.querySelector('.indicator-label').style.display =
-                    'inline-block';
-                submitButton.querySelector('.indicator-progress').style.display =
                     'none';
+                submitButton.querySelector('.indicator-progress').style.display =
+                    'inline-block';
             }
 
             function indicatorNone() {

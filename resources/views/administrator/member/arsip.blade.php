@@ -26,10 +26,10 @@
                 <table class="table" id="datatable">
                     <thead>
                         <tr>
-                            <th width="25">No</th>
-                            <th width="">Nama</th>
-                            <th width="">Email</th>
-                            <th width="200">Action</th>
+                            <th width="15px">No</th>
+                            <th width="50%">Nama</th>
+                            <th width="50%">Email</th>
+                            <th width="200px">Action</th>
                         </tr>
                     </thead>
                 </table>

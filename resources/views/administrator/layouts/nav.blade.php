@@ -27,7 +27,7 @@
                         <div class="avatar avatar-sm me-1">
                             <img src="@if (auth()->user() ? auth()->user()->profile && auth()->user()->profile->foto : '') {{ img_src(auth()->user()->profile->foto, 'profile') }}
             @else
-                {{ asset('templateAdmin/assets/compiled/jpg/2.jpg') }} @endif"
+                {{ asset('templateAdmin/assets/images/faces/2.jpg') }} @endif"
                                 alt="" srcset="">
                         </div>
                         {{-- {{ dd(auth()->user()->name)  }} --}}

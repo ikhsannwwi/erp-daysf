@@ -49,132 +49,141 @@
                                 <div id="modul_akses">
                                     <!-- Assuming $moduleAccessData is an array of module access data from your controller -->
                                     @if ($data->access->count() == 0)
-                                    <div class="modul_akses-list" index-element="0">
-                                        <div class="row rowAkses">
-                                            <div class="col-md-5 col-11">
-                                                <div class="form-group">
-                                                    <label class="form-label">Tipe</label>
-                                                    <select class="modul_akses-tipe form-select"
-                                                        data-parsley-required="true" name="modul_akses[0][tipe]">
-                                                        <option value="">Please Select</option>
-                                                        <option value="page">Elemen Standar</option>
-                                                        <option value="element">Elemen Lainnya</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-
-                                            <div class="col-md-6 col-11">
-                                                <div class="form-group kode_akses-select" style="display: none;">
-                                                    <label class="form-label">Kode Akses</label>
-                                                    <select class="modul_akses-kode_akses-select kode_akses form-select"
-                                                        name="modul_akses[0][kode_akses]">
-                                                        <option value="">Please Select</option>
-                                                        <option value="view">View</option>
-                                                        <option value="add">Add</option>
-                                                        <option value="edit">Edit</option>
-                                                        <option value="delete">Delete</option>
-                                                        <option value="detail">Detail</option>
-                                                    </select>
-                                                </div>
-                                                <div class="form-group kode_akses-input" style="display: none;">
-                                                    <label class="form-label">Kode Akses</label>
-                                                    <input class="modul_akses-kode_akses-input kode_akses form-control"
-                                                        placeholder="Masukan Kode Akses" name="modul_akses[0][kode_akses]"
-                                                        type="text" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    @else
-                                    @foreach ($data->access as $index => $moduleAccess)
-                                        
-                                        <div class="modul_akses-list" index-element="{{ $index }}">
+                                        <div class="modul_akses-list" index-element="0">
                                             <div class="row rowAkses">
                                                 <div class="col-md-5 col-11">
                                                     <div class="form-group">
                                                         <label class="form-label">Tipe</label>
                                                         <select class="modul_akses-tipe form-select"
-                                                            data-parsley-required="true"
-                                                            name="modul_akses[{{ $index }}][tipe]">
+                                                            data-parsley-required="true" name="modul_akses[0][tipe]">
                                                             <option value="">Please Select</option>
-                                                            <option value="page"
-                                                                {{ $moduleAccess['identifiers'] == 'view' ||
-                                                                $moduleAccess['identifiers'] == 'add' ||
-                                                                $moduleAccess['identifiers'] == 'edit' ||
-                                                                $moduleAccess['identifiers'] == 'delete' ||
-                                                                $moduleAccess['identifiers'] == 'detail'
-                                                                    ? 'selected'
-                                                                    : '' }}>
-                                                                Elemen Standar
-                                                            </option>
-                                                            <option value="element"
-                                                                {{ $moduleAccess['identifiers'] != 'view' &&
-                                                                $moduleAccess['identifiers'] != 'add' &&
-                                                                $moduleAccess['identifiers'] != 'edit' &&
-                                                                $moduleAccess['identifiers'] != 'delete' &&
-                                                                $moduleAccess['identifiers'] != 'detail'
-                                                                    ? 'selected'
-                                                                    : '' }}>
-                                                                Elemen Lainnya
-                                                            </option>
+                                                            <option value="page">Elemen Standar</option>
+                                                            <option value="element">Elemen Lainnya</option>
                                                         </select>
                                                     </div>
                                                 </div>
 
                                                 <div class="col-md-6 col-11">
-                                                    <div class="form-group kode_akses-select" style="@if($moduleAccess['identifiers'] != 'view' &&
-                                                    $moduleAccess['identifiers'] != 'add' &&
-                                                    $moduleAccess['identifiers'] != 'edit' &&
-                                                    $moduleAccess['identifiers'] != 'delete' &&
-                                                    $moduleAccess['identifiers'] != 'detail')display: none;@endif">
+                                                    <div class="form-group kode_akses-select" style="display: none;">
                                                         <label class="form-label">Kode Akses</label>
                                                         <select class="modul_akses-kode_akses-select kode_akses form-select"
-                                                            name="modul_akses[{{ $index }}][kode_akses]">
+                                                            name="modul_akses[0][kode_akses]">
                                                             <option value="">Please Select</option>
-                                                            <option value="view"
-                                                                {{ $moduleAccess['identifiers'] == 'view' ? 'selected' : '' }}>
-                                                                View</option>
-                                                            <option value="add"
-                                                                {{ $moduleAccess['identifiers'] == 'add' ? 'selected' : '' }}>
-                                                                Add</option>
-                                                            <option value="edit"
-                                                                {{ $moduleAccess['identifiers'] == 'edit' ? 'selected' : '' }}>
-                                                                Edit</option>
-                                                            <option value="delete"
-                                                                {{ $moduleAccess['identifiers'] == 'delete' ? 'selected' : '' }}>
-                                                                Delete</option>
-                                                            <option value="detail"
-                                                                {{ $moduleAccess['identifiers'] == 'detail' ? 'selected' : '' }}>
-                                                                Detail</option>
+                                                            <option value="view">View</option>
+                                                            <option value="add">Add</option>
+                                                            <option value="edit">Edit</option>
+                                                            <option value="delete">Delete</option>
+                                                            <option value="detail">Detail</option>
                                                         </select>
                                                     </div>
-                                                    <div class="form-group kode_akses-input" style="@if($moduleAccess['identifiers'] == 'view' ||
-                                                    $moduleAccess['identifiers'] == 'add' ||
-                                                    $moduleAccess['identifiers'] == 'edit' ||
-                                                    $moduleAccess['identifiers'] == 'delete' ||
-                                                    $moduleAccess['identifiers'] == 'detail')display: none;@endif">
+                                                    <div class="form-group kode_akses-input" style="display: none;">
                                                         <label class="form-label">Kode Akses</label>
                                                         <input class="modul_akses-kode_akses-input kode_akses form-control"
-                                                            placeholder="Masukan Kode Akses" autocomplete="off"
-                                                            name="modul_akses[{{ $index }}][kode_akses]"
-                                                            value="{{ $moduleAccess['identifiers'] }}" type="text" />
+                                                            placeholder="Masukan Kode Akses"
+                                                            name="modul_akses[0][kode_akses]" type="text" />
                                                     </div>
                                                 </div>
-
-                                                @if (!empty($moduleAccess) && $index != 0)
-                                                <div class='col-1 deleteRow d-flex align-items-center justify-content-center'> 
-                                                    <button class='removeData btn btn-primary btn-sm' type='button'><i class='fa fa-times'></i></button> 
-                                                    </div>
-                                                @endif
-                                                
                                             </div>
                                         </div>
-                                    @endforeach
-                                    @endif 
+                                    @else
+                                        @foreach ($data->access as $index => $moduleAccess)
+                                            <div class="modul_akses-list" index-element="{{ $index }}">
+                                                <div class="row rowAkses">
+                                                    <div class="col-md-5 col-11">
+                                                        <div class="form-group">
+                                                            <label class="form-label">Tipe</label>
+                                                            <select class="modul_akses-tipe form-select"
+                                                                data-parsley-required="true"
+                                                                name="modul_akses[{{ $index }}][tipe]">
+                                                                <option value="">Please Select</option>
+                                                                <option value="page"
+                                                                    {{ $moduleAccess['identifiers'] == 'view' ||
+                                                                    $moduleAccess['identifiers'] == 'add' ||
+                                                                    $moduleAccess['identifiers'] == 'edit' ||
+                                                                    $moduleAccess['identifiers'] == 'delete' ||
+                                                                    $moduleAccess['identifiers'] == 'detail'
+                                                                        ? 'selected'
+                                                                        : '' }}>
+                                                                    Elemen Standar
+                                                                </option>
+                                                                <option value="element"
+                                                                    {{ $moduleAccess['identifiers'] != 'view' &&
+                                                                    $moduleAccess['identifiers'] != 'add' &&
+                                                                    $moduleAccess['identifiers'] != 'edit' &&
+                                                                    $moduleAccess['identifiers'] != 'delete' &&
+                                                                    $moduleAccess['identifiers'] != 'detail'
+                                                                        ? 'selected'
+                                                                        : '' }}>
+                                                                    Elemen Lainnya
+                                                                </option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-6 col-11">
+                                                        <div class="form-group kode_akses-select"
+                                                            style="@if (
+                                                                $moduleAccess['identifiers'] != 'view' &&
+                                                                    $moduleAccess['identifiers'] != 'add' &&
+                                                                    $moduleAccess['identifiers'] != 'edit' &&
+                                                                    $moduleAccess['identifiers'] != 'delete' &&
+                                                                    $moduleAccess['identifiers'] != 'detail') display: none; @endif">
+                                                            <label class="form-label">Kode Akses</label>
+                                                            <select
+                                                                class="modul_akses-kode_akses-select kode_akses form-select"
+                                                                name="modul_akses[{{ $index }}][kode_akses]">
+                                                                <option value="">Please Select</option>
+                                                                <option value="view"
+                                                                    {{ $moduleAccess['identifiers'] == 'view' ? 'selected' : '' }}>
+                                                                    View</option>
+                                                                <option value="add"
+                                                                    {{ $moduleAccess['identifiers'] == 'add' ? 'selected' : '' }}>
+                                                                    Add</option>
+                                                                <option value="edit"
+                                                                    {{ $moduleAccess['identifiers'] == 'edit' ? 'selected' : '' }}>
+                                                                    Edit</option>
+                                                                <option value="delete"
+                                                                    {{ $moduleAccess['identifiers'] == 'delete' ? 'selected' : '' }}>
+                                                                    Delete</option>
+                                                                <option value="detail"
+                                                                    {{ $moduleAccess['identifiers'] == 'detail' ? 'selected' : '' }}>
+                                                                    Detail</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="form-group kode_akses-input"
+                                                            style="@if (
+                                                                $moduleAccess['identifiers'] == 'view' ||
+                                                                    $moduleAccess['identifiers'] == 'add' ||
+                                                                    $moduleAccess['identifiers'] == 'edit' ||
+                                                                    $moduleAccess['identifiers'] == 'delete' ||
+                                                                    $moduleAccess['identifiers'] == 'detail') display: none; @endif">
+                                                            <label class="form-label">Kode Akses</label>
+                                                            <input
+                                                                class="modul_akses-kode_akses-input kode_akses form-control"
+                                                                placeholder="Masukan Kode Akses" autocomplete="off"
+                                                                name="modul_akses[{{ $index }}][kode_akses]"
+                                                                value="{{ $moduleAccess['identifiers'] }}"
+                                                                type="text" />
+                                                        </div>
+                                                    </div>
+
+                                                    @if (!empty($moduleAccess) && $index != 0)
+                                                        <div
+                                                            class='col-1 deleteRow d-flex align-items-center justify-content-center'>
+                                                            <button class='removeData btn btn-primary btn-sm'
+                                                                type='button'><i class='fa fa-times'></i></button>
+                                                        </div>
+                                                    @endif
+
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    @endif
 
                                 </div>
                                 <br>
-                                <button class="more-akses btn btn-primary btn-sm" type="button"><i class="fa fa-plus"></i>
+                                <button class="more-akses btn btn-primary btn-sm" type="button"><i
+                                        class="fa fa-plus"></i>
                                     Add more akses</button>
 
                             </div>
@@ -295,30 +304,21 @@
             submitButton.addEventListener("click", async function(e) {
                 e.preventDefault();
 
+                indicatorBlock();
+
+
                 // Validate the form using Parsley
                 if ($(form).parsley().validate()) {
-                    // Disable the submit button and show the "Please wait..." message
-                    submitButton.querySelector('.indicator-label').style.display = 'none';
-                    submitButton.querySelector('.indicator-progress').style.display =
-                        'inline-block';
+                    indicatorSubmit();
 
-                    // Perform your asynchronous form submission here
-                    // Simulating a 2-second delay for demonstration
-                    setTimeout(function() {
-                        // Re-enable the submit button and hide the "Please wait..." message
-                        submitButton.querySelector('.indicator-label').style.display =
-                            'inline-block';
-                        submitButton.querySelector('.indicator-progress').style.display =
-                            'none';
-
-                        // Submit the form
-                        form.submit();
-                    }, 2000);
+                    // Submit the form
+                    form.submit();
                 } else {
                     // Handle validation errors
                     const validationErrors = [];
                     $(form).find(':input').each(function() {
                         const field = $(this);
+                        indicatorNone();
                         if (!field.parsley().isValid()) {
                             const attrName = field.attr('name');
                             const errorMessage = field.parsley().getErrorsMessages().join(
@@ -331,6 +331,29 @@
             });
 
         });
+
+        function indicatorSubmit() {
+            submitButton.querySelector('.indicator-label').style.display =
+                'none';
+            submitButton.querySelector('.indicator-progress').style.display =
+                'inline-block';
+        }
+
+        function indicatorNone() {
+            submitButton.querySelector('.indicator-label').style.display =
+                'inline-block';
+            submitButton.querySelector('.indicator-progress').style.display =
+                'none';
+            submitButton.disabled = false;
+        }
+
+        function indicatorBlock() {
+            // Disable the submit button and show the "Please wait..." message
+            submitButton.disabled = true;
+            submitButton.querySelector('.indicator-label').style.display = 'none';
+            submitButton.querySelector('.indicator-progress').style.display =
+                'inline-block';
+        }
 
         function resetData() {
 

@@ -26,6 +26,7 @@ class DataServiceProvider extends ServiceProvider
     {
         view()->composer([
             'administrator.layouts.main',
+            'kasir.layouts.main',
             'administrator.authentication.main',
             'administrator.authentication.login',
             'administrator.logs.export'

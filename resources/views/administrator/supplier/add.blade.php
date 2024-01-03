@@ -35,7 +35,7 @@
                             </div>
                         </div>
 
-                        
+
                         <div class="row">
                             <div class="col-md-6 col-12">
                                 <div class="form-group mandatory">
@@ -84,7 +84,7 @@
                                     </span>
                                 </button>
                                 <button type="reset" class="btn btn-light-secondary me-1 mb-1">Reset</button>
-                                <a href="{{route('admin.supplier')}}" class="btn btn-danger me-1 mb-1">Cancel</a>
+                                <a href="{{ route('admin.supplier') }}" class="btn btn-danger me-1 mb-1">Cancel</a>
                             </div>
                         </div>
                     </form>
@@ -120,7 +120,7 @@
 
                 indicatorBlock();
 
-                
+
                 // Perform remote validation
                 const remoteValidationResultEmail = await validateRemoteEmail();
                 const inputEmail = $("#inputEmail");
@@ -185,9 +185,9 @@
 
             function indicatorSubmit() {
                 submitButton.querySelector('.indicator-label').style.display =
-                    'inline-block';
-                submitButton.querySelector('.indicator-progress').style.display =
                     'none';
+                submitButton.querySelector('.indicator-progress').style.display =
+                    'inline-block';
             }
 
             function indicatorNone() {
@@ -206,7 +206,7 @@
                     'inline-block';
             }
 
-            
+
             async function validateRemoteEmail() {
                 const inputEmail = $('#inputEmail');
                 const remoteValidationUrl = "{{ route('admin.supplier.checkEmail') }}";

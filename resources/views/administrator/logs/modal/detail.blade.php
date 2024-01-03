@@ -36,6 +36,7 @@
                 method: 'GET',
                 success: function(response) {
                     var data = response.data;
+                    console.log(data);
                     $dataArray = JSON.parse(data.data);
 
                     var dataJson = JSON.stringify($dataArray, null,

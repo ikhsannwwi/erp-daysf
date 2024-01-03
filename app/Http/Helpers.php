@@ -1,13 +1,14 @@
 <?php
 
-use Jenssegers\Agent\Agent;
-use App\Models\admin\User;
 use App\Models\admin\Log;
+use App\Models\admin\User;
 use Illuminate\Support\Str;
+use Jenssegers\Agent\Agent;
 use Illuminate\Http\Request;
 use App\Models\admin\UserGroup;
 use App\Models\admin\ModuleAccess;
 use Illuminate\Support\Facades\DB;
+use App\Models\admin\OperatorKasir;
 
 function asset_administrator($url)
 {
@@ -96,7 +97,11 @@ function createLog($module, $action, $data_id,$data)
 
 function isAllowed($modul, $modul_akses)
 {
-	$data_user = User::find(auth()->user()->id);
+	if (auth()->user()) {
+		$data_user = User::find(auth()->user()->id);
+	}else {
+		$data_user = OperatorKasir::find(auth()->guard('operator_kasir')->user()->id);
+	}
 	$grup_pengguna_id = $data_user->user_group_id;
 	$permission = getPermissionGroup($grup_pengguna_id);
 	if ($grup_pengguna_id == 0) {
@@ -204,7 +209,11 @@ function getPermissionGroup2($x)
 
 function getPermissionModuleGroup()
 {
-	$data_user = User::find(auth()->user()->id);
+	if (auth()->user()) {
+		$data_user = User::find(auth()->user()->id);
+	}else {
+		$data_user = OperatorKasir::find(auth()->guard('operator_kasir')->user()->id);
+	}
 	$grup_pengguna_id = $data_user->user_group_id;
 	$data_akses = ModuleAccess::select(DB::raw('
     module.identifiers as module_identifiers, 
@@ -239,7 +248,11 @@ function getPermissionModuleGroup()
 
 function showModule($module, $permission_module)
 {
-	$data_user = User::find(auth()->user()->id);
+	if (auth()->user()) {
+		$data_user = User::find(auth()->user()->id);
+	}else {
+		$data_user = OperatorKasir::find(auth()->guard('operator_kasir')->user()->id);
+	}
 	$grup_pengguna_id = $data_user->user_group_id;
 	if ($grup_pengguna_id == 0) {
 		return TRUE;

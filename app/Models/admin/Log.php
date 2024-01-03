@@ -3,6 +3,7 @@
 namespace App\Models\admin;
 
 use App\Models\admin\User;
+use App\Models\admin\Module;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -35,5 +36,9 @@ class Log extends Model
 
     public function user(){
         return $this->belongsTo(User::class,'user_id','id');
+    }
+    
+    public function modules(){
+        return $this->belongsTo(Module::class, 'module', 'identifiers');
     }
 }

@@ -29,7 +29,7 @@ class LogSystemController extends Controller
 
     public function getData(Request $request)
     {
-        $data = Log::query()->with('user');
+        $data = Log::query()->with('user')->with('modules');
 
         if ($request->user || $request->module) {
             if ($request->user != "") {
@@ -52,7 +52,7 @@ class LogSystemController extends Controller
 
     public function getDetail($id){
 
-        $data = Log::with('user')->find($id);
+        $data = Log::with('user')->with('modules')->find($id);
         if (!$data) {
             return abort(404);
         }

@@ -32,12 +32,12 @@
                 <table class="table" id="datatable">
                     <thead>
                         <tr>
-                            <th width="25">No</th>
-                            <th width="">Kategori</th>
-                            <th width="">Nama</th>
-                            <th width="">Kode</th>
-                            <th width="">Status</th>
-                            <th width="200">Action</th>
+                            <th width="15px">No</th>
+                            <th width="150px">Kategori</th>
+                            <th width="100%">Nama</th>
+                            <th width="150px">Kode</th>
+                            <th width="150px">Status</th>
+                            <th width="250px">Action</th>
                         </tr>
                     </thead>
                 </table>

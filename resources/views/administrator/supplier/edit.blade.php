@@ -20,30 +20,30 @@
                         class="form" id="form" data-parsley-validate>
                         @csrf
                         @method('PUT')
-                        <input type="hidden" name="id" id="inputId" value="{{$data->id}}">
+                        <input type="hidden" name="id" id="inputId" value="{{ $data->id }}">
                         <div class="row">
                             <div class="col-md-6 col-12">
                                 <div class="row">
                                     <div class="col-12">
                                         <div class="form-group mandatory">
                                             <label for="inputNama" class="form-label">Nama</label>
-                                            <input type="text" id="inputNama" class="form-control" value="{{$data->nama}}"
-                                                placeholder="Masukan Nama" name="nama" autocomplete="off"
-                                                data-parsley-required="true">
+                                            <input type="text" id="inputNama" class="form-control"
+                                                value="{{ $data->nama }}" placeholder="Masukan Nama" name="nama"
+                                                autocomplete="off" data-parsley-required="true">
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        
+
                         <div class="row">
                             <div class="col-md-6 col-12">
                                 <div class="form-group mandatory">
                                     <label for="inputEmail" class="form-label">Email</label>
                                     <input type="text" id="inputEmail" class="form-control" placeholder="Masukan Email"
-                                        name="email" autocomplete="off" data-parsley-required="true" value="{{$data->email}}"
-                                        data-parsley-type="email" data-parsley-trigger="change"
+                                        name="email" autocomplete="off" data-parsley-required="true"
+                                        value="{{ $data->email }}" data-parsley-type="email" data-parsley-trigger="change"
                                         data-parsley-error-message="Masukan alamat email yang valid.">
                                     <div class="" style="color: #dc3545" id="accessErrorEmail"></div>
                                 </div>
@@ -55,9 +55,10 @@
                                 <div class="form-group mandatory">
                                     <label for="inputTelepon" class="form-label">Telepon</label>
                                     <input type="text" id="inputTelepon" class="form-control"
-                                        placeholder="Masukan Telepon" name="telepon" autocomplete="off" value="{{$data->telepon}}"
-                                        data-parsley-required="true" data-parsley-pattern="^(628|08)[0-9]+$"
-                                        data-parsley-length="[10,13]" data-parsley-trigger="change"
+                                        placeholder="Masukan Telepon" name="telepon" autocomplete="off"
+                                        value="{{ $data->telepon }}" data-parsley-required="true"
+                                        data-parsley-pattern="^(628|08)[0-9]+$" data-parsley-length="[10,13]"
+                                        data-parsley-trigger="change"
                                         data-parsley-error-message="Telepon harus dimulai dengan 628 atau 08, hanya boleh berisi angka, dan memiliki panjang antara 10 hingga 13 digit.">
                                     <div class="" style="color: #dc3545" id="accessErrorTelepon"></div>
                                 </div>
@@ -69,7 +70,7 @@
                                 <div class="form-group mandatory">
                                     <label for="inputAlamat" class="form-label">Alamat</label>
                                     <textarea id="inputAlamat" class="form-control" placeholder="Masukkan Alamat" name="alamat" style="height: 150px;"
-                                        data-parsley-required="true">{{$data->alamat}}</textarea>
+                                        data-parsley-required="true">{{ $data->alamat }}</textarea>
                                 </div>
                             </div>
                         </div>
@@ -85,7 +86,7 @@
                                     </span>
                                 </button>
                                 <button type="reset" class="btn btn-light-secondary me-1 mb-1">Reset</button>
-                                <a href="{{route('admin.supplier')}}" class="btn btn-danger me-1 mb-1">Cancel</a>
+                                <a href="{{ route('admin.supplier') }}" class="btn btn-danger me-1 mb-1">Cancel</a>
                             </div>
                         </div>
                     </form>
@@ -121,7 +122,7 @@
 
                 indicatorBlock();
 
-                
+
                 // Perform remote validation
                 const remoteValidationResultEmail = await validateRemoteEmail();
                 const inputEmail = $("#inputEmail");
@@ -186,9 +187,9 @@
 
             function indicatorSubmit() {
                 submitButton.querySelector('.indicator-label').style.display =
-                    'inline-block';
-                submitButton.querySelector('.indicator-progress').style.display =
                     'none';
+                submitButton.querySelector('.indicator-progress').style.display =
+                    'inline-block';
             }
 
             function indicatorNone() {
@@ -208,7 +209,7 @@
             }
 
             var inputId = $('#inputId');
-            
+
             async function validateRemoteEmail() {
                 const inputEmail = $('#inputEmail');
                 const remoteValidationUrl = "{{ route('admin.supplier.checkEmail') }}";

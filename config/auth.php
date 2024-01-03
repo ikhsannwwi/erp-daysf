@@ -14,7 +14,7 @@ return [
     */
 
     'defaults' => [
-        'guard' => 'web',
+        'guard' => 'admin',
         'passwords' => 'users',
     ],
 
@@ -36,9 +36,13 @@ return [
     */
 
     'guards' => [
-        'web' => [
+        'admin' => [
             'driver' => 'session',
             'provider' => 'users',
+        ],
+        'operator_kasir' => [
+            'driver' => 'session',
+            'provider' => 'operator_kasir',
         ],
     ],
 
@@ -63,6 +67,10 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => App\Models\admin\User::class,
+        ],
+        'operator_kasir' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\admin\OperatorKasir::class,
         ],
 
         // 'users' => [
@@ -89,6 +97,12 @@ return [
     'passwords' => [
         'users' => [
             'provider' => 'users',
+            'table' => 'password_resets',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+        'operator_kasir' => [
+            'provider' => 'operator_kasir',
             'table' => 'password_resets',
             'expire' => 60,
             'throttle' => 60,

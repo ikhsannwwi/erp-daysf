@@ -30,9 +30,9 @@
                 <table class="table" id="datatable">
                     <thead>
                         <tr>
-                            <th>No</th>
-                            <th width="325px">Nama</th>
-                            <th width="250px">Status</th>
+                            <th width="15px">No</th>
+                            <th width="100%">Nama</th>
+                            <th width="150px">Status</th>
                             <th width="200px">Action</th>
                         </tr>
                     </thead>

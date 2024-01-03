@@ -29,11 +29,11 @@
                 <table class="table" id="datatable">
                     <thead>
                         <tr>
-                            <th width="30">No</th>
-                            <th width="">Nama</th>
-                            <th width="">Email</th>
-                            <th width="">Telepon</th>
-                            <th width="200">Action</th>
+                            <th width="15px">No</th>
+                            <th width="40%">Nama</th>
+                            <th width="30%">Email</th>
+                            <th width="30%">Telepon</th>
+                            <th width="200px">Action</th>
                         </tr>
                     </thead>
                 </table>

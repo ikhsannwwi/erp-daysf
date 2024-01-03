@@ -40,11 +40,11 @@
                 <table class="table" id="datatable">
                     <thead>
                         <tr>
-                            <th>No</th>
-                            <th width="">User</th>
-                            <th width="">Module</th>
-                            <th width="">Action</th>
-                            <th width="">Tanggal</th>
+                            <th width="15px">No</th>
+                            <th width="100%">User</th>
+                            <th width="200px">Module</th>
+                            <th width="200px">Action</th>
+                            <th width="200px">Tanggal</th>
                         </tr>
                     </thead>
                 </table>

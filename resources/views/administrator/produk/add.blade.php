@@ -46,8 +46,8 @@
                             <div class="col-md-6 col-12">
                                 <div class="form-group mandatory">
                                     <label for="inputHarga" class="form-label">Harga</label>
-                                    <input type="text" id="inputHarga" class="form-control" placeholder="Masukkan Harga" autocomplete="off"
-                                        name="harga" data-parsley-required="true">
+                                    <input type="text" id="inputHarga" class="form-control" placeholder="Masukkan Harga"
+                                        autocomplete="off" name="harga" data-parsley-required="true">
                                 </div>
                             </div>
                         </div>
@@ -106,7 +106,9 @@
     <script src="{{ asset('templateAdmin/assets/extensions/parsleyjs/parsley.min.js') }}"></script>
     <script src="{{ asset('templateAdmin/assets/js/pages/parsley.js') }}"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.8/jquery.inputmask.min.js" integrity="sha512-efAcjYoYT0sXxQRtxGY37CKYmqsFVOIwMApaEbrxJr4RwqVVGw8o+Lfh/+59TU07+suZn1BWq4fDl5fdgyCNkw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.8/jquery.inputmask.min.js"
+        integrity="sha512-efAcjYoYT0sXxQRtxGY37CKYmqsFVOIwMApaEbrxJr4RwqVVGw8o+Lfh/+59TU07+suZn1BWq4fDl5fdgyCNkw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <script type="text/javascript">
         $(document).ready(function() {
@@ -185,9 +187,9 @@
 
             function indicatorSubmit() {
                 submitButton.querySelector('.indicator-label').style.display =
-                    'inline-block';
-                submitButton.querySelector('.indicator-progress').style.display =
                     'none';
+                submitButton.querySelector('.indicator-progress').style.display =
+                    'inline-block';
             }
 
             function indicatorNone() {

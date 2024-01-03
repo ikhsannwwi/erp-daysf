@@ -70,8 +70,8 @@
                                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                             stroke-linecap="round" stroke-linejoin="round"
                                             class="feather feather-instagram mr-2 icon-inline text-danger">
-                                            <rect x="2" y="2" width="20" height="20" rx="5"
-                                                ry="5"></rect>
+                                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5">
+                                            </rect>
                                             <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
                                             <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
                                         </svg>Instagram</h6>
@@ -233,6 +233,8 @@
 
             submitButton.addEventListener("click", async function(e) {
                 e.preventDefault();
+                indicatorBlock();
+
 
                 // Perform remote validation
                 const remoteValidationResult = await validateRemoteEmail();
@@ -245,6 +247,7 @@
 
                     accessErrorEmail.text(remoteValidationResult
                         .errorMessage); // Set the error message from the response
+                        indicatorNone();
 
                     return;
                 } else {
@@ -256,28 +259,17 @@
 
                 // Validate the form using Parsley
                 if ($(form).parsley().validate()) {
-                    // Disable the submit button and show the "Please wait..." message
-                    submitButton.querySelector('.indicator-label').style.display = 'none';
-                    submitButton.querySelector('.indicator-progress').style.display =
-                        'inline-block';
+                    indicatorSubmit();
 
-                    // Perform your asynchronous form submission here
-                    // Simulating a 2-second delay for demonstration
-                    setTimeout(function() {
-                        // Re-enable the submit button and hide the "Please wait..." message
-                        submitButton.querySelector('.indicator-label').style.display =
-                            'inline-block';
-                        submitButton.querySelector('.indicator-progress').style.display =
-                            'none';
+                    // Submit the form
+                    form.submit();
 
-                        // Submit the form
-                        form.submit();
-                    }, 2000);
                 } else {
                     // Handle validation errors
                     const validationErrors = [];
                     $(form).find(':input').each(function() {
                         const field = $(this);
+                        indicatorNone();
                         if (!field.parsley().isValid()) {
                             const attrName = field.attr('name');
                             const errorMessage = field.parsley().getErrorsMessages().join(
@@ -288,6 +280,29 @@
                     console.log("Validation errors:", validationErrors.join('\n'));
                 }
             });
+
+            function indicatorSubmit() {
+                submitButton.querySelector('.indicator-label').style.display =
+                    'none';
+                submitButton.querySelector('.indicator-progress').style.display =
+                    'inline-block';
+            }
+
+            function indicatorNone() {
+                submitButton.querySelector('.indicator-label').style.display =
+                    'inline-block';
+                submitButton.querySelector('.indicator-progress').style.display =
+                    'none';
+                submitButton.disabled = false;
+            }
+
+            function indicatorBlock() {
+                // Disable the submit button and show the "Please wait..." message
+                submitButton.disabled = true;
+                submitButton.querySelector('.indicator-label').style.display = 'none';
+                submitButton.querySelector('.indicator-progress').style.display =
+                    'inline-block';
+            }
 
             async function validateRemoteEmail() {
                 const emailInput = $('#emailField');

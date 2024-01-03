@@ -14,6 +14,8 @@ use App\Http\Controllers\admin\SupplierController;
 use App\Http\Controllers\admin\DashboardController;
 use App\Http\Controllers\admin\LogSystemController;
 use App\Http\Controllers\admin\UserGroupController;
+use App\Http\Controllers\admin\OperatorKasirController;
+use App\Http\Controllers\admin\TransaksiPenjualanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -77,6 +79,26 @@ Route::prefix('admin')->group(function () {
         Route::get('users/arsip/getDataArsip',[UserController::class, 'getDataArsip'])->name('admin.users.getDataArsip');
         Route::put('users/arsip/restore',[UserController::class, 'restore'])->name('admin.users.restore');
         Route::delete('users/arsip/forceDelete',[UserController::class, 'forceDelete'])->name('admin.users.forceDelete');
+        
+        //Operator Kasir
+        Route::get('operator-kasir', [OperatorKasirController::class, 'index'])->name('admin.operator_kasir');
+        Route::get('operator-kasir/add', [OperatorKasirController::class, 'add'])->name('admin.operator_kasir.add');
+        Route::get('operator-kasir/getData', [OperatorKasirController::class, 'getData'])->name('admin.operator_kasir.getData');
+        Route::post('operator-kasir/save', [OperatorKasirController::class, 'save'])->name('admin.operator_kasir.save');
+        Route::get('operator-kasir/edit/{id}', [OperatorKasirController::class, 'edit'])->name('admin.operator_kasir.edit');
+        Route::put('operator-kasir/update', [OperatorKasirController::class, 'update'])->name('admin.operator_kasir.update');
+        Route::delete('operator-kasir/delete', [OperatorKasirController::class, 'delete'])->name('admin.operator_kasir.delete');
+        Route::get('operator-kasir/getDetail-{id}', [OperatorKasirController::class, 'getDetail'])->name('admin.operator_kasir.getDetail');
+        Route::get('operator-kasir/getUserGroup', [OperatorKasirController::class, 'getUserGroup'])->name('admin.operator_kasir.getUserGroup');
+        Route::post('operator-kasir/changeStatus',[OperatorKasirController::class, 'changeStatus'])->name('admin.operator_kasir.changeStatus');
+        Route::get('operator-kasir/generateKode',[OperatorKasirController::class, 'generateKode'])->name('admin.operator_kasir.generateKode');
+        Route::post('operator-kasir/checkEmail',[OperatorKasirController::class, 'checkEmail'])->name('admin.operator_kasir.checkEmail');
+        Route::post('operator-kasir/checkKode',[OperatorKasirController::class, 'checkKode'])->name('admin.operator_kasir.checkKode');
+
+        Route::get('operator-kasir/arsip',[OperatorKasirController::class, 'arsip'])->name('admin.operator_kasir.arsip');
+        Route::get('operator-kasir/arsip/getDataArsip',[OperatorKasirController::class, 'getDataArsip'])->name('admin.operator_kasir.getDataArsip');
+        Route::put('operator-kasir/arsip/restore',[OperatorKasirController::class, 'restore'])->name('admin.operator_kasir.restore');
+        Route::delete('operator-kasir/arsip/forceDelete',[OperatorKasirController::class, 'forceDelete'])->name('admin.operator_kasir.forceDelete');
         
         //Profile
         Route::get('profile/{kode}', [ProfileController::class, 'index'])->name('admin.profile');
@@ -157,5 +179,24 @@ Route::prefix('admin')->group(function () {
         Route::get('supplier/getDetail-{id}', [SupplierController::class, 'getDetail'])->name('admin.supplier.getDetail');
         Route::post('supplier/checkEmail',[SupplierController::class, 'checkEmail'])->name('admin.supplier.checkEmail');
         Route::post('supplier/checkTelepon',[SupplierController::class, 'checkTelepon'])->name('admin.supplier.checkTelepon');
+        
+        //Transaksi Penjualan
+        Route::get('transaksi-penjualan', [TransaksiPenjualanController::class, 'index'])->name('admin.transaksi_penjualan');
+        Route::get('transaksi-penjualan/transaksi', [TransaksiPenjualanController::class, 'transaksi'])->name('admin.transaksi_penjualan.transaksi');
+        Route::get('transaksi-penjualan/add', [TransaksiPenjualanController::class, 'add'])->name('admin.transaksi_penjualan.add');
+        Route::get('transaksi-penjualan/getData', [TransaksiPenjualanController::class, 'getData'])->name('admin.transaksi_penjualan.getData');
+        Route::get('transaksi-penjualan/getDataProduk', [TransaksiPenjualanController::class, 'getDataProduk'])->name('admin.transaksi_penjualan.getDataProduk');
+        Route::get('transaksi-penjualan/getDataMember', [TransaksiPenjualanController::class, 'getDataMember'])->name('admin.transaksi_penjualan.getDataMember');
+        Route::post('transaksi-penjualan/save', [TransaksiPenjualanController::class, 'save'])->name('admin.transaksi_penjualan.save');
+        Route::get('transaksi-penjualan/edit/{id}', [TransaksiPenjualanController::class, 'edit'])->name('admin.transaksi_penjualan.edit');
+        Route::put('transaksi-penjualan/update', [TransaksiPenjualanController::class, 'update'])->name('admin.transaksi_penjualan.update');
+        Route::put('transaksi-penjualan/updateTotal', [TransaksiPenjualanController::class, 'updateTotal'])->name('admin.transaksi_penjualan.updateTotal');
+        Route::delete('transaksi-penjualan/delete', [TransaksiPenjualanController::class, 'delete'])->name('admin.transaksi_penjualan.delete');
+        Route::delete('transaksi-penjualan/deleteItem', [TransaksiPenjualanController::class, 'deleteItem'])->name('admin.transaksi_penjualan.deleteItem');
+        Route::get('transaksi-penjualan/getDetail-{id}', [TransaksiPenjualanController::class, 'getDetail'])->name('admin.transaksi_penjualan.getDetail');
+        Route::get('transaksi-penjualan/getMember', [TransaksiPenjualanController::class, 'getMember'])->name('admin.transaksi_penjualan.getMember');
+        Route::get('transaksi-penjualan/getProduk', [TransaksiPenjualanController::class, 'getProduk'])->name('admin.transaksi_penjualan.getProduk');
+        Route::get('transaksi-penjualan/getProductDetails', [TransaksiPenjualanController::class, 'getProductDetails'])->name('admin.transaksi_penjualan.getProductDetails');
+        Route::post('transaksi-penjualan/uploadBarcode', [TransaksiPenjualanController::class, 'uploadBarcode'])->name('admin.transaksi_penjualan.uploadBarcode');
     });
 });
