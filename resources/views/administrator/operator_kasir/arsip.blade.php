@@ -31,7 +31,7 @@
                             <th width="50%">Nama</th>
                             <th width="50%">Email</th>
                             <th width="150px">Status</th>
-                            <th width="200px">Action</th>
+                            <th width="225px">Action</th>
                         </tr>
                     </thead>
                 </table>
@@ -136,11 +136,13 @@
                                 //         '{{ route('admin.operator_kasir.getData') }}')
                                 //     .load();
                                 data_table.ajax.reload(null, false);
-                                swalWithBootstrapButtons.fire(
-                                    'Berhasil!',
-                                    'Data berhasil dihapus secara permanent.',
-                                    'success'
-                                );
+                                swalWithBootstrapButtons.fire({
+                                    title: 'Berhasil!',
+                                    text: 'Data berhasil dihapus secara permanent.',
+                                    icon: 'success',
+                                    timer: 1500, // 2 detik
+                                    showConfirmButton: false
+                                });
 
                                 // Remove the deleted row from the DataTable without reloading the page
                                 // data_table.row($(this).parents('tr')).remove().draw();
@@ -183,11 +185,13 @@
                                 //         '{{ route('admin.operator_kasir.getData') }}')
                                 //     .load();
                                 data_table.ajax.reload(null, false);
-                                swalWithBootstrapButtons.fire(
-                                    'Berhasil!',
-                                    'Data berhasil dipulihkan.',
-                                    'success'
-                                );
+                                swalWithBootstrapButtons.fire({
+                                    title: 'Berhasil!',
+                                    text: 'Data berhasil dipulihkan.',
+                                    icon: 'success',
+                                    timer: 1500, // 2 detik
+                                    showConfirmButton: false
+                                });
 
                                 // Remove the PUT row from the DataTable without reloading the page
                                 // data_table.row($(this).parents('tr')).remove().draw();

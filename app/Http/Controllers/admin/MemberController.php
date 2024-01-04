@@ -5,11 +5,13 @@ namespace App\Http\Controllers\admin;
 use DB;
 use File;
 use DataTables;
+use App\Models\admin\User;
 use Illuminate\Support\Str;
 use App\Models\admin\Member;
 use Illuminate\Http\Request;
 use App\Models\admin\UserGroup;
 use App\Models\admin\UserMember;
+use App\Models\admin\OperatorKasir;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Intervention\Image\Facades\Image;
@@ -158,14 +160,13 @@ class MemberController extends Controller
                 $data->save();
             }
     
-            createLog(static::$module, __FUNCTION__, $data->id, ['Data yang disimpan' => $data]);
+            createLog(static::$module, __FUNCTION__, $data->id, ['Data yang disimpan' => ['member' => $data, 'user_member' => $user]]);
             DB::commit();
             return redirect()->route('admin.member')->with('success', 'Data berhasil disimpan.');
         } catch (\Throwable $th) {
             DB::rollback();
             return redirect()->back()->with('error', $th->getMessage());
         }
-
     }
     
     
@@ -176,8 +177,9 @@ class MemberController extends Controller
         }
 
         $data = Member::find($id);
+        $userMember = UserMember::where('email', $data->email)->with('user_group')->first();
 
-        return view('administrator.member.edit',compact('data'));
+        return view('administrator.member.edit',compact('data', 'userMember'));
     }
     
     public function update(Request $request)
@@ -189,6 +191,7 @@ class MemberController extends Controller
 
         $id = $request->id;
         $data = Member::find($id);
+        $userMember = UserMember::where('email', $data->email)->with('user_group')->first();
 
         $rules = [
             'nama' => 'required',
@@ -196,113 +199,124 @@ class MemberController extends Controller
             'email' => 'required',
             'alamat' => 'required',
             'status' => 'required',
+            'user_group' => 'required',
+            'kode' => 'required',
         ];
 
         if ($request->img_url) {
             $rules['img_url'] = 'required|image';
         }
 
+        if ($request->password) {
+            $rules['password'] = 'required|min:8';
+            $rules['konfirmasi_password'] = 'required|min:8|same:password';
+        }
+
         $request->validate($rules);
 
         // Simpan data sebelum diupdate
         $previousData = $data->toArray();
+        $previousDataUser = $userMember->toArray();
 
-        $updates = [
-            'nama' => $request->nama,
-            'telepon' => $request->telepon,
-            'email' => $request->email,
-            'alamat' => $request->alamat,
-            'status' => $request->status,
-            'updated_by' => auth()->user() ? auth()->user()->kode : '',
-        ];
-
-        if ($request->hasFile('img_url')) {
-
-            if (!empty($data->img_url)) {
-                $image_path = "./administrator/assets/media/member/" . $data->img_url;
-                if (File::exists($image_path)) {
-                    File::delete($image_path);
-                }
+        try {
+            DB::beginTransaction();
+            $updates = [
+                'nama' => $request->nama,
+                'telepon' => $request->telepon,
+                'email' => $request->email,
+                'alamat' => $request->alamat,
+                'status' => $request->status,
+                'updated_by' => auth()->user() ? auth()->user()->kode : '',
+            ];
+            
+            $update_userMember = [
+                'user_group_id' => $request->user_group,
+                'kode' => $request->kode,
+                'name' => $request->nama,
+                'telepon' => $request->telepon,
+                'email' => $request->email,
+                'status' => $request->status,
+                'updated_by' => auth()->user() ? auth()->user()->kode : '',
+            ];
+    
+            if ($request->password) {
+                $update_userMember['password'] = Hash::make($request->password);
             }
-
-            $image = $request->file('img_url');
-            $fileName = 'IMG_' . $data->nama . '_' . date('Y-m-d-H-i-s') . '_' . uniqid(2) . '.' . $image->getClientOriginalExtension();
-            $path = upload_path('member') . $fileName;
-            Image::make($image->getRealPath())->save($path, 100);
-            $data['img_url'] = $fileName;
-            $data->save();
+            
+            // Filter only the updated data
+            $updatedData = array_intersect_key($updates, $data->getOriginal());
+            $updatedDataUser = array_intersect_key($update_userMember, $userMember->getOriginal());
+    
+            $data->update($updates);
+            $userMember->update($update_userMember);
+            
+            createLog(static::$module, __FUNCTION__, $data->id, [
+                'member' => ['Data sebelum diupdate' => $previousData, 'Data sesudah diupdate' => $updatedData],
+                'user' => ['Data sebelum diupdate' => $previousDataUser, 'Data sesudah diupdate' => $updatedDataUser]
+            ]);
+            DB::commit();
+            return redirect()->route('admin.member')->with('success', 'Data berhasil diupdate.');
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return redirect()->back()->with('error', $th->getMessage());
         }
-
-        if ($request->has('remove_img') && $request->remove_img == 1) {
-            // dd($request->remove_img);
-            // Assuming 'img_url' is the field that stores the image URL in the Member model.
-        
-            // Delete the image from the storage
-            if (!empty($data->img_url)) {
-                $image_path = "./administrator/assets/media/member/" . $data->img_url; // Update the path to your image storage directory.
-                if (File::exists($image_path)) {
-                    File::delete($image_path);
-                }
-            }
-        
-            // Update the database field to null or any default value as per your application's logic.
-            $data['img_url'] = null; // Update this according to your field name and logic.
-            $data->save();
-        }
-        
-
-        // Filter only the updated data
-        $updatedData = array_intersect_key($updates, $data->getOriginal());
-
-        $data->update($updates);
-
-        createLog(static::$module, __FUNCTION__, $data->id, ['Data sebelum diupdate' => $previousData, 'Data sesudah diupdate' => $updatedData]);
-        return redirect()->route('admin.member')->with('success', 'Data berhasil diupdate.');
     }
 
-    
-    
-    
     public function delete(Request $request)
     {
-        // Check permission
-        if (!isAllowed(static::$module, "delete")) {
-            abort(403);
-        }
+        try {
+            // Check permission
+            if (!isAllowed(static::$module, "delete")) {
+                abort(403);
+            }
+            $id = $request->id;
 
-        // Ensure you have authorization mechanisms here before proceeding to delete data.
+            $data = Member::findOrFail($id);
+            $userMember = UserMember::where('email', $data->email)->first();
 
-        $id = $request->id;
+            $deletedData = $data->toArray();
+            $deletedUserData = $userMember->toArray();
 
-        // Find the data based on the provided ID.
-        $data = Member::findorfail($id);
+            DB::beginTransaction();
 
-        if (!$data) {
+            try {
+                $data->update([
+                    'deleted_by' => auth()->user() ? auth()->user()->kode : '',
+                ]);
+                $data->delete();
+
+                $userMember->update([
+                    'deleted_by' => auth()->user() ? auth()->user()->kode : '',
+                ]);
+                $userMember->delete();
+
+                DB::commit();
+            } catch (\Exception $e) {
+                DB::rollBack();
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Error deleting data: ' . $e->getMessage(),
+                ], 500);
+            }
+
+            // Write logs only for soft delete (not force delete)
+            createLog(static::$module, __FUNCTION__, $id, ['Data yang dihapus' => [
+                'member' => $deletedData,
+                'user' => $deletedUserData,
+            ]]);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Pengguna telah dihapus.',
+            ]);
+        } catch (\Exception $exception) {
+            // Handle exceptions, log or respond accordingly
             return response()->json([
                 'status' => 'error',
-                'message' => 'Pengguna tidak ditemukan'
-            ], 404);
+                'message' => $exception->getMessage(),
+            ], 500);
         }
-
-        // Store the data to be logged before deletion
-        $deletedData = $data->toArray();
-
-        // Delete the data.
-        $data->update([
-            'deleted_by' => auth()->user() ? auth()->user()->kode : '',
-        ]);
-        $data->delete();
-
-        // Write logs only for soft delete (not force delete)
-        createLog(static::$module, __FUNCTION__, $id, ['Data yang dihapus' => $deletedData]);
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Pengguna telah dihapus.',
-        ]);
     }
-
-    
     
     public function getDetail($id){
         //Check permission
@@ -311,9 +325,11 @@ class MemberController extends Controller
         }
 
         $data = Member::find($id);
+        $user = UserMember::where('email', $data->email)->first();
 
         return response()->json([
             'data' => $data,
+            'user' => $user,
             'status' => 'success',
             'message' => 'Sukses memuat detail data.',
         ]);
@@ -329,17 +345,29 @@ class MemberController extends Controller
         $data['status'] = $request->status == "Aktif" ? 1 : 0;
         $log = $request->status == 1 ? 'Aktif' : 'Tidak Aktif';
         $id = $request->ix;
-        $updates = Member::where(["id" => $id])->first();
-        // Simpan data sebelum diupdate
-        $previousData = $updates->toArray();
-        $updates->update($data);
-
-        //Write log
-        createLog(static::$module, __FUNCTION__, $id, ['Data' => $previousData,'Statusnya diubah menjadi' => $log]);
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Status telah diubah.',
-        ]);
+        try {
+            DB::beginTransaction();
+            $updates = Member::where(["id" => $id])->first();
+            $update_user = UserMember::where(["email" => $updates->email])->first();
+            // Simpan data sebelum diupdate
+            $previousData = $updates->toArray();
+            $updates->update($data);
+            $update_user->update($data);
+    
+            //Write log
+            createLog(static::$module, __FUNCTION__, $id, ['Data' => $previousData,'Statusnya diubah menjadi' => $log]);
+            DB::commit();
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Status telah diubah.',
+            ]);
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return response()->json([
+                'status' => 'error',
+                'message' => $th->getMessage(),
+            ]);
+        }
     }
     
     public function getKategori(){
@@ -352,15 +380,22 @@ class MemberController extends Controller
     
     public function checkEmail(Request $request){
         if($request->ajax()){
-            $data = Member::where('email', $request->email)->withTrashed();
-            
-            if(isset($request->id)){
-                $data->where('id', '!=', $request->id);
+            $email = $request->email;
+            $id = $request->id;
+    
+            $userWithEmail = User::where('email', $email);
+            $userMemberWithEmail = UserMember::where('email', $email);
+            $operatorKasirWithEmail = OperatorKasir::where('email', $email);
+    
+            if(isset($id)){
+                $userWithEmail->where('id', '!=', $id);
+                $userMemberWithEmail->where('id', '!=', $id);
+                $operatorKasirWithEmail->where('id', '!=', $id);
             }
     
-            // dd($data->exists());
-
-            if($data->exists()){
+            $userExists = $userWithEmail->exists() || $userMemberWithEmail->exists() || $operatorKasirWithEmail->exists();
+    
+            if($userExists){
                 return response()->json([
                     'message' => 'Email sudah dipakai',
                     'valid' => false
@@ -373,21 +408,22 @@ class MemberController extends Controller
         }
     }
     
+    
     public function checkTelepon(Request $request){
         if($request->ajax()){
-            $data = Member::where('telepon', $request->telepon)->withTrashed();
+            $data = UserMember::where('telepon', $request->telepon)->withTrashed();
             
             if(isset($request->id)){
                 $data->where('id', '!=', $request->id);
             }
             // $data->get();
 
-            // dd($data->exists());
+            // dd($request->telepon);
     
             if($data->exists()){
                 return response()->json([
                     'message' => 'Telepon sudah dipakai',
-                    'valid' => false
+                    'valid' => false,
                 ]);
             } else {
                 return response()->json([
@@ -439,64 +475,118 @@ class MemberController extends Controller
 
     public function restore(Request $request)
     {
-        // Check permission
-        if (!isAllowed(static::$module, "restore")) {
-            abort(403);
-        }
-        
-        $id = $request->id;
-        $data = Member::withTrashed()->find($id);
 
-        if (!$data) {
+        try {
+            // Check permission
+            if (!isAllowed(static::$module, "restore")) {
+                abort(403);
+            }
+            $id = $request->id;
+
+            $data = Member::onlyTrashed()->findOrFail($id);
+            $userMember = UserMember::onlyTrashed()->where('email', $data->email)->first();
+
+            $deletedData = $data->toArray();
+            $deletedUserData = $userMember->toArray();
+
+            DB::beginTransaction();
+
+            try {
+                $data->update([
+                    'deleted_by' => null,
+                ]);
+                $data->restore();
+
+                $userMember->update([
+                    'deleted_by' => null,
+                ]);
+                $userMember->restore();
+
+                DB::commit();
+            } catch (\Exception $e) {
+                DB::rollBack();
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Error restoring data: ' . $e->getMessage(),
+                ], 500);
+            }
+
+            // Write logs only for soft delete (not force delete)
+            createLog(static::$module, __FUNCTION__, $id, ['Data yang dipulihkan' => [
+                'member' => $deletedData,
+                'user' => $deletedUserData,
+            ]]);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Data telah dipulihkan.',
+            ]);
+        } catch (\Exception $exception) {
+            // Handle exceptions, log or respond accordingly
             return response()->json([
                 'status' => 'error',
-                'message' => 'Data tidak ditemukan.'
-            ], 404);
+                'message' => $exception->getMessage(),
+            ], 500);
         }
-
-        $data->restore();
-
-        // Write logs if needed.
-        createLog(static::$module, __FUNCTION__, $id, ['Data yang dipulihkan' => $data]);
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Data telah dipulihkan.'
-        ]);
     }
 
 
     public function forceDelete(Request $request)
     {
-        //Check permission
-        if (!isAllowed(static::$module, "delete")) {
-            abort(403);
-        }
-        
-        $id = $request->id;
 
-        $data = Member::withTrashed()->find($id);
-
-        if (!$data) {
-            return redirect()->route('admin.member.arsip')->with('error', 'Data tidak ditemukan.');
-        }
-
-        if (!empty($data->img_url)) {
-            $image_path = "./administrator/assets/media/member/" . $data->img_url;
-            if (File::exists($image_path)) {
-                File::delete($image_path);
+        try {
+            // Check permission
+            if (!isAllowed(static::$module, "delete")) {
+                abort(403);
             }
+            $id = $request->id;
+
+            $data = Member::onlyTrashed()->findOrFail($id);
+            $userMember = UserMember::onlyTrashed()->where('email', $data->email)->first();
+
+            $deletedData = $data->toArray();
+            $deletedUserData = $userMember->toArray();
+
+            DB::beginTransaction();
+
+            try {
+                if (!empty($data->img_url)) {
+                    $image_path = "./administrator/assets/media/member/" . $data->img_url;
+                    if (File::exists($image_path)) {
+                        File::delete($image_path);
+                    }
+                }
+                
+                $data->forceDelete();
+
+                $userMember->forceDelete();
+
+                DB::commit();
+            } catch (\Exception $e) {
+                DB::rollBack();
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Error deleting data: ' . $e->getMessage(),
+                ], 500);
+            }
+
+            // Write logs only for soft delete (not force delete)
+            createLog(static::$module, __FUNCTION__, $id, ['Data yang dihapus' => [
+                'member' => $deletedData,
+                'user' => $deletedUserData,
+            ]]);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Data telah dihapus secara permanent.',
+            ]);
+        } catch (\Exception $exception) {
+            // Handle exceptions, log or respond accordingly
+            return response()->json([
+                'status' => 'error',
+                'message' => $exception->getMessage(),
+            ], 500);
         }
-
-        $data->forceDelete();
-
-        // Write logs if needed.
-        createLog(static::$module, __FUNCTION__, $id, $data);
-    
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Data telah dihapus secara permanent.',
-        ]);
     }
 
     public function generateKode(){

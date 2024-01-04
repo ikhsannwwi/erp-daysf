@@ -104,27 +104,6 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-md-6 col-12">
-                                <div class="form-group">
-                                    <label for="inputFileImg" class="form-label">Image</label>
-                                    <div class="fileinput fileinput-new" data-provides="fileinput">
-                                        <div class="fileinput-preview thumbnail mb20" data-trigger="fileinput">
-                                            <img src="http://placehold.it/500x500?text=Not Found" alt="Masukan Img"
-                                                width="150">
-                                        </div>
-                                        <div class="my-3">
-                                            <label for="inputFileImg" class="btn btn-outline-primary btn-file">
-                                                <span class="fileinput-new ">Select Image</span>
-                                                <input type="file" class="d-none" id="inputFileImg" name="img_url"
-                                                    accept="image/*">
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
                             <div class="col-12">
                                 <div class='form-group mandatory'>
                                     <fieldset>
@@ -165,6 +144,7 @@
 @endsection
 
 @push('js')
+    <script src="{{ asset_administrator('assets/plugins/form-jasnyupload/fileinput.min.js') }}"></script>
     <script src="{{ asset('templateAdmin/assets/extensions/parsleyjs/parsley.min.js') }}"></script>
     <script src="{{ asset('templateAdmin/assets/js/pages/parsley.js') }}"></script>
 
@@ -212,11 +192,6 @@
 
             const submitButton = document.getElementById("formSubmit");
 
-            // form.addEventListener('keydown', function(e) {
-            //     if (e.key === 'Enter') {
-            //         e.preventDefault();
-            //     }
-            // });
 
             submitButton.addEventListener("click", async function(e) {
                 e.preventDefault();
@@ -273,6 +248,7 @@
 
                     accessErrorKode.text(remoteValidationResultKode
                         .errorMessage); // Set the error message from the response
+                        indicatorNone();
 
                     return;
                 } else {
@@ -293,6 +269,7 @@
                     accessErrorKode.text(
                         'Kode harus 17 characters dan diawali dengan user-member- lalu diakhiri oleh 5 uniqid.'
                     );
+                    indicatorNone();
                     return;
                 } else {
                     accessErrorKode.removeClass('invalid-feedback');

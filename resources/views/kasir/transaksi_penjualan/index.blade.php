@@ -24,28 +24,7 @@
                                 @csrf
                                 @method('POST')
 
-                                <div class="row">
-                                    <div class="form-group">
-                                        <div class="col-4">
-                                            <label for="button_member" class="form-label">Member</label>
-                                            <div class="input-group">
-                                                <!-- Menggunakan input-group agar tombol dapat ditempatkan di sebelah input -->
-                                                <input type="text" class="form-control" id="inputMemberName" readonly>
-                                                <input type="text" class="d-none" name="member" id="inputMember">
-                                                <div class="input-group-append">
-                                                    <!-- Menggunakan input-group-append agar elemen berikutnya ditambahkan setelah input -->
-                                                    <a href="#" class="btn btn-secondary btn-sm"
-                                                        data-bs-toggle="modal" data-bs-target="#modalMember"
-                                                        id="button_member">
-                                                        Search
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-
+                                @include('kasir.transaksi_penjualan.modal.member')
 
                                 <div id="interactive" style="width: 100%;"></div>
 
@@ -120,7 +99,6 @@
                                             </span>
                                         </button>
                                         <button type="reset" class="btn btn-light-secondary me-1 mb-1">Reset</button>
-                                        <a href="{{ route('kasir.transaksi') }}" class="btn btn-danger me-1 mb-1">Cancel</a>
                                     </div>
                                 </div>
                             </form>
@@ -160,7 +138,6 @@
     </table>
 
     @include('administrator.transaksi_penjualan.modal.produk')
-    @include('administrator.transaksi_penjualan.modal.member')
 @endsection
 
 @push('js')
@@ -549,6 +526,9 @@
                                 rows_selected.splice(indexToRemove, 1);
                             }
                             updateTotalHarga();
+                            updateTotalPembayaran($(
+                                        '#input_jumlah_total_pembayaran_transaksi'
+                                    ).val());
                         }
                     });
                 });
@@ -686,94 +666,6 @@
                 submitButton.querySelector('.indicator-progress').style.display =
                     'inline-block';
             }
-
-            $('#modalMember').on('show.bs.modal', function(event) {
-                var button = $(event.relatedTarget);
-
-                // Now, you can initialize a new DataTable on the same table.
-                $("#datatablemodalMember").DataTable().destroy();
-                $('#datatablemodalMember tbody').remove();
-                var data_table = $('#datatablemodalMember').DataTable({
-                    "oLanguage": {
-                        "oPaginate": {
-                            "sFirst": "<i class='ti-angle-left'></i>",
-                            "sPrevious": "&#8592;",
-                            "sNext": "&#8594;",
-                            "sLast": "<i class='ti-angle-right'></i>"
-                        }
-                    },
-                    processing: true,
-                    serverSide: true,
-                    order: [
-                        [0, 'asc']
-                    ],
-                    // scrollX: true, // Enable horizontal scrolling
-                    ajax: {
-                        url: '{{ route('kasir.transaksi.getDataMember') }}',
-                        dataType: "JSON",
-                        type: "GET",
-                    },
-                    columns: [{
-                            render: function(data, type, row, meta) {
-                                return meta.row + meta.settings._iDisplayStart + 1;
-                            },
-                        },
-                        {
-                            data: 'nama',
-                            name: 'nama'
-                        },
-                        {
-                            data: 'telepon',
-                            name: 'telepon'
-                        },
-                        {
-                            data: 'email',
-                            name: 'email'
-                        },
-                        {
-                            data: 'alamat',
-                            name: 'alamat'
-                        },
-                    ],
-                });
-
-                // click di baris tabel member
-                $('#datatablemodalMember tbody').on('click', 'tr', function() {
-                    var $row = $(this);
-
-                    // Remove 'selected' class from all rows
-                    $('#datatablemodalMember tbody tr').removeClass('selected');
-
-                    // Add 'selected' class to the clicked row
-                    $row.addClass('selected');
-
-                    // Get selected row data
-                    var selectedRow = data_table.row('.selected').data();
-
-                    if (selectedRow) {
-                        // Set input values based on the selected row
-                        $("#inputMember").val(selectedRow.id);
-                        $("#inputMemberName").val(selectedRow.nama);
-                    }
-                });
-                // end click di baris tabel member
-
-                // click Select button
-                $('#selectDataMember').on('click', function() {
-                    // Get selected row data
-                    var selectedRow = data_table.row('.selected').data();
-
-                    if (selectedRow) {
-                        $("#inputMember").val(selectedRow.id);
-                        $("#inputMemberName").val(selectedRow.nama);
-                    }
-
-                    $('#buttonClosemodalMember').click();
-                });
-                // end click Select button
-            });
-
-
             
             function formatRupiah(amount) {
                 // Use Number.prototype.toLocaleString() to format the number as currency

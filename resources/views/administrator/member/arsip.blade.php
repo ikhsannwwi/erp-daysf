@@ -29,7 +29,7 @@
                             <th width="15px">No</th>
                             <th width="50%">Nama</th>
                             <th width="50%">Email</th>
-                            <th width="200px">Action</th>
+                            <th width="225px">Action</th>
                         </tr>
                     </thead>
                 </table>

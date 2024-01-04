@@ -2,8 +2,8 @@
     <div class="row">
         <div class="col-8" style="padding-right: 0;">
             <!-- Menggunakan col-8 agar input lebih lebar dan menghapus padding kanan -->
-            <input type="text" class="form-control" id="inputUserGroupName" placeholder="Pilih User Group" data-parsley-required="true" readonly>
-            <input type="text" class="d-none" name="user_group" id="inputUserGroup">
+            <input type="text" class="form-control" id="inputUserGroupName" value="{{Route::is('admin.member.edit*') ? $userMember->user_group->name : ''}}" placeholder="Pilih User Group" data-parsley-required="true" readonly>
+            <input type="text" class="d-none" name="user_group" value="{{Route::is('admin.member.edit*') ? $userMember->user_group->id : ''}}" id="inputUserGroup">
         </div>
         <div class="col-4" style="padding-left: 0;">
             <!-- Menggunakan col-4 agar tombol "Search" lebih kecil dan menghapus padding kiri -->

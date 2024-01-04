@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\admin;
 
 use Illuminate\Http\Request;
+use App\Models\admin\UserMember;
 use App\Models\admin\OperatorKasir;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;

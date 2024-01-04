@@ -31,7 +31,7 @@
                         <tr>
                             <th width="15px">No</th>
                             <th width="100%">Nama</th>
-                            <th width="200px">Action</th>
+                            <th width="225px">Action</th>
                         </tr>
                     </thead>
                 </table>

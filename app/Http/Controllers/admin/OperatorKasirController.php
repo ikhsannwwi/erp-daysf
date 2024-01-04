@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\admin;
 
 use DataTables;
+use App\Models\admin\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\admin\Profile;
 use App\Models\admin\UserGroup;
+use App\Models\admin\UserMember;
 use App\Models\admin\OperatorKasir;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
@@ -309,13 +311,22 @@ class OperatorKasirController extends Controller
     
     public function checkEmail(Request $request){
         if($request->ajax()){
-            $users = OperatorKasir::where('email', $request->email)->withTrashed();
-            
-            if(isset($request->id)){
-                $users->where('id', '!=', $request->id);
+            $email = $request->email;
+            $id = $request->id;
+    
+            $userWithEmail = User::where('email', $email);
+            $userMemberWithEmail = UserMember::where('email', $email);
+            $operatorKasirWithEmail = OperatorKasir::where('email', $email);
+    
+            if(isset($id)){
+                $userWithEmail->where('id', '!=', $id);
+                $userMemberWithEmail->where('id', '!=', $id);
+                $operatorKasirWithEmail->where('id', '!=', $id);
             }
     
-            if($users->exists()){
+            $userExists = $userWithEmail->exists() || $userMemberWithEmail->exists() || $operatorKasirWithEmail->exists();
+    
+            if($userExists){
                 return response()->json([
                     'message' => 'Email sudah dipakai',
                     'valid' => false

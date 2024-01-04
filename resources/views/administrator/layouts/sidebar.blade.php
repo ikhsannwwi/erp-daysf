@@ -57,7 +57,7 @@
                         <i class="bi bi-stack"></i>
                         <span>Data Master</span>
                     </a>
-                    <ul class="submenu ">
+                    <ul class="submenu" style="display: {{ Route::is('admin.kategori*', 'admin.produk*', 'admin.member*', 'admin.supplier*') ? 'block' : 'none' }};">
                         <li class="submenu-item {{ Route::is('admin.kategori*') ? 'active' : '' }}">
                             <a href="{{route('admin.kategori')}}">Kategori</a>
                         </li>
@@ -78,7 +78,7 @@
                         <i class="bi bi-grid-1x2-fill"></i>
                         <span>Data Transaksi</span>
                     </a>
-                    <ul class="submenu">
+                    <ul class="submenu" style="display: {{ Route::is('admin.transaksi_penjualan*', 'admin.user_groups*') ? 'block' : 'none' }};">
                         <li class="submenu-item {{ Route::is('admin.transaksi_penjualan*') ? 'active' : '' }} ">
                             <a href="{{ route('admin.transaksi_penjualan') }}">Transaksi Penjualan</a>
                         </li>
@@ -107,7 +107,7 @@
                         <i class="bi bi-grid-1x2-fill"></i>
                         <span>User Management</span>
                     </a>
-                    <ul class="submenu">
+                    <ul class="submenu" style="display: {{ Route::is('admin.users*', 'admin.user_groups*', 'admin.operator_kasir*') ? 'block' : 'none' }};">
                         <li class="submenu-item {{ Route::is('admin.user_groups*') ? 'active' : '' }} ">
                             <a href="{{ route('admin.user_groups') }}">User Groups</a>
                         </li>
@@ -125,7 +125,7 @@
                         <i class="bi bi-collection-fill"></i>
                         <span>Systems</span>
                     </a>
-                    <ul class="submenu ">
+                    <ul class="submenu" style="display: {{ Route::is('admin.logSystems*') ? 'block' : 'none' }};">
                         <li class="submenu-item {{ Route::is('admin.logSystems*') ? 'active' : '' }}">
                             <a href="{{ route('admin.logSystems') }}">Logs</a>
                         </li>
@@ -143,7 +143,7 @@
                         <i class="bi bi-collection-fill"></i>
                         <span>Settings</span>
                     </a>
-                    <ul class="submenu ">
+                    <ul class="submenu " style="display: {{ Route::is('admin.settings*','admin.module*') ? 'block' : 'none' }};">
                         <li class="submenu-item {{ Route::is('admin.settings*') ? 'active' : '' }}">
                             <a href="{{ route('admin.settings') }}">Setting General</a>
                         </li>

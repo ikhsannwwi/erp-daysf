@@ -687,6 +687,35 @@
                     'inline-block';
             }
 
+            function addSelectedClassByModuleIdentifiers(id) {
+                var table = $('#datatablemodalMember').DataTable();
+
+                // Check if the 'select' extension is available
+                if ($.fn.dataTable.Select) {
+                    // Check if the 'select' extension is initialized for the table
+                    if (table.select) {
+                        // Deselect all rows first
+                        table.rows().deselect();
+                    }
+                }
+
+                table.rows().nodes().to$().removeClass('selected'); // Remove 'selected' class from all rows
+
+                if (id) {
+                    table.rows().every(function() {
+                        var rowData = this.data();
+                        if (rowData.id === parseInt(id)) {
+                            // Check if the 'select' extension is available before using 'select' method
+                            if ($.fn.dataTable.Select && table.select) {
+                                this.select(); // Select the row
+                            }
+                            $(this.node()).addClass('selected'); // Add 'selected' class
+                            return false; // Break the loop
+                        }
+                    });
+                }
+            }
+
             $('#modalMember').on('show.bs.modal', function(event) {
                 var button = $(event.relatedTarget);
 
@@ -735,6 +764,11 @@
                             name: 'alamat'
                         },
                     ],
+                    drawCallback: function(settings) {
+                        // Add 'selected' class based on the content of the input fields
+                        var id = $("#inputMember").val();
+                        addSelectedClassByModuleIdentifiers(id);
+                    },
                 });
 
                 // click di baris tabel member
