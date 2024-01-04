@@ -23,6 +23,42 @@
                         <div class="row">
                             <div class="col-md-6 col-12">
                                 <div class="form-group mandatory">
+                                    @include('administrator.member.modal.user_group')
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 col-12">
+                                <div class="form-group mandatory">
+                                    <label for="kodeField" class="form-label">Kode</label>
+                                    <div class="row">
+                                        <div class="col-8">
+                                            <input type="text" id="kodeField" class="form-control"
+                                                placeholder="Masukan Kode" name="kode" autocomplete="off"
+                                                data-parsley-required="true">
+                                            <div class="" style="color: #dc3545" id="accessErrorKode"></div>
+                                        </div>
+                                        <div class="col-2">
+                                            <a href="javascript:void(0)" class="btn btn-primary"
+                                                id="buttonGenerateKode"><span class="indicator-label-kode">Generate</span>
+                                                <span class="indicator-progress-kode" style="display: none;">
+                                                    <div class="d-flex">
+                                                        Generate...
+                                                        <span
+                                                            class="spinner-border spinner-border-sm align-middle ms-2 mt-1"></span>
+                                                    </div>
+                                                </span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 col-12">
+                                <div class="form-group mandatory">
                                     <label for="inputNama" class="form-label">Nama</label>
                                     <input type="text" id="inputNama" class="form-control" placeholder="Masukan Nama"
                                         name="nama" autocomplete="off" data-parsley-required="true">
@@ -74,12 +110,13 @@
                                     <div class="fileinput fileinput-new" data-provides="fileinput">
                                         <div class="fileinput-preview thumbnail mb20" data-trigger="fileinput">
                                             <img src="http://placehold.it/500x500?text=Not Found" alt="Masukan Img"
-                                                 width="150">
+                                                width="150">
                                         </div>
                                         <div class="my-3">
                                             <label for="inputFileImg" class="btn btn-outline-primary btn-file">
                                                 <span class="fileinput-new ">Select Image</span>
-                                                <input type="file" class="d-none" id="inputFileImg" name="img_url"  accept="image/*">
+                                                <input type="file" class="d-none" id="inputFileImg" name="img_url"
+                                                    accept="image/*">
                                             </label>
                                         </div>
                                     </div>
@@ -138,6 +175,37 @@
     <script type="text/javascript">
         $(document).ready(function() {
 
+            // Add an event listener to the "Generate" button
+            const generateKodeButton = document.getElementById("buttonGenerateKode");
+            const kodeField = document.getElementById("kodeField");
+            const indicatorLabelKode = document.querySelector(".indicator-label-kode");
+            const indicatorProgressKode = document.querySelector(".indicator-progress-kode");
+            const remoteGenerateKodeUrl = "{{ route('admin.member.generateKode') }}";
+
+            generateKodeButton.addEventListener("click", async function() {
+                // Show the indicator when the button is clicked
+                indicatorLabelKode.style.display = "none";
+                indicatorProgressKode.style.display = "inline-block";
+
+                // Make an AJAX request to generate the code
+                try {
+                    const response = await $.ajax({
+                        method: "GET",
+                        url: remoteGenerateKodeUrl,
+                    });
+
+                    // Assuming the response is JSON and contains a "generateKode" key
+                    kodeField.value = response.generateKode;
+                } catch (error) {
+                    console.error("Generate error:", error);
+                    // Handle errors as needed
+                } finally {
+                    // Hide the indicator when the AJAX request is complete
+                    indicatorLabelKode.style.display = "inline-block";
+                    indicatorProgressKode.style.display = "none";
+                }
+            });
+
             //validate parsley form
             const form = document.getElementById("form");
             const validator = $(form).parsley();
@@ -193,6 +261,43 @@
                     accessErrorTelepon.removeClass('invalid-feedback');
                     inputTelepon.removeClass('is-invalid');
                     accessErrorTelepon.text('');
+                }
+
+                const remoteValidationResultKode = await validateRemoteKode();
+                const kodeField = $("#kodeField");
+                const accessErrorKode = $("#accessErrorKode");
+                if (!remoteValidationResultKode.valid) {
+                    // Remote validation failed, display the error message
+                    accessErrorKode.addClass('invalid-feedback');
+                    kodeField.addClass('is-invalid');
+
+                    accessErrorKode.text(remoteValidationResultKode
+                        .errorMessage); // Set the error message from the response
+
+                    return;
+                } else {
+                    accessErrorKode.removeClass('invalid-feedback');
+                    kodeField.removeClass('is-invalid');
+                    accessErrorKode.text('');
+                }
+                // Get the value from the kode field
+                const kodeValue = kodeField.val().trim();
+
+                // Validate the length and format of the kode
+                if (kodeValue.length !== 17 || !kodeValue.startsWith('user-member-') || kodeValue
+                    .substring(
+                        12).length !== 5) {
+                    accessErrorKode.addClass('invalid-feedback');
+                    kodeField.addClass('is-invalid');
+
+                    accessErrorKode.text(
+                        'Kode harus 17 characters dan diawali dengan user-member- lalu diakhiri oleh 5 uniqid.'
+                    );
+                    return;
+                } else {
+                    accessErrorKode.removeClass('invalid-feedback');
+                    kodeField.removeClass('is-invalid');
+                    accessErrorKode.text('');
                 }
 
                 // Validate the form using Parsley
@@ -282,6 +387,36 @@
                         data: {
                             _token: csrfToken,
                             telepon: inputTelepon.val(),
+                        }
+                    });
+
+                    // Assuming the response is JSON and contains a "valid" key
+                    return {
+                        valid: response.valid === true,
+                        errorMessage: response.message
+                    };
+                } catch (error) {
+                    console.error("Remote validation error:", error);
+                    return {
+                        valid: false,
+                        errorMessage: "An error occurred during validation."
+                    };
+                }
+            }
+
+
+            async function validateRemoteKode() {
+                const kodeInput = $('#kodeField');
+                const remoteValidationUrl = "{{ route('admin.member.checkKode') }}";
+                const csrfToken = "{{ csrf_token() }}";
+
+                try {
+                    const response = await $.ajax({
+                        method: "POST",
+                        url: remoteValidationUrl,
+                        data: {
+                            _token: csrfToken,
+                            kode: kodeInput.val(),
                         }
                     });
 

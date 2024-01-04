@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers\admin;
 
+use DB;
 use File;
 use DataTables;
+use Illuminate\Support\Str;
 use App\Models\admin\Member;
 use Illuminate\Http\Request;
+use App\Models\admin\UserGroup;
+use App\Models\admin\UserMember;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
 use Intervention\Image\Facades\Image;
 
 
@@ -103,6 +108,8 @@ class MemberController extends Controller
             'email' => 'required',
             'alamat' => 'required',
             'status' => 'required',
+            'user_group' => 'required',
+            'kode' => 'required',
         ];
 
         if ($request->img_url) {
@@ -111,34 +118,54 @@ class MemberController extends Controller
 
         $request->validate($rules);
 
-        $data = Member::create([
-            'nama' => $request->nama,
-            'telepon' => $request->telepon,
-            'email' => $request->email,
-            'alamat' => $request->alamat,
-            'status' => $request->status,
-            'created_by' => auth()->user() ? auth()->user()->kode : '',
-        ]);
-
-        if ($request->hasFile('img_url')) {
-
-            if (!empty($data->img_url)) {
-                $image_path = "./administrator/assets/media/member/" . $data->img_url;
-                if (File::exists($image_path)) {
-                    File::delete($image_path);
+        try {
+            DB::beginTransaction();
+            $data = Member::create([
+                'nama' => $request->nama,
+                'telepon' => $request->telepon,
+                'email' => $request->email,
+                'alamat' => $request->alamat,
+                'status' => $request->status,
+                'created_by' => auth()->user() ? auth()->user()->kode : '',
+            ]);
+    
+            $user = UserMember::create([
+                'user_group_id' => $request->user_group,
+                'kode' => $request->kode,
+                'name' => $request->nama,
+                'telepon' => $request->telepon,
+                'email' => $request->email,
+                'status' => $request->status,
+                'password' => 'verify_required',
+                'remember_token' => Str::random(60),
+                'created_by' => auth()->user() ? auth()->user()->kode : '',
+            ]);
+    
+            if ($request->hasFile('img_url')) {
+    
+                if (!empty($data->img_url)) {
+                    $image_path = "./administrator/assets/media/member/" . $data->img_url;
+                    if (File::exists($image_path)) {
+                        File::delete($image_path);
+                    }
                 }
+    
+                $image = $request->file('img_url');
+                $fileName = 'IMG_' . $data->nama . '_' . date('Y-m-d-H-i-s') . '_' . uniqid(2) . '.' . $image->getClientOriginalExtension();
+                $path = upload_path('member') . $fileName;
+                Image::make($image->getRealPath())->save($path, 100);
+                $data['img_url'] = $fileName;
+                $data->save();
             }
-
-            $image = $request->file('img_url');
-            $fileName = 'IMG_' . $data->nama . '_' . date('Y-m-d-H-i-s') . '_' . uniqid(2) . '.' . $image->getClientOriginalExtension();
-            $path = upload_path('member') . $fileName;
-            Image::make($image->getRealPath())->save($path, 100);
-            $data['img_url'] = $fileName;
-            $data->save();
+    
+            createLog(static::$module, __FUNCTION__, $data->id, ['Data yang disimpan' => $data]);
+            DB::commit();
+            return redirect()->route('admin.member')->with('success', 'Data berhasil disimpan.');
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return redirect()->back()->with('error', $th->getMessage());
         }
 
-        createLog(static::$module, __FUNCTION__, $data->id, ['Data yang disimpan' => $data]);
-        return redirect()->route('admin.member')->with('success', 'Data berhasil disimpan.');
     }
     
     
@@ -470,5 +497,42 @@ class MemberController extends Controller
             'status' => 'success',
             'message' => 'Data telah dihapus secara permanent.',
         ]);
+    }
+
+    public function generateKode(){
+        $generateKode = 'user-member-' . substr(uniqid(), -5);
+
+        return response()->json([
+            'generateKode' => $generateKode,
+        ]);
+    }
+
+    public function getDataUserGroup(Request $request)
+    {
+        $data = UserGroup::query();
+
+        return DataTables::of($data)
+            ->make(true);
+    }
+    
+    public function checkKode(Request $request){
+        if($request->ajax()){
+            $users = UserMember::where('kode', $request->kode)->withTrashed();
+            
+            if(isset($request->id)){
+                $users->where('id', '!=', $request->id);
+            }
+    
+            if($users->exists()){
+                return response()->json([
+                    'message' => 'Kode sudah dipakai',
+                    'valid' => false
+                ]);
+            } else {
+                return response()->json([
+                    'valid' => true
+                ]);
+            }
+        }
     }
 }

@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
+use App\Http\Controllers\admin\AuthController;
 use App\Http\Controllers\kasir\DashboardController;
 use App\Http\Controllers\kasir\TransaksiController;
 
@@ -17,6 +18,10 @@ use App\Http\Controllers\kasir\TransaksiController;
 */
 
 Route::prefix('kasir')->group(function () {
+    Route::get('login', [AuthController::class, 'login'])->name('kasir.login');
+    Route::post('loginProses', [AuthController::class, 'loginProses'])->name('kasir.loginProses');
+    Route::get('logout', [AuthController::class, 'logout'])->name('kasir.logout');
+    
     Route::middleware(['auth.admin'])->group(function () {
         Route::get('dashboard', [DashboardController::class, 'index'])->name('kasir.dashboard');
 

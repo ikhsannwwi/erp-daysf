@@ -51,6 +51,8 @@ class RouteServiceProvider extends ServiceProvider
             $this->mapAdminRoutes();
 
             $this->mapKasirRoutes();
+
+            $this->mapMemberRoutes();
         });
     }
 
@@ -67,6 +69,13 @@ class RouteServiceProvider extends ServiceProvider
         Route::middleware('web')
             ->namespace('App\Http\Controllers\kasir') // Gantilah dengan namespace controller kasir Anda
             ->group(base_path('routes/kasir.php'));
+    }
+
+    protected function mapMemberRoutes()
+    {
+        Route::middleware('web')
+            ->namespace('App\Http\Controllers\member') // Gantilah dengan namespace controller member Anda
+            ->group(base_path('routes/member.php'));
     }
 
     /**

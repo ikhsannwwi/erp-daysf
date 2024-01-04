@@ -6,10 +6,8 @@
         <div class="row h-100">
             <div class="col-lg-5 col-12">
                 <div id="auth-left">
-                    {{-- <div class="auth-logo">
-                        <a href="index.html"><img src="assets/images/logo/logo.svg" alt="Logo"></a>
-                    </div> --}}
-                    <h1 class="auth-title">{{ array_key_exists('nama_app_admin', $settings) ? $settings['nama_app_admin'] : '' }}.</h1>
+                    @include('administrator.authentication.logo')
+
                     <p class="auth-subtitle mb-5">Control Panel Admin.</p>
 
                     <form action="{{route('admin.loginProses')}}" method="POST" enctype="multipart/form-data">

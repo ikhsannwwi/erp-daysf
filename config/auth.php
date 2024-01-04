@@ -44,6 +44,10 @@ return [
             'driver' => 'session',
             'provider' => 'operator_kasir',
         ],
+        'user_member' => [
+            'driver' => 'session',
+            'provider' => 'user_member',
+        ],
     ],
 
     /*
@@ -71,6 +75,10 @@ return [
         'operator_kasir' => [
             'driver' => 'eloquent',
             'model' => App\Models\admin\OperatorKasir::class,
+        ],
+        'user_member' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\admin\UserMember::class,
         ],
 
         // 'users' => [
@@ -103,6 +111,12 @@ return [
         ],
         'operator_kasir' => [
             'provider' => 'operator_kasir',
+            'table' => 'password_resets',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+        'user_member' => [
+            'provider' => 'user_member',
             'table' => 'password_resets',
             'expire' => 60,
             'throttle' => 60,

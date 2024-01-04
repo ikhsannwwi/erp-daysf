@@ -43,6 +43,19 @@ class AdminMiddleware
                 $request->session()->invalidate();
                 return redirect()->route('admin.login')->with('info', 'Akunmu sudah tidak aktif.');
             }
+        } else if (auth()->guard('user_member')->check()) {
+            $user = auth()->guard('user_member')->user();
+            // Check if the user_member user's status is 1
+            if ($user->status == 1) {
+                auth()->guard('user_member')->login($user);
+                // If the status is 1, allow access to the requested route
+                return $next($request);
+            } else {
+                // If the status is not 1, log out the user and redirect to the login page
+                auth()->guard('user_member')->logout();
+                $request->session()->invalidate();
+                return redirect()->route('admin.login')->with('info', 'Akunmu sudah tidak aktif.');
+            }
         }
 
         // If the user is not authenticated as an admin, redirect to the login page

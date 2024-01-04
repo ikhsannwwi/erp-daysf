@@ -19,6 +19,7 @@
     @yield('content')
 
 
+    <script src="{{ asset('jquery/dist/jquery.js') }}"></script>
     <script src="{{ asset('templateAdmin/assets/extensions/toastify-js/src/toastify.js') }}"></script>
     <script src="{{ asset('templateAdmin/assets/js/pages/toastify.js') }}"></script>
 

@@ -29,7 +29,11 @@ class DataServiceProvider extends ServiceProvider
             'kasir.layouts.main',
             'administrator.authentication.main',
             'administrator.authentication.login',
-            'administrator.logs.export'
+            'administrator.authentication.logo',
+            'administrator.logs.export',
+            
+            'member.layouts.main',
+            'member.verify.template_mail'
         ], function ($view) {
             $settings = Setting::get()->toArray();
         

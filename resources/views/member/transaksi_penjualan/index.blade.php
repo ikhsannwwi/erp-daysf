@@ -1,199 +1,135 @@
-@extends('administrator.layouts.main')
+@extends('kasir.layouts.main')
 
 @section('content')
-    <!-- Basic Tables start -->
-    <section class="section">
-        <div class="card">
-            <div class="card-header">
-                Transaksi Penjualan
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-                        <li class="breadcrumb-item"><a href="{{ route('admin.transaksi_penjualan') }}">Transaksi Penjualan</a>
-                        </li>
-                        <li class="breadcrumb-item active" aria-current="page">Edit</li>
-                    </ol>
-                </nav>
-            </div>
-            <div class="card-content">
-                <div class="card-body">
-                    <form action="{{ route('admin.transaksi_penjualan.update') }}" method="post"
-                        enctype="multipart/form-data" class="form" id="form" data-parsley-validate>
-                        @csrf
-                        @method('PUT')
-                        <input type="hidden" name="id" id="id" value="{{ $data->id }}">
+    <div class="page-heading">
+        <h3>Transaksi Penjualan</h3>
+    </div>
+    <div class="page-content">
+        <section class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="{{ route('kasir.dashboard') }}">Dashboard</a>
+                                </li>
+                                <li class="breadcrumb-item active" aria-current="page">Transaksi</li>
+                            </ol>
+                        </nav>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-body">
+                            <form action="{{ route('kasir.transaksi.save') }}" method="post" enctype="multipart/form-data"
+                                class="form" id="form" data-parsley-validate>
+                                @csrf
+                                @method('POST')
 
-                        <div class="row">
-                            <div class="form-group">
-                                <div class="col-4">
-                                    <label for="button_member" class="form-label">Member</label>
-                                    <div class="input-group">
-                                        <!-- Menggunakan input-group agar tombol dapat ditempatkan di sebelah input -->
-                                        <input type="text" class="form-control" id="inputMemberName"
-                                            value="{{ $data->member ? $data->member->nama : '' }}" readonly>
-                                        <input type="text" class="d-none" name="member" id="inputMember"
-                                            value="{{ $data->member ? $data->member->id : '' }}">
-                                        <div class="input-group-append">
-                                            <!-- Menggunakan input-group-append agar elemen berikutnya ditambahkan setelah input -->
-                                            <a href="#" class="btn btn-secondary btn-sm" data-bs-toggle="modal"
-                                                data-bs-target="#modalMember" id="button_member">
-                                                Search
-                                            </a>
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="col-4">
+                                            <label for="button_member" class="form-label">Member</label>
+                                            <div class="input-group">
+                                                <!-- Menggunakan input-group agar tombol dapat ditempatkan di sebelah input -->
+                                                <input type="text" class="form-control" id="inputMemberName" readonly>
+                                                <input type="text" class="d-none" name="member" id="inputMember">
+                                                <div class="input-group-append">
+                                                    <!-- Menggunakan input-group-append agar elemen berikutnya ditambahkan setelah input -->
+                                                    <a href="#" class="btn btn-secondary btn-sm"
+                                                        data-bs-toggle="modal" data-bs-target="#modalMember"
+                                                        id="button_member">
+                                                        Search
+                                                    </a>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
 
 
 
-                        <div id="interactive" style="width: 100%;"></div>
+                                <div id="interactive" style="width: 100%;"></div>
 
-                        <div class="row mt-3">
-                            <div class="col-12">
-                                <div class="form-group">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <label for="inputNama" class="form-label">Detail</label>
-                                        </div>
-                                        <div class="col-md-6 d-flex justify-content-end">
-                                            <button class="more-item btn btn-primary btn-sm" type="button"
-                                                data-bs-toggle="modal" data-bs-target="#ModalProduk"><i
-                                                    class="fa fa-plus"></i> Tambah Item</button>
-                                        </div>
-                                    </div>
-                                    <table class="table" id="daftar_detail">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">#</th>
-                                                <th scope="col">Item</th>
-                                                <th scope="col" width="100px">Jumlah</th>
-                                                <th scope="col">Harga Satuan</th>
-                                                <th scope="col">Harga Total</th>
-                                                <th scope="col" width="25px"></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @php
-                                                $index = 0;
-                                            @endphp
-                                            @if (!empty($data->item))
-                                                @foreach ($data->item as $row)
-                                                    <tr class="detail-list" childidx="{{ $index }}"
-                                                        style="position: relative;">
-                                                        <td class="no-item text-center" style="vertical-align:middle;">
-                                                            {{ $index + 1 }}</td>
-                                                        <td class="nama-item" style="vertical-align:middle;">
-                                                            {{ $row->produk->nama }}</td>
-                                                        <input type="hidden" class="input_id-item"
-                                                            name="detail[{{ $index }}][input_id]" id="input_id-item"
-                                                            value="{{ $row->produk_id }}">
-                                                        <td class="jumlah-item" style="vertical-align:middle;">
-                                                            <input type="text" class="input_jumlah-item form-control"
-                                                                name="detail[{{ $index }}][input_jumlah]"
-                                                                id="input_jumlah-item" data-parsley-required="true"
-                                                                autocomplete="off" value="{{ $row->jumlah }}"
+                                <div class="row mt-3">
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <label for="inputNama" class="form-label">Detail</label>
+                                                </div>
+                                                <div class="col-md-6 d-flex justify-content-end">
+                                                    <button class="more-item btn btn-primary btn-sm" type="button"
+                                                        data-bs-toggle="modal" data-bs-target="#ModalProduk"><i
+                                                            class="fa fa-plus"></i> Tambah Item</button>
+                                                </div>
+                                            </div>
+                                            <table class="table" id="daftar_detail">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">#</th>
+                                                        <th scope="col">Item</th>
+                                                        <th scope="col" width="100px">Jumlah</th>
+                                                        <th scope="col">Harga Satuan</th>
+                                                        <th scope="col">Harga Total</th>
+                                                        <th scope="col" width="25px"></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr>
+                                                        <td colspan="4">Total</td>
+                                                        <td class="text-end" id="jumlah_total_transaksi-item-tfoot">Rp 0</td>
+                                                        <td><input type="hidden" name="jumlah_total_transaksi"
+                                                                id="jumlah_total_transaksi"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="3">Pembayaran</td>
+                                                        <td> <input type="text" name="input_jumlah_total_pembayaran_transaksi"
+                                                                id="input_jumlah_total_pembayaran_transaksi"
+                                                                placeholder="Masukan Nominal Pembayaran"
+                                                                class="form-control text-end" data-parsley-required="true"
+                                                                autocomplete="off"
                                                                 data-parsley-required-message="Field ini wajib diisi"
-                                                                data-parsley-type="number"
-                                                                data-parsley-type-message="Field ini hanya boleh diisi dengan angka"
                                                                 onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                                         </td>
-                                                        <td class="harga_satuan-item text-end"
-                                                            style="vertical-align:middle;">
-                                                            {{ 'Rp ' . number_format(intval($row->harga_satuan), 0, ',', '.') }}
-                                                        </td>
-                                                        <input type="hidden" class="input_harga_satuan-item"
-                                                            name="detail[{{ $index }}][input_harga_satuan]"
-                                                            value="{{ intval($row->harga_satuan) }}"
-                                                            id="input_harga_satuan-item">
-                                                        <td class="harga_total-item text-end"
-                                                            style="vertical-align:middle;">
-                                                            {{ 'Rp ' . number_format(intval($row->harga_total), 0, ',', '.') }}
-                                                        </td>
-                                                        <input type="hidden" class="input_harga_total-item"
-                                                            name="detail[{{ $index }}][input_harga_total]"
-                                                            value="{{ intval($row->harga_total) }}"
-                                                            id="input_harga_total-item">
-                                                        <input type="hidden" class="id-item"
-                                                            name="detail[{{ $index }}][id]" id="id-item"
-                                                            value="{{ $row->id }}">
-                                                        <td>
-                                                            <button class='btn btn-danger removeData'
-                                                                data-ix="{{ $row->id }}"
-                                                                data-transaksi_id="{{ $row->transaksi_id }}"
-                                                                type='button'><i class='fa fa-times'
-                                                                    style="color:#fff!important;"></i>
-                                                        </td>
+                                                        <td class="text-end" id="total_bayar-item-tfoot">Rp 0</td>
+                                                        <td><input type="hidden" name="jumlah_total_pembayaran_transaksi"
+                                                            id="jumlah_total_pembayaran_transaksi"></td>
                                                     </tr>
-                                                    @php
-                                                        $index++;
-                                                    @endphp
-                                                @endforeach
-                                            @endif
-                                        </tbody>
-                                        <tfoot>
-                                            <tr>
-                                                <td colspan="4">Total</td>
-                                                <td class="text-end" id="jumlah_total_transaksi-item-tfoot">
-                                                    {{ 'Rp ' . number_format(intval($data->jumlah_total), 0, ',', '.') }}
-                                                </td>
-                                                <td><input type="hidden" name="jumlah_total_transaksi"
-                                                        id="jumlah_total_transaksi"
-                                                        value="{{ intval($data->jumlah_total) }}"></td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="3">Pembayaran</td>
-                                                <td> <input type="text" name="input_jumlah_total_pembayaran_transaksi"
-                                                        value="{{ $data->pembayaran ? 'Rp ' . number_format(intval($data->pembayaran[0]->nominal_pembayaran), 0, ',', '.') : '' }}"
-                                                        id="input_jumlah_total_pembayaran_transaksi"
-                                                        placeholder="Masukan Nominal Pembayaran"
-                                                        class="form-control text-end" data-parsley-required="true"
-                                                        autocomplete="off"
-                                                        data-parsley-required-message="Field ini wajib diisi"
-                                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
-                                                </td>
-                                                <td class="text-end" id="total_bayar-item-tfoot">
-                                                    {{ $data->pembayaran ? 'Rp ' . number_format(intval($data->pembayaran[0]->nominal_pembayaran), 0, ',', '.') : '' }}
-                                                </td>
-                                                <td><input type="hidden" name="jumlah_total_pembayaran_transaksi"
-                                                        value="{{ $data->pembayaran ? intval($data->pembayaran[0]->nominal_kembalian) : '' }}"
-                                                        id="jumlah_total_pembayaran_transaksi"></td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="4">Kembalian</td>
-                                                <td class="text-end" id="total_kembalian-item-tfoot">
-                                                    {{ $data->pembayaran ? 'Rp ' . number_format(intval($data->pembayaran[0]->nominal_kembalian), 0, ',', '.') : '' }}
-                                                </td>
-                                                <td><input type="hidden" name="jumlah_total_kembalian_transaksi"
-                                                        id="jumlah_total_kembalian_transaksi"></td>
-                                            </tr>
-                                        </tfoot>
-                                    </table>
-                                    <div class="" style="color: #dc3545" id="accessErrorDetail"></div>
+                                                    <tr>
+                                                        <td colspan="4">Kembalian</td>
+                                                        <td class="text-end" id="total_kembalian-item-tfoot">Rp 0</td>
+                                                        <td><input type="hidden" name="jumlah_total_kembalian_transaksi"
+                                                                id="jumlah_total_kembalian_transaksi"></td>
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
+                                            <div class="" style="color: #dc3545" id="accessErrorDetail"></div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
 
-                        <div class="row">
-                            <div class="col-12 d-flex justify-content-end">
-                                <button type="submit" id="formSubmit" class="btn btn-primary me-1 mb-1">
-                                    <span class="indicator-label">Submit</span>
-                                    <span class="indicator-progress" style="display: none;">
-                                        Tunggu Sebentar...
-                                        <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
-                                    </span>
-                                </button>
-                                <button type="reset" class="btn btn-light-secondary me-1 mb-1">Reset</button>
-                                <a href="{{ route('admin.transaksi_penjualan') }}"
-                                    class="btn btn-danger me-1 mb-1">Cancel</a>
-                            </div>
+                                <div class="row">
+                                    <div class="col-12 d-flex justify-content-end">
+                                        <button type="submit" id="formSubmit" class="btn btn-primary me-1 mb-1">
+                                            <span class="indicator-label">Submit</span>
+                                            <span class="indicator-progress" style="display: none;">
+                                                Tunggu Sebentar...
+                                                <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                                            </span>
+                                        </button>
+                                        <button type="reset" class="btn btn-light-secondary me-1 mb-1">Reset</button>
+                                        <a href="{{ route('kasir.transaksi') }}" class="btn btn-danger me-1 mb-1">Cancel</a>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
-        </div>
+    </div>
 
-    </section>
     <!-- Basic Tables end -->
 
     <!-- Template Detail -->
@@ -203,7 +139,7 @@
             <td class="nama-item" style="vertical-align:middle;"></td>
             <input type="hidden" class="input_id-item" name="detail[0][input_id]" id="input_id-item">
             <td class="jumlah-item" style="vertical-align:middle;">
-                <input type="text" class="input_jumlah-item form-control" name="detail[0][input_jumlah]"
+                <input type="text" class="input_jumlah-item form-control" name="detail[0][input_jumlah]" placeholder="Masukan jumlah item"
                     id="input_jumlah-item" data-parsley-required="true" autocomplete="off"
                     data-parsley-required-message="Field ini wajib diisi" data-parsley-type="number"
                     data-parsley-type-message="Field ini hanya boleh diisi dengan angka"
@@ -243,6 +179,81 @@
 
     <script type="text/javascript">
         $(document).ready(function() {
+            // function scanBarcode() {
+            //     // Get the file input element
+            //     var input = document.getElementById('fileInput');
+
+            //     // Check if a file is selected
+            //     if (input.files.length > 0) {
+            //         // Get the selected file
+            //         var file = input.files[0];
+
+            //         // Create a FileReader to read the file
+            //         var reader = new FileReader();
+
+            //         // Define the function to be executed when the file is loaded
+            //         reader.onload = function(e) {
+            //             // Convert the file data to base64
+            //             var imageData = e.target.result.split(',')[1];
+
+            //             // Initialize Quagga
+            //             Quagga.decodeSingle({
+            //                 decoder: {
+            //                     readers: ['ean_reader'],
+            //                 },
+            //                 locate: true,
+            //                 src: imageData,
+            //             }, function(result) {
+            //                 if (result && result.codeResult) {
+            //                     // Barcode successfully decoded
+            //                     var code = result.codeResult.code;
+            //                     alert('Barcode: ' + code);
+            //                 } else {
+            //                     // No barcode found
+            //                     alert('No barcode found');
+            //                 }
+            //             });
+            //         };
+
+            //         // Read the file as a data URL
+            //         reader.readAsDataURL(file);
+            //     } else {
+            //         alert('Please select a file');
+            //     }
+            // }
+
+            // $('.upload-barcode').on('click', function() {
+            //     $('#fileInput').click();
+            // });
+
+            // // $('#fileInput').on('change', function(event) {
+            // //     var file = event.target.files[0];
+            // //     var formData = new FormData();
+            // //     formData.append('barcode', file);
+            // //     formData.append('_token', "{{ csrf_token() }}"); // Tambahkan token CSRF ke FormData
+
+            // //     $.ajax({
+            // //         url: '{{ route('kasir.transaksi.uploadBarcode') }}',
+            // //         method: 'POST',
+            // //         data: formData, // Gunakan objek FormData sebagai data permintaan
+            // //         processData: false,
+            // //         contentType: false,
+            // //         success: function(response) {
+            // //             // Tindakan yang sesuai setelah pengunggahan berhasil
+            // //             console.log(response);
+            // //         },
+            // //         error: function(response) {
+            // //             console.log(response);
+            // //             // Tindakan yang sesuai jika permintaan AJAX gagal
+            // //             console.error('Gagal Post Data.');
+            // //             // optionMember.html('<option>Gagal post data</option>'); // Pastikan optionMember didefinisikan di tempat yang sesuai
+            // //         }
+            // //     });
+            // //     console.log("Uploaded file:", file);
+            // // });
+            // $('#fileInput').on('change', function(event) {
+            //     scanBarcode();
+            // });
 
             $('#input_jumlah_total_pembayaran_transaksi').on('keyup', function() {
                 let pembayaran = this.value;
@@ -253,95 +264,21 @@
                 updateTotalPembayaran(pembayaran);
             });
 
-            function updateTotalPembayaran(pembayaran) {
+            function updateTotalPembayaran(pembayaran){
                 $('#total_bayar-item-tfoot').text(
                     formatRupiah(parseRupiah(pembayaran))
                 );
                 $('#jumlah_total_pembayaran_transaksi').val(
                     parseRupiah(pembayaran)
                 );
-
+                
                 $('#total_kembalian-item-tfoot').text(
-                    formatRupiah(parseRupiah(pembayaran) - parseRupiah($('#jumlah_total_transaksi-item-tfoot')
-                        .text()))
+                    formatRupiah(parseRupiah(pembayaran) - parseRupiah($('#jumlah_total_transaksi-item-tfoot').text()))
                 );
                 $('#jumlah_total_kembalian_transaksi').val(
                     parseRupiah(pembayaran) - parseRupiah($('#jumlah_total_transaksi-item-tfoot').text())
                 );
             }
-
-            $('#daftar_detail').on('click', '.removeData', function() {
-                let another = this;
-                let ix = $(this).data('ix');
-                let transaksi_id = $(this).data('transaksi_id');
-                const swalWithBootstrapButtons = Swal.mixin({
-                    customClass: {
-                        confirmButton: 'btn btn-success mx-4',
-                        cancelButton: 'btn btn-danger'
-                    },
-                    buttonsStyling: false
-                });
-
-
-
-                swalWithBootstrapButtons.fire({
-                    title: 'Apakah anda yakin ingin menghapus data ini',
-                    icon: 'warning',
-                    buttonsStyling: false,
-                    showCancelButton: true,
-                    confirmButtonText: 'Ya, Saya yakin!',
-                    cancelButtonText: 'Tidak, Batalkan!',
-                    reverseButtons: true
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        if (ix != '') {
-                            $.ajax({
-                                type: "DELETE",
-                                url: "{{ route('admin.transaksi_penjualan.deleteItem') }}",
-                                data: {
-                                    "_token": "{{ csrf_token() }}",
-                                    "_method": "DELETE",
-                                    "id": ix,
-                                },
-                                success: function() {
-                                    $(another).closest('.detail-list')
-                                        .remove();
-                                    updateTotalHarga();
-                                    updateTotalPembayaran($(
-                                        '#input_jumlah_total_pembayaran_transaksi'
-                                    ).val());
-                                    $.ajax({
-                                        type: "POST",
-                                        url: "{{ route('admin.transaksi_penjualan.updateTotal') }}",
-                                        data: {
-                                            "_token": "{{ csrf_token() }}",
-                                            "_method": "PUT",
-                                            "id": transaksi_id,
-                                            "jumlah_total": $(
-                                                '#jumlah_total_transaksi'
-                                            ).val(),
-                                            "jumlah_total_kembalian_transaksi": $(
-                                                '#jumlah_total_kembalian_transaksi'
-                                            ).val(),
-                                        },
-                                        success: function() {
-                                            swalWithBootstrapButtons
-                                                .fire({
-                                                    title: 'Berhasil!',
-                                                    text: 'Data berhasil diupdate.',
-                                                    icon: 'success',
-                                                    timer: 1500, // 2 detik
-                                                    showConfirmButton: false
-                                                });
-
-                                        }
-                                    });
-                                }
-                            });
-                        }
-                    }
-                });
-            });
 
 
             $('#ModalProduk').on('show.bs.modal', function(event) {
@@ -369,7 +306,7 @@
                     ],
                     // scrollX: true, // Enable horizontal scrolling
                     ajax: {
-                        url: '{{ route('admin.transaksi_penjualan.getDataProduk') }}',
+                        url: '{{ route('kasir.transaksi.getDataProduk') }}',
                         dataType: "JSON",
                         type: "GET",
                     },
@@ -514,8 +451,7 @@
                                     var hargaSatuan = parseFloat(data_i.harga);
 
                                     if (!isNaN(hargaSatuan)) {
-                                        var formattedHargaSatuan = formatRupiah(
-                                            hargaSatuan);
+                                        var formattedHargaSatuan = formatRupiah(hargaSatuan);
                                         tr_clone.find(".harga_satuan-item").text(
                                             formattedHargaSatuan);
                                     } else {
@@ -535,14 +471,12 @@
                                             $(this).closest(".detail-list").find(
                                                 ".harga_total-item").text(
                                                 formatRupiah(hargaTotal)
-                                            );
+                                                );
                                             $(this).closest(".detail-list").find(
                                                 ".input_harga_total-item").val(
                                                 hargaTotal);
                                             updateTotalHarga();
-                                            updateTotalPembayaran($(
-                                                '#input_jumlah_total_pembayaran_transaksi'
-                                            ).val());
+                                            updateTotalPembayaran($('#input_jumlah_total_pembayaran_transaksi').val());
                                         });
 
                                     tr_clone.find(".harga_total-item").text('Rp ' + 0);
@@ -583,9 +517,6 @@
 
 
                 $('#daftar_detail').on('click', '.removeData', function() {
-                    let another = this;
-                    let ix = $(this).data('ix');
-                    let transaksi_id = $(this).data('transaksi_id');
                     const swalWithBootstrapButtons = Swal.mixin({
                         customClass: {
                             confirmButton: 'btn btn-success mx-4',
@@ -606,80 +537,18 @@
                         reverseButtons: true
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            if (ix != '') {
-                                $.ajax({
-                                    type: "DELETE",
-                                    url: "{{ route('admin.transaksi_penjualan.deleteItem') }}",
-                                    data: {
-                                        "_token": "{{ csrf_token() }}",
-                                        "_method": "DELETE",
-                                        "id": ix,
-                                    },
-                                    success: function() {
-                                        $(another).closest('.detail-list')
-                                            .remove();
-                                        var item_id = $(this).closest(
-                                            '.detail-list').find(
-                                            '.input_id-item').val();
-                                        var indexToRemove = isDataSelected(
-                                            item_id);
-                                        console.log(indexToRemove);
-                                        console.log(data_selected);
-                                        if (indexToRemove === false) {
-                                            console.log(item_id);
-                                            data_selected.splice(indexToRemove,
-                                                1);
-                                            rows_selected.splice(indexToRemove,
-                                                1);
-                                        }
-                                        updateTotalHarga();
-                                        updateTotalPembayaran($(
-                                            '#input_jumlah_total_pembayaran_transaksi'
-                                        ).val());
-                                        $.ajax({
-                                            type: "POST",
-                                            url: "{{ route('admin.transaksi_penjualan.updateTotal') }}",
-                                            data: {
-                                                "_token": "{{ csrf_token() }}",
-                                                "_method": "PUT",
-                                                "id": transaksi_id,
-                                                "jumlah_total": $(
-                                                    '#jumlah_total_transaksi'
-                                                ).val(),
-                                                "jumlah_total_kembalian_transaksi": $(
-                                                    '#jumlah_total_kembalian_transaksi'
-                                                ).val(),
-                                            },
-                                            success: function() {
-                                                swalWithBootstrapButtons
-                                                    .fire({
-                                                        title: 'Berhasil!',
-                                                        text: 'Data berhasil diupdate.',
-                                                        icon: 'success',
-                                                        timer: 1500, // 2 detik
-                                                        showConfirmButton: false
-                                                    });
-                                            }
-                                        });
-                                    }
-                                });
-                            } else {
-                                $(this).closest('.detail-list').remove();
-                                var item_id = $(this).closest('.detail-list').find(
-                                    '.input_id-item').val();
-                                var indexToRemove = isDataSelected(item_id);
-                                console.log(indexToRemove);
-                                console.log(data_selected);
-                                if (indexToRemove === false) {
-                                    console.log(item_id);
-                                    data_selected.splice(indexToRemove, 1);
-                                    rows_selected.splice(indexToRemove, 1);
-                                }
-                                updateTotalHarga();
-                                updateTotalPembayaran($(
-                                    '#input_jumlah_total_pembayaran_transaksi'
-                                ).val());
+                            $(this).closest('.detail-list').remove();
+                            var item_id = $(this).closest('.detail-list').find(
+                                '.input_id-item').val();
+                            var indexToRemove = isDataSelected(item_id);
+                            console.log(indexToRemove);
+                            console.log(data_selected);
+                            if (indexToRemove === false) {
+                                console.log(item_id);
+                                data_selected.splice(indexToRemove, 1);
+                                rows_selected.splice(indexToRemove, 1);
                             }
+                            updateTotalHarga();
                         }
                     });
                 });
@@ -701,7 +570,7 @@
 
                 //end click di baris tabel barang
             });
-            resetData();
+
             function resetData() {
 
                 var index = 0;
@@ -717,26 +586,6 @@
                             '[' + index + ']');
                         $(another).attr("childidx", index);
                     });
-
-                    $(this).find(".input_jumlah-item").on("input",
-                        function() {
-                            var jumlah = $(this).val();
-                            var hargaSatuan = $(this).closest(
-                                ".detail-list").find(
-                                ".input_harga_satuan-item").val();
-                            var hargaTotal = jumlah * hargaSatuan;
-                            $(this).closest(".detail-list").find(
-                                ".harga_total-item").text(
-                                formatRupiah(hargaTotal)
-                            );
-                            $(this).closest(".detail-list").find(
-                                ".input_harga_total-item").val(
-                                hargaTotal);
-                            updateTotalHarga();
-                            updateTotalPembayaran($(
-                                '#input_jumlah_total_pembayaran_transaksi'
-                            ).val());
-                        });
 
                     index++;
                 });
@@ -860,7 +709,7 @@
                     ],
                     // scrollX: true, // Enable horizontal scrolling
                     ajax: {
-                        url: '{{ route('admin.transaksi_penjualan.getDataMember') }}',
+                        url: '{{ route('kasir.transaksi.getDataMember') }}',
                         dataType: "JSON",
                         type: "GET",
                     },
@@ -925,7 +774,7 @@
             });
 
 
-
+            
             function formatRupiah(amount) {
                 // Use Number.prototype.toLocaleString() to format the number as currency
                 return 'Rp ' + Number(amount).toLocaleString('id-ID');
@@ -936,7 +785,7 @@
                 const parsedValue = parseInt(rupiahString.replace(/[^\d]/g, ''));
                 return isNaN(parsedValue) ? 0 : parsedValue;
             }
-
+            
             function formatNumber(number) {
                 // Use Number.prototype.toLocaleString() to format the number as currency
                 return Number(number).toLocaleString('id-ID');

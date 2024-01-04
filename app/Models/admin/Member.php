@@ -2,9 +2,10 @@
 
 namespace App\Models\admin;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\admin\UserMember;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Member extends Model
 {
@@ -13,4 +14,8 @@ class Member extends Model
     protected $table = 'member';
 
     protected $guarded = ['id'];
+    
+    public function user_member(){
+        return $this->hasOne(UserMember::class, 'kode', 'user_kode');
+    }
 }

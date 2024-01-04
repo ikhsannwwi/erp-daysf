@@ -162,6 +162,9 @@ Route::prefix('admin')->group(function () {
         Route::post('member/changeStatus',[MemberController::class, 'changeStatus'])->name('admin.member.changeStatus');
         Route::post('member/checkEmail',[MemberController::class, 'checkEmail'])->name('admin.member.checkEmail');
         Route::post('member/checkTelepon',[MemberController::class, 'checkTelepon'])->name('admin.member.checkTelepon');
+        Route::get('member/getDataUserGroup', [MemberController::class, 'getDataUserGroup'])->name('admin.member.getDataUserGroup');
+        Route::get('member/generateKode',[MemberController::class, 'generateKode'])->name('admin.member.generateKode');
+        Route::post('member/checkKode',[UserController::class, 'checkKode'])->name('admin.member.checkKode');
 
         Route::get('member/arsip',[MemberController::class, 'arsip'])->name('admin.member.arsip');
         Route::get('member/arsip/getDataArsip',[MemberController::class, 'getDataArsip'])->name('admin.member.getDataArsip');
