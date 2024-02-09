@@ -80,6 +80,80 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="row">
+                                    <div class="col-3">
+                                        <div class='form-group'>
+                                            <fieldset>
+                                                <label class="form-label">
+                                                    Pembelian
+                                                </label>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="pembelian"
+                                                        value="1" id="flexRadioDefault1">
+                                                    <label class="form-check-label form-label" for="flexRadioDefault1">
+                                                        Ya
+                                                    </label>
+                                                </div>
+                                            </fieldset>
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class='form-group'>
+                                            <fieldset>
+                                                <label class="form-label">
+                                                    Formula
+                                                </label>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="formula"
+                                                        value="1" id="flexRadioDefault1">
+                                                    <label class="form-check-label form-label" for="flexRadioDefault1">
+                                                        Ya
+                                                    </label>
+                                                </div>
+                                            </fieldset>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-3">
+                                        <div class='form-group'>
+                                            <fieldset>
+                                                <label class="form-label">
+                                                    Produksi
+                                                </label>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="produksi"
+                                                        value="1" id="flexRadioDefault1">
+                                                    <label class="form-check-label form-label" for="flexRadioDefault1">
+                                                        Ya
+                                                    </label>
+                                                </div>
+                                            </fieldset>
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class='form-group'>
+                                            <fieldset>
+                                                <label class="form-label">
+                                                    Penjualan
+                                                </label>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="penjualan"
+                                                        value="1" id="flexRadioDefault1">
+                                                    <label class="form-check-label form-label" for="flexRadioDefault1">
+                                                        Ya
+                                                    </label>
+                                                </div>
+                                            </fieldset>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="row">
                             <div class="col-12 d-flex justify-content-end">
                                 <button type="submit" id="formSubmit" class="btn btn-primary me-1 mb-1">

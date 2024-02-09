@@ -70,7 +70,7 @@
     <script src="{{ asset('templateAdmin/assets/js/pages/toastify.js') }}"></script>
     <!-- Tautan ke calendarify JavaScript -->
     <script src="{{asset_administrator('assets/plugins/calendarify/dist/calendarify.iife.js')}}"></script>
-
+    <script src="{{ asset_administrator('assets/plugins/daterangepicker/moment.min.js') }}"></script>
 
     
 

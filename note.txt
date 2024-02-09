@@ -1,0 +1,17 @@
+master data
+warehouse : status = done, module = gudang
+
+stok : status = done, module = transaksi_stok
+stock card : status = done, module = penyesuaian_stok
+
+pembelian : status = ... , module = ...
+resep/formula : status = ... , module = ...
+produksi : status = ... , module = ...
+penjualan : status = ... , module = ...
+invoice : status = ... , module = ...
+
+
+catatan :
+
+9 febuari 2024
+penyesuaian stok : tambahkan column transaksi_stok_id untuk memudahkan edit data dan hapus data

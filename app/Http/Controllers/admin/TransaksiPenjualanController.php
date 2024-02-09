@@ -402,7 +402,7 @@ class TransaksiPenjualanController extends Controller
     }
 
     public function getProduk(){
-        $produk = Produk::all();
+        $produk = Produk::where('penjualan', 1)->get();
 
         return response()->json([
             'produk' => $produk,
@@ -429,7 +429,7 @@ class TransaksiPenjualanController extends Controller
 
     public function getDataProduk(Request $request)
     {
-        $data = Produk::query()->with('kategori')->where('status',1)->get();
+        $data = Produk::query()->with('kategori')->where('status', 1)->where('penjualan', 1)->get();
 
         return DataTables::of($data)
             ->make(true);

@@ -74,8 +74,8 @@
 
                         itemTableHTML += '<tr class="item-list">' +
                             '<td>' + (i + 1) + '</td>' +
-                            '<td>' + item.produk.nama + '</td>' +
-                            '<td>' + item.jumlah + '</td>' +
+                            '<td>' + (item.produk ? item.produk.nama : 'Not found') + '</td>' +
+                            '<td>' + (item ? item.jumlah : '-') + '</td>' +
                             '<td class="text-end">' + harga + '</td>' +
                             '<td class="text-end">' + total + '</td>' +
                             '</tr>';

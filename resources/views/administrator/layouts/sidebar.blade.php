@@ -57,7 +57,7 @@
                         <i class="bi bi-stack"></i>
                         <span>Data Master</span>
                     </a>
-                    <ul class="submenu" style="display: {{ Route::is('admin.kategori*', 'admin.produk*', 'admin.member*', 'admin.supplier*') ? 'block' : 'none' }};">
+                    <ul class="submenu" style="display: {{ Route::is('admin.kategori*', 'admin.produk*', 'admin.member*', 'admin.supplier*', 'admin.gudang*') ? 'block' : 'none' }};">
                         <li class="submenu-item {{ Route::is('admin.kategori*') ? 'active' : '' }}">
                             <a href="{{route('admin.kategori')}}">Kategori</a>
                         </li>
@@ -69,6 +69,24 @@
                         </li>
                         <li class="submenu-item {{ Route::is('admin.supplier*') ? 'active' : '' }}">
                             <a href="{{ route('admin.supplier') }}">Supplier</a>
+                        </li>
+                        <li class="submenu-item {{ Route::is('admin.gudang*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.gudang') }}">Gudang</a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="sidebar-item  has-sub {{ Route::is('admin.transaksi_stok*','admin.penyesuaian_stok*') ? 'active' : '' }}">
+                    <a href="#" class='sidebar-link'>
+                        <i class="bi bi-stack"></i>
+                        <span>Track Gudang</span>
+                    </a>
+                    <ul class="submenu" style="display: {{ Route::is('admin.transaksi_stok*','admin.penyesuaian_stok*') ? 'block' : 'none' }};">
+                        <li class="submenu-item {{ Route::is('admin.transaksi_stok*') ? 'active' : '' }}">
+                            <a href="{{route('admin.transaksi_stok')}}">Transaksi Stok</a>
+                        </li>
+                        <li class="submenu-item {{ Route::is('admin.penyesuaian_stok*') ? 'active' : '' }}">
+                            <a href="{{route('admin.penyesuaian_stok')}}">Penyesuaian Stok</a>
                         </li>
                     </ul>
                 </li>

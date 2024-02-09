@@ -145,6 +145,10 @@ class ProdukController extends Controller
             'kode' => $KodeProduk,
             'barcode' => $barcode,
             'status' => $request->status,
+            'pembelian' => $request->pembelian ? $request->pembelian : 0,
+            'formula' => $request->formula ? $request->formula : 0,
+            'produksi' => $request->produksi ? $request->produksi : 0,
+            'penjualan' => $request->penjualan ? $request->penjualan : 0,
             'created_by' => auth()->user() ? auth()->user()->kode : '',
         ]);
 
@@ -200,6 +204,10 @@ class ProdukController extends Controller
             'deskripsi' => $request->deskripsi,
             'harga' => $harga,
             'status' => $request->status,
+            'pembelian' => $request->pembelian ? $request->pembelian : 0,
+            'formula' => $request->formula ? $request->formula : 0,
+            'produksi' => $request->produksi ? $request->produksi : 0,
+            'penjualan' => $request->penjualan ? $request->penjualan : 0,
             'updated_by' => auth()->user() ? auth()->user()->kode : '',
         ];
 
