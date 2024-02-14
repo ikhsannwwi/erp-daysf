@@ -15,7 +15,15 @@ class CreateSatuanKonversiTable extends Migration
     {
         Schema::create('satuan_konversi', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('produk_id');
+            $table->foreignId('satuan_id');
+            $table->decimal('kuantitas_satuan', 32, 4);
+            $table->string('nama_konversi');
+            $table->decimal('kuantitas_konversi', 32, 4);
+            $table->boolean('status');
             $table->timestamps();
+            $table->string('created_by')->nullable();
+            $table->string('updated_by')->nullable();
         });
     }
 

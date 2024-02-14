@@ -19,6 +19,7 @@ use App\Http\Controllers\admin\PembelianController;
 use App\Http\Controllers\admin\UserGroupController;
 use App\Http\Controllers\admin\OperatorKasirController;
 use App\Http\Controllers\admin\TransaksiStokController;
+use App\Http\Controllers\admin\SatuanKonversiController;
 use App\Http\Controllers\admin\PenyesuaianStokController;
 use App\Http\Controllers\admin\TransaksiPenjualanController;
 
@@ -272,5 +273,15 @@ Route::prefix('admin')->group(function () {
         Route::delete('satuan/delete', [SatuanController::class, 'delete'])->name('admin.satuan.delete');
         Route::post('satuan/checkNama',[SatuanController::class, 'checkNama'])->name('admin.satuan.checkNama');
 
+        //Satuan Konversi
+        Route::get('satuan-konversi', [SatuanKonversiController::class, 'index'])->name('admin.satuan_konversi');
+        Route::get('satuan-konversi/add', [SatuanKonversiController::class, 'add'])->name('admin.satuan_konversi.add');
+        Route::get('satuan-konversi/getData', [SatuanKonversiController::class, 'getData'])->name('admin.satuan_konversi.getData');
+        Route::post('satuan-konversi/save', [SatuanKonversiController::class, 'save'])->name('admin.satuan_konversi.save');
+        Route::get('satuan-konversi/edit/{id}', [SatuanKonversiController::class, 'edit'])->name('admin.satuan_konversi.edit');
+        Route::put('satuan-konversi/update', [SatuanKonversiController::class, 'update'])->name('admin.satuan_konversi.update');
+        Route::delete('satuan-konversi/delete', [SatuanKonversiController::class, 'delete'])->name('admin.satuan_konversi.delete');
+        Route::get('satuan-konversi/getDetail-{id}', [SatuanKonversiController::class, 'getDetail'])->name('admin.satuan_konversi.getDetail');
+        Route::get('satuan-konversi/getDataProduk', [SatuanKonversiController::class, 'getDataProduk'])->name('admin.satuan_konversi.getDataProduk');
     });
 });

@@ -52,12 +52,12 @@
                     </a>
                 </li>
 
-                <li class="sidebar-item  has-sub {{ Route::is('admin.kategori*', 'admin.produk*', 'admin.member*', 'admin.supplier*', 'admin.gudang*', 'admin.satuan*') ? 'active' : '' }}">
+                <li class="sidebar-item  has-sub {{ Route::is('admin.kategori*', 'admin.produk*', 'admin.member*', 'admin.supplier*', 'admin.gudang*', 'admin.satuan*') && !Route::is('admin.satuan_konversi*') ? 'active' : '' }}">
                     <a href="#" class='sidebar-link'>
                         <i class="bi bi-stack"></i>
                         <span>Data Master</span>
                     </a>
-                    <ul class="submenu" style="display: {{ Route::is('admin.kategori*', 'admin.produk*', 'admin.member*', 'admin.supplier*', 'admin.gudang*', 'admin.satuan*') ? 'block' : 'none' }};">
+                    <ul class="submenu" style="display: {{ Route::is('admin.kategori*', 'admin.produk*', 'admin.member*', 'admin.supplier*', 'admin.gudang*', 'admin.satuan*') && !Route::is('admin.satuan_konversi*') ? 'block' : 'none' }};">
                         <li class="submenu-item {{ Route::is('admin.kategori*') ? 'active' : '' }}">
                             <a href="{{route('admin.kategori')}}">Kategori</a>
                         </li>
@@ -73,18 +73,21 @@
                         <li class="submenu-item {{ Route::is('admin.gudang*') ? 'active' : '' }}">
                             <a href="{{ route('admin.gudang') }}">Gudang</a>
                         </li>
-                        <li class="submenu-item {{ Route::is('admin.satuan*') ? 'active' : '' }}">
+                        <li class="submenu-item {{ Route::is('admin.satuan*') && !Route::is('admin.satuan_konversi*') ? 'active' : '' }}">
                             <a href="{{ route('admin.satuan') }}">Satuan</a>
                         </li>
                     </ul>
                 </li>
 
-                <li class="sidebar-item  has-sub {{ Route::is('admin.transaksi_stok*','admin.penyesuaian_stok*') ? 'active' : '' }}">
+                <li class="sidebar-item  has-sub {{ Route::is('admin.satuan_konversi*', 'admin.transaksi_stok*','admin.penyesuaian_stok*') ? 'active' : '' }}">
                     <a href="#" class='sidebar-link'>
                         <i class="bi bi-stack"></i>
                         <span>Track Gudang</span>
                     </a>
-                    <ul class="submenu" style="display: {{ Route::is('admin.transaksi_stok*','admin.penyesuaian_stok*') ? 'block' : 'none' }};">
+                    <ul class="submenu" style="display: {{ Route::is('admin.satuan_konversi*', 'admin.transaksi_stok*','admin.penyesuaian_stok*') ? 'block' : 'none' }};">
+                        <li class="submenu-item {{ Route::is('admin.satuan_konversi*') ? 'active' : '' }}">
+                            <a href="{{route('admin.satuan_konversi')}}">Satuan Konversi</a>
+                        </li>
                         <li class="submenu-item {{ Route::is('admin.transaksi_stok*') ? 'active' : '' }}">
                             <a href="{{route('admin.transaksi_stok')}}">Transaksi Stok</a>
                         </li>

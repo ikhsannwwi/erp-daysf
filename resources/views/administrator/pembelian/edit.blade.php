@@ -251,7 +251,7 @@
         $(document).ready(function() {
 
             resetData()
-            updateTotalHarga()
+            updateTotalHarga();
 
             $('#inputTanggal').daterangepicker({
                 "locale": {
@@ -399,7 +399,7 @@
                                 success: function() {
                                     $(another).closest('.detail-list')
                                         .remove();
-                                    resetData()
+                                    resetData();
                                     updateTotalHarga();
                                     
                                     $.ajax({
@@ -617,7 +617,6 @@
                                     $("#daftar_detail").append(tr_clone);
 
                                     resetData();
-                                    updateTotalHarga();
 
                                     $('#buttonCloseProdukModal').click();
                                     $('#datatableProdukModal').DataTable().rows('.selected')
@@ -669,7 +668,7 @@
                                 data_selected.splice(indexToRemove, 1);
                                 rows_selected.splice(indexToRemove, 1);
                             }
-                            resetData()
+                                    resetData();
                             updateTotalHarga();
                         }
                     });
@@ -753,7 +752,6 @@
                         $(another).find(
                             ".input_sub_total-item").val(
                             total);
-                            resetData()
                         updateTotalHarga()
                     });
 
@@ -772,7 +770,6 @@
                         $(another).find(
                             ".input_sub_total-item").val(
                             total);
-                            resetData()
                         updateTotalHarga()
                     });
 
