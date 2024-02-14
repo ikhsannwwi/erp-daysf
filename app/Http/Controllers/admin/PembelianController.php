@@ -6,11 +6,13 @@ use DB;
 use DataTables;
 use Carbon\Carbon;
 use App\Models\Gudang;
+use App\Models\Satuan;
 use App\Models\Pembelian;
 use App\Models\admin\Produk;
 use Illuminate\Http\Request;
 use App\Models\TransaksiStok;
 use App\Models\admin\Supplier;
+use App\Models\SatuanKonversi;
 use App\Models\PembelianDetail;
 use App\Http\Controllers\Controller;
 
@@ -123,6 +125,7 @@ class PembelianController extends Controller
                     'pembelian_id' => $data->id,
                     'produk_id' => $row['produk'],
                     'gudang_id' => $row['gudang'],
+                    'satuan_id' => $row['satuan'],
                     'transaksi_stok_id' => 0,
                     'harga_satuan' => str_replace(['Rp ', '.'], '', $row['harga_satuan']),
                     'sub_total' => str_replace(['Rp ', '.'], '', $row['sub_total']),
@@ -130,13 +133,21 @@ class PembelianController extends Controller
                     'keterangan' => $row['keterangan'],
                     'created_by' => auth()->user() ? auth()->user()->kode : '',
                 ]);
+
+                if ($row['satuan'] === 0 || $row['satuan'] === "0") {
+                    $kuantitas = str_replace(['.', ','], '', $row['jumlah_unit']);
+                } else {
+                    $satuan_konversi = SatuanKonversi::find($row['satuan']);
+                    $kuantitas = $satuan_konversi->kuantitas_satuan * str_replace(['.', ','], '', $row['jumlah_unit']);
+                }
+                
                 $stok = TransaksiStok::create([
                     'tanggal' => date('Y-m-d', strtotime($data->tanggal)),
                     'gudang_id' => $row['gudang'],
                     'produk_id' => $row['produk'],
                     'metode_transaksi' => 'masuk',
                     'jenis_transaksi' => static::$module,
-                    'jumlah_unit' => str_replace(['.', ','], '', $row['jumlah_unit']),
+                    'jumlah_unit' => $kuantitas,
                     'keterangan' => $row['keterangan'],
                     'created_by' => auth()->user() ? auth()->user()->kode : '',
                 ]);
@@ -213,6 +224,7 @@ class PembelianController extends Controller
                 
                 $detail_updates = array_merge($commonFields, [
                     'pembelian_id' => $data->id,
+                    'satuan_id' => $row['satuan'],
                     'keterangan' => $row['keterangan'],
                     'harga_satuan' => str_replace(['Rp ', '.'], '', $row['harga_satuan']),
                     'sub_total' => str_replace(['Rp ', '.'], '', $row['sub_total']),
@@ -221,12 +233,19 @@ class PembelianController extends Controller
                     'created_by' => !empty($row['id']) ? auth()->user()->kode : '',
                     'updated_by' => empty($row['id']) ? auth()->user()->kode : '',
                 ]);
+
+                if ($row['satuan'] === 0 || $row['satuan'] === "0") {
+                    $kuantitas = str_replace(['.', ','], '', $row['jumlah_unit']);
+                } else {
+                    $satuan_konversi = SatuanKonversi::find($row['satuan']);
+                    $kuantitas = $satuan_konversi->kuantitas_satuan * str_replace(['.', ','], '', $row['jumlah_unit']);
+                }
     
                 $update_stok = array_merge($commonFields, [
                     'tanggal' => date('Y-m-d', strtotime($data->tanggal)),
                     'metode_transaksi' => 'masuk',
                     'jenis_transaksi' => static::$module,
-                    'jumlah_unit' => str_replace(['.', ','], '', $row['jumlah_unit']),
+                    'jumlah_unit' => $kuantitas,
                     'created_by' => !empty($row['id']) ? auth()->user()->kode : '',
                     'updated_by' => empty($row['id']) ? auth()->user()->kode : '',
                 ]);
@@ -403,6 +422,26 @@ class PembelianController extends Controller
         return DataTables::of($data)
             ->make(true);
     }
+
+    public function getDataSatuan(Request $request) {
+        $produk = Produk::find($request->produk_id);
+    
+        $satuan = Satuan::select('id', 'nama')->where('id', $produk->satuan_id)->get();
+    
+        $satuan_konversi = SatuanKonversi::select('id', 'nama_konversi as nama')
+            ->where("produk_id", $request->produk_id)
+            ->where("status", 1)
+            ->get();
+    
+        // Create a new collection and add a row with id = 0 from Satuan
+        $data = collect([
+            ['id' => 0, 'nama' => $satuan->first()->nama]
+        ])->merge($satuan_konversi);
+    
+        return DataTables::of($data)
+            ->make(true);
+    }
+    
 
     public function getDataSupplier(Request $request){
         $data = Supplier::query();

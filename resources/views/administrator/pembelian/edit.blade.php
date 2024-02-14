@@ -21,7 +21,7 @@
                         @csrf
                         @method('PUT')
 
-                        <input type="hidden" name="id" id="inputId" value="{{$data->id}}">
+                        <input type="hidden" name="id" id="inputId" value="{{ $data->id }}">
 
                         <div class="row">
                             <div class="col-md-6 col-12">
@@ -48,8 +48,9 @@
                                         <span class="input-group-text pb-3" id="searchSupplier"><i
                                                 class="bi bi-search"></i></span>
                                         <input type="text" class="form-control" id="inputSupplierName"
-                                            data-parsley-required="true" value="{{$data->supplier->nama}}" readonly>
-                                        <input type="text" class="d-none" name="supplier" id="inputSupplier" value="{{$data->supplier_id}}">
+                                            data-parsley-required="true" value="{{ $data->supplier->nama }}" readonly>
+                                        <input type="text" class="d-none" name="supplier" id="inputSupplier"
+                                            value="{{ $data->supplier_id }}">
                                         <div class="input-group-append">
                                             <!-- Menggunakan input-group-append agar elemen berikutnya ditambahkan setelah input -->
                                             <a href="#" class="btn btn-outline-secondary" data-bs-toggle="modal"
@@ -67,7 +68,7 @@
                                 <div class="form-group">
                                     <label for="inputKeterangan" class="form-label">Keterangan</label>
                                     <textarea id="inputKeterangan" class="form-control" placeholder="Masukkan Keterangan" name="keterangan"
-                                        style="height: 150px;">{{$data->keterangan}}</textarea>
+                                        style="height: 150px;">{{ $data->keterangan }}</textarea>
                                 </div>
                             </div>
                         </div>
@@ -92,6 +93,7 @@
                                                 <th width="20%">Produk</th>
                                                 <th width="20%">Gudang</th>
                                                 <th width="100px">Jumlah Unit</th>
+                                                <th width="15%">Satuan</th>
                                                 <th width="100px">Harga Satuan</th>
                                                 <th width="100px">Keterangan</th>
                                                 <th width="100px">Sub Total</th>
@@ -100,42 +102,81 @@
                                         </thead>
                                         <tbody>
                                             @foreach ($data->detail as $key => $row)
-                                            <tr class="detail-list" childidx="{{$key}}" style="position: relative;">
-                                                <input type="hidden" class="id-item" name="detail[{{$key}}][id]" id="id-item" value="{{$row->id}}">
-                                                <input type="hidden" class="input_id-item" name="detail[{{$key}}][input_id]" id="input_id-item" value="{{$row->produk_id}}">
-                                                <input type="hidden" class="transaksi_stok_id-item" name="detail[{{$key}}][transaksi_stok_id]" id="transaksi_stok_id-item"  value="{{$row->transaksi_stok_id}}">
-                                                <td class="no-item text-center">{{$key + 1}}</td>
-                                                <td>
-                                                    <span class="nama_produk-item">{{$row->produk->nama}}</span>
-                                                    <input type="hidden" name="detail[{{$key}}][produk]" class="produk_id-item" value="{{$row->produk_id}}">
-                                                </td>
-                                                <td>
-                                                    <span class="nama_gudang-item">{{$row->gudang->nama}}</span>
-                                                    <a class="btn btn-outline-primary btn-sm float-end searchGudang" data-bs-toggle="modal"
-                                                        data-bs-target="#ModalGudang"><i class="bi bi-search"></i></a>
-                                                    <input type="hidden" name="detail[{{$key}}][gudang]" class="gudang_id-item" data-parsley-required="true" value="{{$row->gudang_id}}">
-                                                </td>
-                                                <td><input type="text" name="detail[{{$key}}][jumlah_unit]" class="form-control text-end jumlah_unit-item" value="{{$row->jumlah_unit}}"
-                                                        data-parsley-required="true" autocomplete="off" id="inputJumlahUnit"></td>
-                                                <td><input type="text" name="detail[{{$key}}][harga_satuan]" class="form-control text-end harga_satuan-item" value="Rp {{number_format($row->harga_satuan, 0, ',', '.')}}"
-                                                        data-parsley-required="true" autocomplete="off" id="inputHargaSatuan"></td>
-                                                <td><input type="text" name="detail[{{$key}}][keterangan]" class="form-control keterangan-item" value="{{$row->keterangan}}"
-                                                        autocomplete="off" id="inputKeterangan"></td>
-                                                <td>
-                                                    <span class="sub_total-item">Rp {{number_format($row->sub_total, 0, ',', '.')}}</span>
-                                                    <input type="hidden" name="detail[{{$key}}][sub_total]" class="input_sub_total-item" value="{{$row->sub_total}}">
-                                                </td>
-                                                <td class="text-center"><a href="javascript:void(0)" class="btn btn-outline-danger removeData" data-ix="{{$row->id}}" data-pembelian_id="{{$row->pembelian_id}}"><i
-                                                            class='fa fa-times'></a></td>
-                                            </tr>
+                                                <tr class="detail-list" childidx="{{ $key }}"
+                                                    style="position: relative;">
+                                                    <input type="hidden" class="id-item"
+                                                        name="detail[{{ $key }}][id]" id="id-item"
+                                                        value="{{ $row->id }}">
+                                                    <input type="hidden" class="input_id-item"
+                                                        name="detail[{{ $key }}][input_id]" id="input_id-item"
+                                                        value="{{ $row->produk_id }}">
+                                                    <input type="hidden" class="transaksi_stok_id-item"
+                                                        name="detail[{{ $key }}][transaksi_stok_id]"
+                                                        id="transaksi_stok_id-item"
+                                                        value="{{ $row->transaksi_stok_id }}">
+                                                    <td class="no-item text-center">{{ $key + 1 }}</td>
+                                                    <td>
+                                                        <span class="nama_produk-item">{{ $row->produk->nama }}</span>
+                                                        <input type="hidden" name="detail[{{ $key }}][produk]"
+                                                            class="produk_id-item" value="{{ $row->produk_id }}">
+                                                    </td>
+                                                    <td>
+                                                        <span class="nama_gudang-item">{{ $row->gudang->nama }}</span>
+                                                        <a class="btn btn-outline-primary btn-sm float-end searchGudang"
+                                                            data-bs-toggle="modal" data-bs-target="#ModalGudang"><i
+                                                                class="bi bi-search"></i></a>
+                                                        <input type="hidden" name="detail[{{ $key }}][gudang]"
+                                                            class="gudang_id-item" data-parsley-required="true"
+                                                            value="{{ $row->gudang_id }}">
+                                                    </td>
+                                                    <td><input type="text"
+                                                            name="detail[{{ $key }}][jumlah_unit]"
+                                                            class="form-control text-end jumlah_unit-item"
+                                                            value="{{ $row->jumlah_unit }}" data-parsley-required="true"
+                                                            autocomplete="off" id="inputJumlahUnit"></td>
+                                                    <td>
+                                                        <span
+                                                            class="nama_satuan-item">{{ $row->satuan_id === 0 ? $row->produk->satuan->nama : $row->satuan_konversi->nama_konversi }}</span>
+                                                        <a class="btn btn-outline-primary btn-sm float-end searchSatuan"
+                                                            data-bs-toggle="modal" data-bs-target="#ModalSatuan"><i
+                                                                class="bi bi-search"></i></a>
+                                                        <input type="hidden" name="detail[0][satuan]"
+                                                            value="{{ $row['satuan_id'] }}" class="satuan_id-item"
+                                                            data-parsley-required="true">
+                                                    </td>
+                                                    <td><input type="text"
+                                                            name="detail[{{ $key }}][harga_satuan]"
+                                                            class="form-control text-end harga_satuan-item"
+                                                            value="Rp {{ number_format($row->harga_satuan, 0, ',', '.') }}"
+                                                            data-parsley-required="true" autocomplete="off"
+                                                            id="inputHargaSatuan"></td>
+                                                    <td><input type="text"
+                                                            name="detail[{{ $key }}][keterangan]"
+                                                            class="form-control keterangan-item"
+                                                            value="{{ $row->keterangan }}" autocomplete="off"
+                                                            id="inputKeterangan"></td>
+                                                    <td>
+                                                        <span class="sub_total-item">Rp
+                                                            {{ number_format($row->sub_total, 0, ',', '.') }}</span>
+                                                        <input type="hidden"
+                                                            name="detail[{{ $key }}][sub_total]"
+                                                            class="input_sub_total-item" value="{{ $row->sub_total }}">
+                                                    </td>
+                                                    <td class="text-center"><a href="javascript:void(0)" style="display: {{count($data->detail) > 1 ? 'block' : 'none'}}"
+                                                            class="btn btn-outline-danger removeData"
+                                                            data-ix="{{ $row->id }}"
+                                                            data-pembelian_id="{{ $row->pembelian_id }}"><i
+                                                                class='fa fa-times'></a></td>
+                                                </tr>
                                             @endforeach
                                         </tbody>
                                         <tfoot>
                                             <tr>
-                                                <th colspan="6" class="text-end">Total</th>
-                                                <th id="totalText" class="total-item">Rp {{number_format($data->total, 0, ',', '.')}}</th>
-                                                <th><input type="hidden" name="total" value="{{$data->total}}" class="inputTotal-item"
-                                                        id="inputTotal"></th>
+                                                <th colspan="7" class="text-end">Total</th>
+                                                <th id="totalText" class="total-item">Rp
+                                                    {{ number_format($data->total, 0, ',', '.') }}</th>
+                                                <th><input type="hidden" name="total" value="{{ $data->total }}"
+                                                        class="inputTotal-item" id="inputTotal"></th>
                                             </tr>
                                         </tfoot>
                                     </table>
@@ -170,7 +211,8 @@
         <tr class="template-detail-list" childidx="0" style="position: relative;">
             <input type="hidden" class="id-item" name="detail[0][id]" id="id-item">
             <input type="hidden" class="input_id-item" name="detail[0][input_id]" id="input_id-item">
-            <input type="hidden" class="transaksi_stok_id-item" name="detail[0][transaksi_stok_id]" id="transaksi_stok_id-item">
+            <input type="hidden" class="transaksi_stok_id-item" name="detail[0][transaksi_stok_id]"
+                id="transaksi_stok_id-item">
             <td class="no-item text-center"></td>
             <td>
                 <span class="nama_produk-item"></span>
@@ -184,6 +226,12 @@
             </td>
             <td><input type="text" name="detail[0][jumlah_unit]" class="form-control text-end jumlah_unit-item"
                     data-parsley-required="true" autocomplete="off" id="inputJumlahUnit"></td>
+            <td>
+                <span class="nama_satuan-item">Please Search</span>
+                <a class="btn btn-outline-primary btn-sm float-end searchSatuan" data-bs-toggle="modal"
+                    data-bs-target="#ModalSatuan"><i class="bi bi-search"></i></a>
+                <input type="hidden" name="detail[0][satuan]" class="satuan_id-item" data-parsley-required="true">
+            </td>
             <td><input type="text" name="detail[0][harga_satuan]" class="form-control text-end harga_satuan-item"
                     data-parsley-required="true" autocomplete="off" id="inputHargaSatuan"></td>
             <td><input type="text" name="detail[0][keterangan]" class="form-control keterangan-item"
@@ -192,7 +240,7 @@
                 <span class="sub_total-item">Rp 0</span>
                 <input type="hidden" name="detail[0][sub_total]" class="input_sub_total-item">
             </td>
-            <td class="text-center"><a href="javascript:void(0)" class="btn btn-outline-danger removeData"><i
+            <td class="text-center"><a href="javascript:void(0)" class="btn btn-outline-danger removeData" data-ix=""><i
                         class='fa fa-times'></a></td>
         </tr>
     </table>
@@ -230,6 +278,7 @@
 
 
     @include('administrator.pembelian.modal.supplier')
+    @include('administrator.pembelian.modal.satuan')
     @include('administrator.pembelian.modal.gudang')
 @endsection
 
@@ -401,7 +450,7 @@
                                         .remove();
                                     resetData();
                                     updateTotalHarga();
-                                    
+
                                     $.ajax({
                                         type: "POST",
                                         url: "{{ route('admin.pembelian.updateTotal') }}",
@@ -635,10 +684,10 @@
                 });
 
 
-
-
-
                 $('#daftar_detail').on('click', '.removeData', function() {
+                    let another = this;
+                    let ix = $(this).data('ix');
+                    let pembelian_id = $(this).data('pembelian_id');
                     const swalWithBootstrapButtons = Swal.mixin({
                         customClass: {
                             confirmButton: 'btn btn-success mx-4',
@@ -657,22 +706,65 @@
                         reverseButtons: true
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            $(this).closest('.detail-list').remove();
-                            var item_id = $(this).closest('.detail-list').find(
-                                '.input_id-item').val();
-                            var indexToRemove = isDataSelected(item_id);
-                            console.log(indexToRemove);
-                            console.log(data_selected);
-                            if (indexToRemove === false) {
-                                console.log(item_id);
-                                data_selected.splice(indexToRemove, 1);
-                                rows_selected.splice(indexToRemove, 1);
+                            if (ix != '') {
+                                $.ajax({
+                                    type: "DELETE",
+                                    url: "{{ route('admin.pembelian.deleteDetail') }}",
+                                    data: {
+                                        "_token": "{{ csrf_token() }}",
+                                        "_method": "DELETE",
+                                        "id": ix,
+                                    },
+                                    success: function() {
+                                        $(another).closest('.detail-list')
+                                            .remove();
+                                        resetData();
+                                        updateTotalHarga();
+
+                                        $.ajax({
+                                            type: "POST",
+                                            url: "{{ route('admin.pembelian.updateTotal') }}",
+                                            data: {
+                                                "_token": "{{ csrf_token() }}",
+                                                "_method": "PUT",
+                                                "id": pembelian_id,
+                                                "total": $(
+                                                        '#inputTotal')
+                                                    .val(),
+                                            },
+                                            success: function() {
+                                                swalWithBootstrapButtons
+                                                    .fire({
+                                                        title: 'Berhasil!',
+                                                        text: 'Data berhasil diupdate.',
+                                                        icon: 'success',
+                                                        timer: 1500, // 2 detik
+                                                        showConfirmButton: false
+                                                    });
+
+                                            }
+                                        });
+                                    }
+                                });
+                            } else {
+                                $(this).closest('.detail-list').remove();
+                                var item_id = $(this).closest('.detail-list').find(
+                                    '.input_id-item').val();
+                                var indexToRemove = isDataSelected(item_id);
+                                console.log(indexToRemove);
+                                console.log(data_selected);
+                                if (indexToRemove === false) {
+                                    console.log(item_id);
+                                    data_selected.splice(indexToRemove, 1);
+                                    rows_selected.splice(indexToRemove, 1);
+                                }
+                                resetData();
+                                updateTotalHarga();
                             }
-                                    resetData();
-                            updateTotalHarga();
                         }
                     });
                 });
+
 
                 function findDataIndexById(id) {
                     for (var i = 0; i < rows_selected.length; i++) {
@@ -695,6 +787,12 @@
             function resetData() {
 
                 var index = 0;
+                if ($('#daftar_detail tbody tr').length === 1) {
+                    $('.removeData').css('display', 'none');
+                }else{
+                    $('.removeData').css('display', 'block');
+                }
+                
                 $(".detail-list").each(function() {
 
                     var another = this;
@@ -711,12 +809,26 @@
                     $(this).find('.searchGudang').attr("data-childidx", index);
                     $(this).find('.searchGudang').off().on('click', function() {
                         let key = $(this).data(
-                        'childidx'); // Use 'this' to refer to the clicked element
+                            'childidx'); // Use 'this' to refer to the clicked element
                         console.log(key);
                         $('#selectDataGudang').removeData('childidx');
                         $('#selectDataGudang').attr("data-childidx", key);
                     });
 
+                    $(this).find('.searchSatuan').attr("data-childidx", index);
+                    $(this).find('.searchSatuan').attr("data-produk_id", $(another).find('.produk_id-item')
+                        .val());
+                    $(this).find('.searchSatuan').off().on('click', function() {
+                        let key = $(this).data(
+                            'childidx'); // Use 'this' to refer to the clicked element
+                        console.log(key);
+                        $('#selectDataSatuan').removeData('childidx');
+                        $('#selectDataSatuan').attr("data-childidx", key);
+
+                        $('#selectDataSatuan').removeData('produk_id');
+                        $('#selectDataSatuan').attr("data-produk_id", $(another).find(
+                            '.produk_id-item').val());
+                    });
 
                     $(this).find('.jumlah_unit-item').inputmask('currency', {
                         rightAlign: false,

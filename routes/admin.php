@@ -258,6 +258,7 @@ Route::prefix('admin')->group(function () {
         Route::get('pembelian/getDetail-{id}', [PembelianController::class, 'getDetail'])->name('admin.pembelian.getDetail');
         Route::get('pembelian/getDataSupplier', [PembelianController::class, 'getDataSupplier'])->name('admin.pembelian.getDataSupplier');
         Route::get('pembelian/getDataGudang', [PembelianController::class, 'getDataGudang'])->name('admin.pembelian.getDataGudang');
+        Route::get('pembelian/getDataSatuan', [PembelianController::class, 'getDataSatuan'])->name('admin.pembelian.getDataSatuan');
         Route::get('pembelian/getDataProduk', [PembelianController::class, 'getDataProduk'])->name('admin.pembelian.getDataProduk');
         Route::post('pembelian/checkStock', [PembelianController::class, 'checkStock'])->name('admin.pembelian.checkStock');
         Route::put('pembelian/updateTotal', [PembelianController::class, 'updateTotal'])->name('admin.pembelian.updateTotal');

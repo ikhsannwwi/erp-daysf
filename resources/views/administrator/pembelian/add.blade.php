@@ -90,6 +90,7 @@
                                                 <th width="20%">Produk</th>
                                                 <th width="20%">Gudang</th>
                                                 <th width="100px">Jumlah Unit</th>
+                                                <th width="15%">Satuan</th>
                                                 <th width="100px">Harga Satuan</th>
                                                 <th width="100px">Keterangan</th>
                                                 <th width="100px">Sub Total</th>
@@ -100,7 +101,7 @@
                                         </tbody>
                                         <tfoot>
                                             <tr>
-                                                <th colspan="6" class="text-end">Total</th>
+                                                <th colspan="7" class="text-end">Total</th>
                                                 <th id="totalText" class="total-item">Rp 0</th>
                                                 <th><input type="hidden" name="total" class="input_total-item"
                                                         id="inputTotal"></th>
@@ -150,6 +151,12 @@
             </td>
             <td><input type="text" name="detail[0][jumlah_unit]" class="form-control text-end jumlah_unit-item"
                     data-parsley-required="true" autocomplete="off" id="inputJumlahUnit"></td>
+            <td>
+                <span class="nama_satuan-item">Please Search</span>
+                <a class="btn btn-outline-primary btn-sm float-end searchSatuan" data-bs-toggle="modal"
+                    data-bs-target="#ModalSatuan"><i class="bi bi-search"></i></a>
+                <input type="hidden" name="detail[0][satuan]" class="satuan_id-item" data-parsley-required="true">
+            </td>
             <td><input type="text" name="detail[0][harga_satuan]" class="form-control text-end harga_satuan-item"
                     data-parsley-required="true" autocomplete="off" id="inputHargaSatuan"></td>
             <td><input type="text" name="detail[0][keterangan]" class="form-control keterangan-item"
@@ -196,6 +203,7 @@
 
 
     @include('administrator.pembelian.modal.supplier')
+    @include('administrator.pembelian.modal.satuan')
     @include('administrator.pembelian.modal.gudang')
 @endsection
 
@@ -608,10 +616,23 @@
                     $(this).find('.searchGudang').attr("data-childidx", index);
                     $(this).find('.searchGudang').off().on('click', function() {
                         let key = $(this).data(
-                        'childidx'); // Use 'this' to refer to the clicked element
+                            'childidx'); // Use 'this' to refer to the clicked element
                         console.log(key);
                         $('#selectDataGudang').removeData('childidx');
                         $('#selectDataGudang').attr("data-childidx", key);
+                    });
+
+                    $(this).find('.searchSatuan').attr("data-childidx", index);
+                    $(this).find('.searchSatuan').attr("data-produk_id", $(another).find('.produk_id-item').val());
+                    $(this).find('.searchSatuan').off().on('click', function() {
+                        let key = $(this).data(
+                            'childidx'); // Use 'this' to refer to the clicked element
+                        console.log(key);
+                        $('#selectDataSatuan').removeData('childidx');
+                        $('#selectDataSatuan').attr("data-childidx", key);
+
+                        $('#selectDataSatuan').removeData('produk_id');
+                        $('#selectDataSatuan').attr("data-produk_id", $(another).find('.produk_id-item').val());
                     });
 
 
