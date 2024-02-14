@@ -8,6 +8,7 @@ use App\Http\Controllers\admin\GudangController;
 use App\Http\Controllers\admin\MemberController;
 use App\Http\Controllers\admin\ModuleController;
 use App\Http\Controllers\admin\ProdukController;
+use App\Http\Controllers\admin\SatuanController;
 use App\Http\Controllers\admin\ProfileController;
 use App\Http\Controllers\admin\SettingController;
 use App\Http\Controllers\admin\KategoriController;
@@ -125,7 +126,7 @@ Route::prefix('admin')->group(function () {
         Route::delete('module/delete', [ModuleController::class, 'delete'])->name('admin.module.delete');
         Route::get('module/getDetail-{id}', [ModuleController::class, 'getDetail'])->name('admin.module.getDetail');
 
-        //Modul dan Modul Akses
+        //Kategori
         Route::get('kategori', [KategoriController::class, 'index'])->name('admin.kategori');
         Route::get('kategori/add', [KategoriController::class, 'add'])->name('admin.kategori.add');
         Route::get('kategori/getData', [KategoriController::class, 'getData'])->name('admin.kategori.getData');
@@ -259,6 +260,16 @@ Route::prefix('admin')->group(function () {
         Route::post('pembelian/checkStock', [PembelianController::class, 'checkStock'])->name('admin.pembelian.checkStock');
         Route::put('pembelian/updateTotal', [PembelianController::class, 'updateTotal'])->name('admin.pembelian.updateTotal');
         Route::delete('pembelian/deleteDetail', [PembelianController::class, 'deleteDetail'])->name('admin.pembelian.deleteDetail');
+
+        //Satuan
+        Route::get('satuan', [SatuanController::class, 'index'])->name('admin.satuan');
+        Route::get('satuan/add', [SatuanController::class, 'add'])->name('admin.satuan.add');
+        Route::get('satuan/getData', [SatuanController::class, 'getData'])->name('admin.satuan.getData');
+        Route::post('satuan/save', [SatuanController::class, 'save'])->name('admin.satuan.save');
+        Route::get('satuan/edit/{id}', [SatuanController::class, 'edit'])->name('admin.satuan.edit');
+        Route::put('satuan/update', [SatuanController::class, 'update'])->name('admin.satuan.update');
+        Route::delete('satuan/delete', [SatuanController::class, 'delete'])->name('admin.satuan.delete');
+        Route::post('satuan/checkNama',[SatuanController::class, 'checkNama'])->name('admin.satuan.checkNama');
 
     });
 });
