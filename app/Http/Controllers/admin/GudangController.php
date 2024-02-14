@@ -33,6 +33,28 @@ class GudangController extends Controller
         }
 
         return DataTables::of($data)
+            ->addColumn('status', function ($row) {
+                if (isAllowed(static::$module, "status")) : //Check permission
+                    if ($row->status) {
+                        $status = '<div class="d-flex"><div class="form-check form-switch form-check-custom form-check-solid">
+                        <input class="form-check-input h-20px w-30px changeStatus" data-ix="' . $row->id . '" type="checkbox" value="1"
+                            name="status" checked="checked" />
+                        <label class="form-check-label fw-bold text-gray-400"
+                            for="status"></label>
+                    </div>';
+                        $status .= '<span class="badge bg-success">Aktif</span></div>';
+                    } else {
+                        $status = '<div class="d-flex"><div class="form-check form-switch form-check-custom form-check-solid">
+                        <input class="form-check-input h-20px w-30px changeStatus" data-ix="' . $row->id . '" type="checkbox" value="1"
+                            name="status"/>
+                            <label class="form-check-label fw-bold text-gray-400"
+                            for="status"></label>
+                            </div>';
+                        $status .= '<span class="badge bg-danger">Tidak Aktif</span></div>';
+                    }
+                    return $status;
+                endif;
+            })
             ->addColumn('action', function ($row) {
                 $btn = "";
                 if (isAllowed(static::$module, "delete")) : //Check permission
@@ -52,7 +74,7 @@ class GudangController extends Controller
                 endif;
                 return $btn;
             })
-            ->rawColumns(['action'])
+            ->rawColumns(['status','action'])
             ->make(true);
     }
     
@@ -192,6 +214,29 @@ class GudangController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'Data telah dihapus.',
+        ]);
+    }
+    
+    public function changeStatus(Request $request)
+    {
+        //Check permission
+        if (!isAllowed(static::$module, "status")) {
+            abort(403);
+        }
+        
+        $data['status'] = $request->status == "Aktif" ? 1 : 0;
+        $log = $request->status;
+        $id = $request->ix;
+        $updates = Gudang::where(["id" => $id])->first();
+        // Simpan data sebelum diupdate
+        $previousData = $updates->toArray();
+        $updates->update($data);
+
+        //Write log
+        createLog(static::$module, __FUNCTION__, $id, ['Data' => $previousData,'Statusnya diubah menjadi' => $log]);
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Status telah diubah.',
         ]);
     }
 

@@ -145,6 +145,71 @@
                     }
                 });
             });
+
+            
+            //Change Status Confirmation
+            $(document).on('click', '.changeStatus', function(event) {
+                var ix = $(this).data('ix');
+                if ($(this).is(':checked')) {
+                    var status = "Tidak Aktif";
+                    var changeto = "Aktif";
+                    var message = "";
+                } else {
+                    var status = "Aktif"
+                    var changeto = "Tidak Aktif";
+                    var message = "";
+                }
+
+                const swalWithBootstrapButtons = Swal.mixin({
+                    customClass: {
+                        confirmButton: 'btn btn-success mx-4',
+                        cancelButton: 'btn btn-danger'
+                    },
+                    buttonsStyling: false
+                });
+
+                swalWithBootstrapButtons.fire({
+                    html: 'Apakah anda yakin ingin mengubah status ke ' + changeto + '?' + message,
+                    icon: "info",
+                    buttonsStyling: false,
+                    showCancelButton: true,
+                    confirmButtonText: "Ya, saya yakin!",
+                    cancelButtonText: 'Tidak, batalkan',
+                    reverseButtons: true
+
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: "POST",
+                            url: "{{ route('admin.gudang.changeStatus') }}",
+                            data: ({
+                                "_token": "{{ csrf_token() }}",
+                                "_method": "POST",
+                                ix: ix,
+                                status: changeto,
+
+                            }),
+                            success: function() {
+                                data_table.ajax.reload(null, false);
+                                swalWithBootstrapButtons.fire({
+                                    title: 'Berhasil!',
+                                    text: 'Status berhasil diubah ke ' + changeto,
+                                    icon: 'success',
+                                    timer: 1500, // 2 detik
+                                    showConfirmButton: false
+                                });
+                            }
+                        });
+
+                    } else {
+                        if (status == "Aktif") {
+                            $(this).prop("checked", true);
+                        } else {
+                            $(this).prop("checked", false);
+                        }
+                    }
+                });
+            });
         });
     </script>
 @endpush

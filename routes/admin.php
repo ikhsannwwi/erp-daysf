@@ -233,6 +233,7 @@ Route::prefix('admin')->group(function () {
         Route::delete('gudang/delete', [GudangController::class, 'delete'])->name('admin.gudang.delete');
         Route::get('gudang/getDetail-{id}', [GudangController::class, 'getDetail'])->name('admin.gudang.getDetail');
         Route::post('gudang/checkName',[GudangController::class, 'checkName'])->name('admin.gudang.checkName');
+        Route::post('gudang/changeStatus',[GudangController::class, 'changeStatus'])->name('admin.gudang.changeStatus');
         
         //Penyesuaian Stok
         Route::get('penyesuaian-stok', [PenyesuaianStokController::class, 'index'])->name('admin.penyesuaian_stok');
@@ -284,5 +285,6 @@ Route::prefix('admin')->group(function () {
         Route::delete('satuan-konversi/delete', [SatuanKonversiController::class, 'delete'])->name('admin.satuan_konversi.delete');
         Route::get('satuan-konversi/getDetail-{id}', [SatuanKonversiController::class, 'getDetail'])->name('admin.satuan_konversi.getDetail');
         Route::get('satuan-konversi/getDataProduk', [SatuanKonversiController::class, 'getDataProduk'])->name('admin.satuan_konversi.getDataProduk');
+        Route::post('satuan-konversi/changeStatus',[SatuanKonversiController::class, 'changeStatus'])->name('admin.satuan_konversi.changeStatus');
     });
 });
