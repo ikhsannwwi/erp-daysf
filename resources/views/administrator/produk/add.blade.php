@@ -53,6 +53,28 @@
                         </div>
 
                         <div class="row">
+                            <div class="form-group mandatory">
+                                <div class="col-md-4 col-12">
+                                    <label for="triggerSatuan" class="form-label">Satuan</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text pb-3" id="searchSatuan"><i
+                                                class="bi bi-search"></i></span>
+                                        <input type="text" class="form-control" id="inputSatuanName"
+                                            data-parsley-required="true" readonly>
+                                        <input type="text" class="d-none" name="satuan" id="inputSatuan">
+                                        <div class="input-group-append">
+                                            <!-- Menggunakan input-group-append agar elemen berikutnya ditambahkan setelah input -->
+                                            <a href="#" class="btn btn-outline-secondary" data-bs-toggle="modal"
+                                                data-bs-target="#ModalSatuan" id="triggerSatuan">
+                                                Search
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
                             <div class="col-md-6 col-12">
                                 <div class="form-group mandatory">
                                     <label for="inputDeskripsi" class="form-label">Deskripsi</label>
@@ -174,6 +196,7 @@
 
     </section>
     <!-- Basic Tables end -->
+    @include('administrator.produk.modal.satuan')
 @endsection
 
 @push('js')

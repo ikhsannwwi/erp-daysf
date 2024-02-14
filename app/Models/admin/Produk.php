@@ -2,6 +2,7 @@
 
 namespace App\Models\admin;
 
+use App\Models\Satuan;
 use App\Models\admin\Kategori;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -17,5 +18,9 @@ class Produk extends Model
 
     public function kategori(){
         return $this->belongsTo(Kategori::class, 'kategori_id');
+    }
+
+    public function satuan(){
+        return $this->belongsTo(Satuan::class, 'satuan_id');
     }
 }

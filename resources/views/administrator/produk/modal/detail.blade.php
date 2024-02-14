@@ -91,6 +91,15 @@
 
                         '<div class="row">' +
                         '<div class="col-5">' +
+                        '<div class="title">Satuan</div>' +
+                        '</div>' +
+                        '<div class="col-7">' +
+                        '<div class="data">: ' + (data.satuan ? data.satuan.nama : '') + '</div>' +
+                        '</div>' +
+                        '</div>' +
+
+                        '<div class="row">' +
+                        '<div class="col-5">' +
                         '<div class="title">Deskripsi</div>' +
                         '</div>' +
                         '<div class="col-7">' +

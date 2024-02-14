@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\admin;
 
 use DataTables;
+use App\Models\Satuan;
 use App\Models\admin\Produk;
 use Illuminate\Http\Request;
 use App\Models\admin\Kategori;
@@ -105,6 +106,7 @@ class ProdukController extends Controller
             'nama' => 'required',
             'deskripsi' => 'required',
             'harga' => 'required',
+            'satuan' => 'required',
             'status' => 'required',
         ]);
 
@@ -141,6 +143,7 @@ class ProdukController extends Controller
             'kategori_id' => $request->kategori,
             'nama' => $request->nama,
             'deskripsi' => $request->deskripsi,
+            'satuan_id' => $request->satuan,
             'harga' => $harga,
             'kode' => $KodeProduk,
             'barcode' => $barcode,
@@ -163,7 +166,7 @@ class ProdukController extends Controller
             abort(403);
         }
 
-        $data = Produk::find($id);
+        $data = Produk::with('satuan')->find($id);
 
         return view('administrator.produk.edit',compact('data'));
     }
@@ -183,6 +186,7 @@ class ProdukController extends Controller
             'nama' => 'required',
             'deskripsi' => 'required',
             'harga' => 'required',
+            'satuan' => 'required',
             'status' => 'required',
         ];
 
@@ -202,6 +206,7 @@ class ProdukController extends Controller
             'kategori_id' => $request->kategori,
             'nama' => $request->nama,
             'deskripsi' => $request->deskripsi,
+            'satuan_id' => $request->satuan,
             'harga' => $harga,
             'status' => $request->status,
             'pembelian' => $request->pembelian ? $request->pembelian : 0,
@@ -262,7 +267,12 @@ class ProdukController extends Controller
         ]);
     }
 
-    
+    public function getDataSatuan(Request $request){
+        $data = Satuan::query();
+
+        return DataTables::of($data)
+            ->make(true);
+    }
     
     public function getDetail($id){
         //Check permission
@@ -270,7 +280,7 @@ class ProdukController extends Controller
             abort(403);
         }
 
-        $data = Produk::with('kategori')->find($id);
+        $data = Produk::with('satuan')->with('kategori')->find($id);
 
         return response()->json([
             'data' => $data,
