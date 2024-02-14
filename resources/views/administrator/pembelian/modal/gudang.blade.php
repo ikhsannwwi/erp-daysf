@@ -29,7 +29,7 @@
 
 @push('js')
     <script type="text/javascript">
-        function addSelectedClassByModuleIdentifiers(id) {
+        function addSelectedClassByGudang(id) {
             var table = $('#datatableGudangModal').DataTable();
 
             // Check if the 'select' extension is available
@@ -80,7 +80,7 @@
                 ],
                 // scrollX: true, // Enable horizontal scrolling
                 ajax: {
-                    url: '{{ route('admin.penyesuaian_stok.getDataGudang') }}',
+                    url: '{{ route('admin.pembelian.getDataGudang') }}',
                     dataType: "JSON",
                     type: "GET",
                 },
@@ -99,9 +99,10 @@
                     },
                 ],
                 drawCallback: function(settings) {
-                    // Add 'selected' class based on the content of the input fields
-                    var id = $("#inputGudang").val();
-                    addSelectedClassByModuleIdentifiers(id);
+                    let childidx = $('#selectDataGudang').data('childidx');
+                    let targetRow = $('#daftar_detail tbody tr[childidx="' + childidx + '"]');
+                    var id = targetRow.find(".gudang_id-item").val();
+                    addSelectedClassByGudang(id);
                 },
             });
 
@@ -127,17 +128,24 @@
             // end click di baris tabel member
 
             // click Select button
-            $('#selectDataGudang').on('click', function() {
+            $('#selectDataGudang').off().on('click', function() {
                 // Get selected row data
+                let childidx = $('#selectDataGudang').data('childidx');
                 var selectedRow = data_table.row('.selected').data();
 
+                console.log(childidx)
                 if (selectedRow) {
-                    $("#inputGudang").val(selectedRow.id);
-                    $("#inputGudangName").val(selectedRow.nama);
+                    // Find the row with the specified childidx
+                    let targetRow = $('#daftar_detail tbody tr[childidx="' + childidx + '"]');
+                    // Update values in the found row
+                    targetRow.find(".nama_gudang-item").text(selectedRow.nama);
+                    targetRow.find(".gudang_id-item").val(selectedRow.id);
                 }
 
+                // Trigger click event on the close button
                 $('#buttonCloseGudangModal').click();
             });
+
             // end click Select button
         });
     </script>

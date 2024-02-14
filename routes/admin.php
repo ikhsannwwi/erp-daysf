@@ -14,6 +14,7 @@ use App\Http\Controllers\admin\KategoriController;
 use App\Http\Controllers\admin\SupplierController;
 use App\Http\Controllers\admin\DashboardController;
 use App\Http\Controllers\admin\LogSystemController;
+use App\Http\Controllers\admin\PembelianController;
 use App\Http\Controllers\admin\UserGroupController;
 use App\Http\Controllers\admin\OperatorKasirController;
 use App\Http\Controllers\admin\TransaksiStokController;
@@ -242,5 +243,22 @@ Route::prefix('admin')->group(function () {
         Route::get('penyesuaian-stok/getDataGudang', [PenyesuaianStokController::class, 'getDataGudang'])->name('admin.penyesuaian_stok.getDataGudang');
         Route::get('penyesuaian-stok/getDataProduk', [PenyesuaianStokController::class, 'getDataProduk'])->name('admin.penyesuaian_stok.getDataProduk');
         Route::post('penyesuaian-stok/checkStock', [PenyesuaianStokController::class, 'checkStock'])->name('admin.penyesuaian_stok.checkStock');
+        
+        //Pembelian
+        Route::get('pembelian', [PembelianController::class, 'index'])->name('admin.pembelian');
+        Route::get('pembelian/add', [PembelianController::class, 'add'])->name('admin.pembelian.add');
+        Route::get('pembelian/getData', [PembelianController::class, 'getData'])->name('admin.pembelian.getData');
+        Route::post('pembelian/save', [PembelianController::class, 'save'])->name('admin.pembelian.save');
+        Route::get('pembelian/edit/{id}', [PembelianController::class, 'edit'])->name('admin.pembelian.edit');
+        Route::put('pembelian/update', [PembelianController::class, 'update'])->name('admin.pembelian.update');
+        Route::delete('pembelian/delete', [PembelianController::class, 'delete'])->name('admin.pembelian.delete');
+        Route::get('pembelian/getDetail-{id}', [PembelianController::class, 'getDetail'])->name('admin.pembelian.getDetail');
+        Route::get('pembelian/getDataSupplier', [PembelianController::class, 'getDataSupplier'])->name('admin.pembelian.getDataSupplier');
+        Route::get('pembelian/getDataGudang', [PembelianController::class, 'getDataGudang'])->name('admin.pembelian.getDataGudang');
+        Route::get('pembelian/getDataProduk', [PembelianController::class, 'getDataProduk'])->name('admin.pembelian.getDataProduk');
+        Route::post('pembelian/checkStock', [PembelianController::class, 'checkStock'])->name('admin.pembelian.checkStock');
+        Route::put('pembelian/updateTotal', [PembelianController::class, 'updateTotal'])->name('admin.pembelian.updateTotal');
+        Route::delete('pembelian/deleteDetail', [PembelianController::class, 'deleteDetail'])->name('admin.pembelian.deleteDetail');
+
     });
 });

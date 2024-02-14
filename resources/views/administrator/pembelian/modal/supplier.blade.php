@@ -1,26 +1,28 @@
-<!-- Modal Detail Gudang -->
-<div class="modal fade" id="ModalGudang" tabindex="-1" aria-labelledby="ModalGudangLabel" aria-hidden="true">
+<!-- Modal Detail Supplier -->
+<div class="modal fade" id="ModalSupplier" tabindex="-1" aria-labelledby="ModalSupplierLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="ModalGudangLabel">Data Gudang</h5>
-                <button type="button" id="buttonCloseGudangModal" class="btn-close" data-bs-dismiss="modal"
+                <h5 class="modal-title" id="ModalSupplierLabel">Data Supplier</h5>
+                <button type="button" id="buttonCloseSupplierModal" class="btn-close" data-bs-dismiss="modal"
                     aria-label="Close"></button>
             </div>
-            <div class="modal-body" id="ModalGudangBody">
-                <table class="table" id="datatableGudangModal">
+            <div class="modal-body" id="ModalSupplierBody">
+                <table class="table" id="datatableSupplierModal">
                     <thead>
                         <tr>
                             <th>No</th>
                             <th width="">Nama</th>
-                            <th width="">Penanggung Jawab</th>
+                            <th width="">Email</th>
+                            <th width="">Telepon</th>
+                            <th width="">Alamat</th>
                         </tr>
                     </thead>
                 </table>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="selectDataGudang">Pilih Data</button>
+                <button type="button" class="btn btn-primary" id="selectDataSupplier">Pilih Data</button>
                 {{-- <button type="button" class="btn btn-primary">Save changes</button> --}}
             </div>
         </div>
@@ -29,8 +31,8 @@
 
 @push('js')
     <script type="text/javascript">
-        function addSelectedClassByModuleIdentifiers(id) {
-            var table = $('#datatableGudangModal').DataTable();
+        function addSelectedClassBySupplier(id) {
+            var table = $('#datatableSupplierModal').DataTable();
 
             // Check if the 'select' extension is available
             if ($.fn.dataTable.Select) {
@@ -57,14 +59,14 @@
                 });
             }
         }
-
-        $('#ModalGudang').on('show.bs.modal', function(event) {
+        
+        $('#ModalSupplier').on('show.bs.modal', function(event) {
             var button = $(event.relatedTarget);
-
+            
             // Now, you can initialize a new DataTable on the same table.
-            $("#datatableGudangModal").DataTable().destroy();
-            $('#datatableGudangModal tbody').remove();
-            var data_table = $('#datatableGudangModal').DataTable({
+            $("#datatableSupplierModal").DataTable().destroy();
+            $('#datatableSupplierModal tbody').remove();
+            var data_table = $('#datatableSupplierModal').DataTable({
                 "oLanguage": {
                     "oPaginate": {
                         "sFirst": "<i class='ti-angle-left'></i>",
@@ -80,63 +82,71 @@
                 ],
                 // scrollX: true, // Enable horizontal scrolling
                 ajax: {
-                    url: '{{ route('admin.penyesuaian_stok.getDataGudang') }}',
+                    url: '{{ route('admin.pembelian.getDataSupplier') }}',
                     dataType: "JSON",
                     type: "GET",
                 },
                 columns: [{
-                        render: function(data, type, row, meta) {
-                            return meta.row + meta.settings._iDisplayStart + 1;
-                        },
+                    render: function(data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    },
+                },
+                {
+                    data: 'nama',
+                    name: 'nama'
+                },
+                {
+                        data: 'email',
+                        name: 'email'
                     },
                     {
-                        data: 'nama',
-                        name: 'nama'
+                        data: 'telepon',
+                        name: 'telepon'
                     },
                     {
-                        data: 'penanggung_jawab',
-                        name: 'penanggung_jawab'
+                        data: 'alamat',
+                        name: 'alamat'
                     },
                 ],
                 drawCallback: function(settings) {
                     // Add 'selected' class based on the content of the input fields
-                    var id = $("#inputGudang").val();
-                    addSelectedClassByModuleIdentifiers(id);
+                    var id = $("#inputSupplier").val();
+                    addSelectedClassBySupplier(id);
                 },
             });
 
             // click di baris tabel member
-            $('#datatableGudangModal tbody').on('click', 'tr', function() {
+            $('#datatableSupplierModal tbody').on('click', 'tr', function() {
                 var $row = $(this);
-
+                
                 // Remove 'selected' class from all rows
-                $('#datatableGudangModal tbody tr').removeClass('selected');
-
+                $('#datatableSupplierModal tbody tr').removeClass('selected');
+                
                 // Add 'selected' class to the clicked row
                 $row.addClass('selected');
-
+                
                 // Get selected row data
                 var selectedRow = data_table.row('.selected').data();
-
+                
                 // if (selectedRow) {
                 //     // Set input values based on the selected row
-                //     $("#inputGudang").val(selectedRow.id);
-                //     $("#inputGudangName").val(selectedRow.nama);
+                //     $("#inputSupplier").val(selectedRow.id);
+                //     $("#inputSupplierName").val(selectedRow.nama);
                 // }
             });
             // end click di baris tabel member
 
             // click Select button
-            $('#selectDataGudang').on('click', function() {
+            $('#selectDataSupplier').on('click', function() {
                 // Get selected row data
                 var selectedRow = data_table.row('.selected').data();
 
                 if (selectedRow) {
-                    $("#inputGudang").val(selectedRow.id);
-                    $("#inputGudangName").val(selectedRow.nama);
+                    $("#inputSupplier").val(selectedRow.id);
+                    $("#inputSupplierName").val(selectedRow.nama);
                 }
 
-                $('#buttonCloseGudangModal').click();
+                $('#buttonCloseSupplierModal').click();
             });
             // end click Select button
         });

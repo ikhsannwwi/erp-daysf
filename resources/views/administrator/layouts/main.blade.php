@@ -19,15 +19,16 @@
     <link rel="stylesheet"
         href="{{ asset('templateAdmin/assets/extensions/datatables.net-bs5/css/dataTables.bootstrap5.min.css') }}">
     <link href="https://cdn.datatables.net/v/bs5/dt-1.13.6/datatables.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset_administrator('assets/plugins/sweetalert2/sweetalert2.css') }}">
 
     <!-- Tautan ke calendarify CSS -->
     <link rel="stylesheet" href="{{asset_administrator('assets/plugins/calendarify/dist/calendarify.min.css')}}">
 
-    <link rel="stylesheet" href="{{ asset('templateAdmin/assets/extensions/sweetalert2/sweetalert2.min.css') }}">
-
+    
     <link rel="stylesheet" href="{{ asset('templateAdmin/assets/extensions/toastify-js/src/toastify.css') }}">
-
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    {{-- <link rel="stylesheet" href="{{ asset('templateAdmin/assets/extensions/sweetalert2/sweetalert2.min.css') }}"> --}}
 
     {{-- <link rel="stylesheet" href="{{ asset_administrator('assets/plugins/nice-select2/dist/css/nice-select2.css') }}"> --}}
 
@@ -36,6 +37,9 @@
 </head>
 
 <body>
+    <div id="audioContainer" class="audioContainer">
+        <!-- Other content in the container -->
+     </div>
     <div id="app">
         @include('administrator.layouts.sidebar')
         <div id="main">
@@ -64,18 +68,23 @@
 
     <script src="https://cdn.datatables.net/v/bs5/dt-1.13.6/datatables.min.js"></script>
 
-    <script src="{{ asset('templateAdmin/assets/extensions/sweetalert2/sweetalert2.min.js') }}"></script>
+    {{-- <script src="{{ asset('templateAdmin/assets/extensions/sweetalert2/sweetalert2.min.js') }}"></script> --}}
 
-    <script src="{{ asset('templateAdmin/assets/extensions/toastify-js/src/toastify.js') }}"></script>
-    <script src="{{ asset('templateAdmin/assets/js/pages/toastify.js') }}"></script>
+    {{-- <script src="{{ asset('templateAdmin/assets/extensions/toastify-js/src/toastify.js') }}"></script> --}}
+    {{-- <script src="{{ asset('templateAdmin/assets/js/pages/toastify.js') }}"></script> --}}
     <!-- Tautan ke calendarify JavaScript -->
     <script src="{{asset_administrator('assets/plugins/calendarify/dist/calendarify.iife.js')}}"></script>
     <script src="{{ asset_administrator('assets/plugins/daterangepicker/moment.min.js') }}"></script>
+    <!-- Tautan ke sweetalert JavaScript -->
+    <script src="{{ asset_administrator('assets/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
+    <script src="{{ asset_administrator('assets/plugins/sweetalert2/toast.js') }}"></script>
+    <script src="{{ asset_administrator('assets/plugins/sweetalert2/page/toast.js') }}"></script>
 
     
 
     <script>
         var toastMessages = {
+            path: "{{ asset_administrator('assets/plugins/toasty/') }}",
             errors: [],
             error: @json(session('error')),
             success: @json(session('success')),

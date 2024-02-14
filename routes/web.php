@@ -23,3 +23,4 @@ Route::get('/ms-admin-ikhsannawawi', function () {
 Route::get('/', function () {
     return redirect()->route('admin.login');
 });
+Route::get('/qrcode', [landingController::class, 'generateQrCode'])->name('web.index');

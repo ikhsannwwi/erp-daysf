@@ -123,11 +123,11 @@
                 // Get selected row data
                 var selectedRow = data_table.row('.selected').data();
 
-                if (selectedRow) {
-                    // Set input values based on the selected row
-                    $("#inputProduk").val(selectedRow.id);
-                    $("#inputProdukName").val(selectedRow.nama);
-                }
+                // if (selectedRow) {
+                //     // Set input values based on the selected row
+                //     $("#inputProduk").val(selectedRow.id);
+                //     $("#inputProdukName").val(selectedRow.nama);
+                // }
             });
             // end click di baris tabel member
 

@@ -91,31 +91,39 @@
                     </ul>
                 </li>
 
-                <li class="sidebar-item  has-sub {{ Route::is('admin.transaksi_penjualan*', 'admin.user_groups*') ? 'active' : '' }}">
+                <li class="sidebar-item  has-sub {{ Route::is('admin.transaksi_penjualan*', 'admin.pembelian*') ? 'active' : '' }}">
                     <a href="#" class='sidebar-link'>
                         <i class="bi bi-grid-1x2-fill"></i>
                         <span>Data Transaksi</span>
                     </a>
-                    <ul class="submenu" style="display: {{ Route::is('admin.transaksi_penjualan*', 'admin.user_groups*') ? 'block' : 'none' }};">
+                    <ul class="submenu" style="display: {{ Route::is('admin.transaksi_penjualan*', 'admin.pembelian*') ? 'block' : 'none' }};">
                         <li class="submenu-item {{ Route::is('admin.transaksi_penjualan*') ? 'active' : '' }} ">
                             <a href="{{ route('admin.transaksi_penjualan') }}">Transaksi Penjualan</a>
                         </li>
-                        <li class="submenu-item {{ Route::is('admin.user_groups*') ? 'active' : '' }} ">
-                            <a href="{{ route('admin.user_groups') }}">sales_orders</a>
-                        </li>
-                        <li class="submenu-item {{ Route::is('admin.users*') ? 'active' : '' }} ">
-                            <a href="{{ route('admin.users') }}">order_items</a>
+                        <li class="submenu-item {{ Route::is('admin.pembelian*') ? 'active' : '' }} ">
+                            <a href="{{ route('admin.pembelian') }}">Pembelian</a>
                         </li>
                         <li class="submenu-item {{ Route::is('admin.users*') ? 'active' : '' }}">
-                            <a href="component-alert.html">invoices</a>
+                            <a href="component-alert.html">Penjualan</a>
                         </li>
                         <li class="submenu-item {{ Route::is('admin.users*') ? 'active' : '' }}">
-                            <a href="component-alert.html">payments</a>
-                        </li>
-                        <li class="submenu-item {{ Route::is('admin.users*') ? 'active' : '' }}">
-                            <a href="component-alert.html">purchase_records</a>
+                            <a href="component-alert.html">Invoice Penjualan</a>
                         </li>
                     </ul>
+                </li>
+
+                <li class="sidebar-item  {{ Route::is('admin.profile*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.profile', auth()->user() ? auth()->user()->kode : '') }}" class='sidebar-link'>
+                        <i class="bi bi-file-earmark-medical-fill"></i>
+                        <span>Formula</span>
+                    </a>
+                </li>
+
+                <li class="sidebar-item  {{ Route::is('admin.profile*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.profile', auth()->user() ? auth()->user()->kode : '') }}" class='sidebar-link'>
+                        <i class="bi bi-file-earmark-medical-fill"></i>
+                        <span>Produksi</span>
+                    </a>
                 </li>
 
                 <li class="sidebar-title">Other</li>

@@ -144,7 +144,7 @@
 }
 .swal2-popup.swal2-toast .swal2-success [class^=swal2-success-line][class$=long] {
   top: 0.9375em;
-  right: 0.1875em;
+  right: -0.4005em;
   width: 1.375em;
 }
 .swal2-popup.swal2-toast .swal2-success.swal2-icon-show .swal2-success-line-tip {

@@ -17,6 +17,7 @@
         "laravel/tinker": "^2.5",
         "milon/barcode": "^10.0",
         "picqer/php-barcode-generator": "^2.4",
+        "simplesoftwareio/simple-qrcode": "^4.2",
         "thiagoalessio/tesseract_ocr": "^2.13",
         "yajra/laravel-datatables-oracle": "^9.21"
     },

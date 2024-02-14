@@ -339,7 +339,7 @@ class TransaksiPenjualanController extends Controller
     public function deleteItem(Request $request)
     {
         // Check permission
-        if (!isAllowed(static::$module, "update")) {
+        if (!isAllowed(static::$module, "edit")) {
             abort(403);
         }
         $id = $request->id;
