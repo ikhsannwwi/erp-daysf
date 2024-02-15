@@ -26,21 +26,6 @@ class TransaksiStokController extends Controller
         $data = TransaksiStok::query()->where('produk_id', $request->produk_id)->where('gudang_id', $request->gudang_id)->get();
 
         return DataTables::of($data)
-            ->addColumn('action', function ($row) {
-                $btn = "";
-                if (isAllowed(static::$module, "delete")) : //Check permission
-                    $btn .= '<a href="#" data-id="' . $row->id . '" class="btn btn-danger btn-sm delete me-3 ">
-                    Delete
-                </a>';
-                endif;
-                if (isAllowed(static::$module, "edit")) : //Check permission
-                    $btn .= '<a href="'.route('admin.transaksi_stok.edit',$row->id).'" class="btn btn-primary btn-sm me-3 ">
-                    Edit
-                </a>';
-                endif;
-                return $btn;
-            })
-            ->rawColumns(['action'])
             ->make(true);
     }
     

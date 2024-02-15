@@ -7,31 +7,33 @@
             <div class="card-header">
                 <div class="row">
                     <div class="col-6">
-                        Transaksi Stok
+                        Toko
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-                                <li class="breadcrumb-item"><a href="{{ route('admin.transaksi_stok') }}">Transaksi Stok</a>
-                                </li>
-                                <li class="breadcrumb-item active" aria-current="page">{{ $gudang->nama }}</li>
-                                <li class="breadcrumb-item active" aria-current="page">{{ $data->nama }}</li>
+                                <li class="breadcrumb-item active" aria-current="page">Toko</li>
                             </ol>
                         </nav>
                     </div>
                     <div class="col-6">
+                        @if (isallowed('toko', 'add'))
+                            <a href="{{ route('admin.toko.add') }}" class="btn btn-primary mx-3 float-end">Tambah
+                                Data</a>
+                        @endif
+                        {{-- <a href="javascript:void(0)" class="btn btn-primary float-end" id="filterButton">Filter</a> --}}
                     </div>
                 </div>
             </div>
-            {{-- @include('administrator.supplier.filter.main') --}}
+            {{-- @include('administrator.toko.filter.main') --}}
             <div class="card-body">
                 <table class="table" id="datatable">
                     <thead>
                         <tr>
                             <th width="15px">No</th>
-                            <th width="50%">Metode</th>
-                            <th width="50%">Jenis</th>
-                            <th width="150px">Jumlah Unit</th>
-                            <th width="200px">Tanggal</th>
+                            <th width="40%">Nama</th>
+                            <th width="30%">Penanggung Jawab</th>
+                            <th width="30%">Status</th>
+                            <th width="225px">Action</th>
                         </tr>
                     </thead>
                 </table>
@@ -40,24 +42,13 @@
 
     </section>
     <!-- Basic Tables end -->
+
+    @include('administrator.toko.modal.detail')
 @endsection
 
 @push('js')
     <script type="text/javascript">
         $(document).ready(function() {
-            function ubahFormatTanggal(tanggalAwal) {
-                var tanggal = new Date(tanggalAwal);
-
-                var day = ('0' + tanggal.getDate()).slice(-2);
-                var month = ('0' + (tanggal.getMonth() + 1)).slice(-2);
-                var year = tanggal.getFullYear();
-                var hours = ('0' + tanggal.getHours()).slice(-2);
-                var minutes = ('0' + tanggal.getMinutes()).slice(-2);
-                var seconds = ('0' + tanggal.getSeconds()).slice(-2);
-
-                return day + '-' + month + '-' + year + ' ' + hours + ':' + minutes + ':' + seconds;
-            }
-
             var data_table = $('#datatable').DataTable({
                 "oLanguage": {
                     "oPaginate": {
@@ -70,17 +61,13 @@
                 processing: true,
                 serverSide: true,
                 order: [
-                    [4, 'desc']
+                    [0, 'asc']
                 ],
                 scrollX: true, // Enable horizontal scrolling
                 ajax: {
-                    url: '{{ route('admin.transaksi_stok.getData') }}',
+                    url: '{{ route('admin.toko.getData') }}',
                     dataType: "JSON",
                     type: "GET",
-                    data: {
-                        produk_id: {{ $data->id }},
-                        gudang_id: {{ $gudang->id }}
-                    },
                 },
                 columns: [{
                         render: function(data, type, row, meta) {
@@ -88,24 +75,23 @@
                         },
                     },
                     {
-                        data: 'metode_transaksi',
-                        name: 'metode_transaksi'
+                        data: 'nama',
+                        name: 'nama'
                     },
                     {
-                        data: 'jenis_transaksi',
-                        name: 'jenis_transaksi'
+                        data: 'penanggung_jawab',
+                        name: 'penanggung_jawab'
                     },
                     {
-                        data: 'jumlah_unit',
-                        name: 'jumlah_unit',
-                        class: 'text-end'
+                        data: 'status',
+                        name: 'status'
                     },
                     {
-                        data: 'created_at',
-                        name: 'created_at',
-                        render: function(data, type, row) {
-                            return ubahFormatTanggal(data);
-                        }
+                        data: 'action',
+                        name: 'action',
+                        searchable: false,
+                        sortable: false,
+                        class: 'text-center'
                     },
                 ],
             });
@@ -133,7 +119,7 @@
                     if (result.isConfirmed) {
                         $.ajax({
                             type: "DELETE",
-                            url: "{{ route('admin.supplier.delete') }}",
+                            url: "{{ route('admin.toko.delete') }}",
                             data: {
                                 "_token": "{{ csrf_token() }}",
                                 "_method": "DELETE",
@@ -141,7 +127,7 @@
                             },
                             success: function() {
                                 // data_table.ajax.url(
-                                //         '{{ route('admin.supplier.getData') }}')
+                                //         '{{ route('admin.toko.getData') }}')
                                 //     .load();
                                 data_table.ajax.reload(null, false);
                                 swalWithBootstrapButtons.fire({
@@ -156,6 +142,71 @@
                                 // data_table.row($(this).parents('tr')).remove().draw();
                             }
                         });
+                    }
+                });
+            });
+
+            
+            //Change Status Confirmation
+            $(document).on('click', '.changeStatus', function(event) {
+                var ix = $(this).data('ix');
+                if ($(this).is(':checked')) {
+                    var status = "Tidak Aktif";
+                    var changeto = "Aktif";
+                    var message = "";
+                } else {
+                    var status = "Aktif"
+                    var changeto = "Tidak Aktif";
+                    var message = "";
+                }
+
+                const swalWithBootstrapButtons = Swal.mixin({
+                    customClass: {
+                        confirmButton: 'btn btn-success mx-4',
+                        cancelButton: 'btn btn-danger'
+                    },
+                    buttonsStyling: false
+                });
+
+                swalWithBootstrapButtons.fire({
+                    html: 'Apakah anda yakin ingin mengubah status ke ' + changeto + '?' + message,
+                    icon: "info",
+                    buttonsStyling: false,
+                    showCancelButton: true,
+                    confirmButtonText: "Ya, saya yakin!",
+                    cancelButtonText: 'Tidak, batalkan',
+                    reverseButtons: true
+
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: "POST",
+                            url: "{{ route('admin.toko.changeStatus') }}",
+                            data: ({
+                                "_token": "{{ csrf_token() }}",
+                                "_method": "POST",
+                                ix: ix,
+                                status: changeto,
+
+                            }),
+                            success: function() {
+                                data_table.ajax.reload(null, false);
+                                swalWithBootstrapButtons.fire({
+                                    title: 'Berhasil!',
+                                    text: 'Status berhasil diubah ke ' + changeto,
+                                    icon: 'success',
+                                    timer: 1500, // 2 detik
+                                    showConfirmButton: false
+                                });
+                            }
+                        });
+
+                    } else {
+                        if (status == "Aktif") {
+                            $(this).prop("checked", true);
+                        } else {
+                            $(this).prop("checked", false);
+                        }
                     }
                 });
             });

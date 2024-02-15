@@ -52,17 +52,20 @@
                     </a>
                 </li>
 
-                <li class="sidebar-item  has-sub {{ Route::is('admin.kategori*', 'admin.produk*', 'admin.member*', 'admin.supplier*', 'admin.gudang*', 'admin.satuan*') && !Route::is('admin.satuan_konversi*') ? 'active' : '' }}">
+                <li class="sidebar-item  has-sub {{ Route::is('admin.kategori*', 'admin.member*', 'admin.supplier*', 'admin.gudang*', 'admin.satuan*', 'admin.toko*') && !Route::is('admin.satuan_konversi*') ? 'active' : '' }}">
                     <a href="#" class='sidebar-link'>
                         <i class="bi bi-stack"></i>
                         <span>Data Master</span>
                     </a>
-                    <ul class="submenu" style="display: {{ Route::is('admin.kategori*', 'admin.produk*', 'admin.member*', 'admin.supplier*', 'admin.gudang*', 'admin.satuan*') && !Route::is('admin.satuan_konversi*') ? 'block' : 'none' }};">
+                    <ul class="submenu" style="display: {{ Route::is('admin.kategori*', 'admin.member*', 'admin.supplier*', 'admin.gudang*', 'admin.satuan*', 'admin.toko*') && !Route::is('admin.satuan_konversi*') ? 'block' : 'none' }};">
                         <li class="submenu-item {{ Route::is('admin.kategori*') ? 'active' : '' }}">
                             <a href="{{route('admin.kategori')}}">Kategori</a>
                         </li>
-                        <li class="submenu-item {{ Route::is('admin.produk*') ? 'active' : '' }}">
-                            <a href="{{ route('admin.produk') }}">Produk</a>
+                        <li class="submenu-item {{ Route::is('admin.satuan*') && !Route::is('admin.satuan_konversi*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.satuan') }}">Satuan</a>
+                        </li>
+                        <li class="submenu-item {{ Route::is('admin.gudang*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.gudang') }}">Gudang</a>
                         </li>
                         <li class="submenu-item {{ Route::is('admin.member*') ? 'active' : '' }}">
                             <a href="{{ route('admin.member') }}">Member</a>
@@ -70,13 +73,17 @@
                         <li class="submenu-item {{ Route::is('admin.supplier*') ? 'active' : '' }}">
                             <a href="{{ route('admin.supplier') }}">Supplier</a>
                         </li>
-                        <li class="submenu-item {{ Route::is('admin.gudang*') ? 'active' : '' }}">
-                            <a href="{{ route('admin.gudang') }}">Gudang</a>
-                        </li>
-                        <li class="submenu-item {{ Route::is('admin.satuan*') && !Route::is('admin.satuan_konversi*') ? 'active' : '' }}">
-                            <a href="{{ route('admin.satuan') }}">Satuan</a>
+                        <li class="submenu-item {{ Route::is('admin.toko*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.toko') }}">Toko</a>
                         </li>
                     </ul>
+                </li>
+
+                <li class="sidebar-item  {{ Route::is('admin.produk*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.produk') }}" class='sidebar-link'>
+                        <i class="bi bi-file-earmark-medical-fill"></i>
+                        <span>Produk</span>
+                    </a>
                 </li>
 
                 <li class="sidebar-item  has-sub {{ Route::is('admin.satuan_konversi*', 'admin.transaksi_stok*','admin.penyesuaian_stok*') ? 'active' : '' }}">

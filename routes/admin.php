@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\admin\AuthController;
+use App\Http\Controllers\admin\TokoController;
 use App\Http\Controllers\admin\UserController;
 use App\Http\Controllers\admin\viewController;
 use App\Http\Controllers\admin\GudangController;
@@ -287,5 +288,17 @@ Route::prefix('admin')->group(function () {
         Route::get('satuan-konversi/getDetail-{id}', [SatuanKonversiController::class, 'getDetail'])->name('admin.satuan_konversi.getDetail');
         Route::get('satuan-konversi/getDataProduk', [SatuanKonversiController::class, 'getDataProduk'])->name('admin.satuan_konversi.getDataProduk');
         Route::post('satuan-konversi/changeStatus',[SatuanKonversiController::class, 'changeStatus'])->name('admin.satuan_konversi.changeStatus');
+        
+        //Toko
+        Route::get('toko', [TokoController::class, 'index'])->name('admin.toko');
+        Route::get('toko/add', [TokoController::class, 'add'])->name('admin.toko.add');
+        Route::get('toko/getData', [TokoController::class, 'getData'])->name('admin.toko.getData');
+        Route::post('toko/save', [TokoController::class, 'save'])->name('admin.toko.save');
+        Route::get('toko/edit/{id}', [TokoController::class, 'edit'])->name('admin.toko.edit');
+        Route::put('toko/update', [TokoController::class, 'update'])->name('admin.toko.update');
+        Route::delete('toko/delete', [TokoController::class, 'delete'])->name('admin.toko.delete');
+        Route::get('toko/getDetail-{id}', [TokoController::class, 'getDetail'])->name('admin.toko.getDetail');
+        Route::post('toko/checkName',[TokoController::class, 'checkName'])->name('admin.toko.checkName');
+        Route::post('toko/changeStatus',[TokoController::class, 'changeStatus'])->name('admin.toko.changeStatus');
     });
 });

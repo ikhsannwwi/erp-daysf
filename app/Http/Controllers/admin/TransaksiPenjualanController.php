@@ -9,6 +9,7 @@ use Milon\Barcode\DNS1D;
 use App\Models\admin\Member;
 use App\Models\admin\Produk;
 use Illuminate\Http\Request;
+use App\Models\TransaksiStok;
 use Picqer\Barcode\BarcodeScanner;
 use App\Http\Controllers\Controller;
 use Picqer\Barcode\BarcodeGeneratorPNG;
@@ -142,6 +143,17 @@ class TransaksiPenjualanController extends Controller
                     'harga_total' => $row['input_harga_total'],
                     'created_by' => auth()->user() ? auth()->user()->kode : '',
                 ]);
+
+                $stok = TransaksiStok::create([
+                    'tanggal' => now(),
+                    'gudang_id' => 0,
+                    'produk_id' => $row['input_id'],
+                    'metode_transaksi' => 'masuk',
+                    'jenis_transaksi' => static::$module,
+                    'jumlah_unit' => $row['input_jumlah'],
+                    'created_by' => auth()->user() ? auth()->user()->kode : '',
+                ]);
+                $detail->update(['transaksi_stok_id' => $stok->id]);
             }
             $pembayaran = PembayaranTransaksiPenjualanTitikPenjualan::create([
                 'transaksi_id' => $data['id'],
