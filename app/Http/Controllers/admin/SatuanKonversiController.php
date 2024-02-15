@@ -69,7 +69,7 @@ class SatuanKonversiController extends Controller
                 </a>';
                 endif;
                 if (isAllowed(static::$module, "detail")) : //Check permission
-                    $btn .= '<a href="#" data-id="' . $row->id . '" class="btn btn-secondary btn-sm me-3" data-bs-toggle="modal" data-bs-target="#detailGudang">
+                    $btn .= '<a href="#" data-id="' . $row->id . '" class="btn btn-secondary btn-sm me-3" data-bs-toggle="modal" data-bs-target="#detailSatuanKonversi">
                     Detail
                 </a>';
                 endif;
@@ -112,6 +112,7 @@ class SatuanKonversiController extends Controller
             'kuantitas_konversi' => str_replace([','], '', $request->kuantitas_konversi),
             'kuantitas_satuan' => str_replace([','], '', $request->kuantitas_satuan),
             'nama_konversi' => $request->nama_konversi,
+            'keterangan' => $request->keterangan,
             'status' => $request->status,
             'created_by' => auth()->user() ? auth()->user()->kode : '',
         ]);
@@ -162,6 +163,7 @@ class SatuanKonversiController extends Controller
             'kuantitas_konversi' => str_replace([','], '', $request->kuantitas_konversi),
             'kuantitas_satuan' => str_replace([','], '', $request->kuantitas_satuan),
             'nama_konversi' => $request->nama_konversi,
+            'keterangan' => $request->keterangan,
             'status' => $request->status,
             'updated_by' => auth()->user() ? auth()->user()->kode : '',
         ];
@@ -249,7 +251,11 @@ class SatuanKonversiController extends Controller
             abort(403);
         }
 
-        $data = SatuanKonversi::find($id);
+        $data = SatuanKonversi::with([
+            'produk' => function($query){
+                $query->with('satuan');
+            }
+        ])->find($id);
 
         return response()->json([
             'data' => $data,

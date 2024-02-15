@@ -83,6 +83,16 @@
                                 </div>
                             </div>
                         </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 col-12">
+                                <div class="form-group">
+                                    <label for="inputKeterangan" class="form-label">Keterangan</label>
+                                    <textarea id="inputKeterangan" class="form-control" placeholder="Masukkan Keterangan" name="keterangan"
+                                        style="height: 150px;"></textarea>
+                                </div>
+                            </div>
+                        </div>
 
                         <div class="row">
                             <div class="col-12">
