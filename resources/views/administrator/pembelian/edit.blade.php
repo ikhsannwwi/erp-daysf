@@ -29,7 +29,7 @@
                                     <div class="col-12">
                                         <div class="form-group mandatory">
                                             <label for="inputTanggal" class="form-label">Tanggal</label>
-                                            <input type="text" id="inputTanggal" class="form-control datepicker"
+                                            <input type="text" id="inputTanggal" class="form-control datepicker" value="{{date('d-m-Y', strtotime($data->tanggal))}}"
                                                 placeholder="Masukan Tanggal" name="tanggal" autocomplete="off"
                                                 data-parsley-required="true">
                                         </div>
@@ -304,7 +304,7 @@
 
             $('#inputTanggal').daterangepicker({
                 "locale": {
-                    "format": "MM-DD-YYYY",
+                    "format": "DD-MM-YYYY",
                     "separator": " - ",
                     "daysOfWeek": [
                         "Su",

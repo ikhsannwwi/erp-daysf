@@ -15,6 +15,7 @@
         "laravel/framework": "^8.75",
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
+        "maatwebsite/excel": "^3.1",
         "milon/barcode": "^10.0",
         "picqer/php-barcode-generator": "^2.4",
         "simplesoftwareio/simple-qrcode": "^4.2",

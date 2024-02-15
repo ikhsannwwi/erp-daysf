@@ -46,7 +46,7 @@ class PembelianController extends Controller
                 </a>';
                 endif;
                 if (isAllowed(static::$module, "detail")) : //Check permission
-                    $btn .= '<a href="#" data-id="' . $row->id . '" class="btn btn-secondary btn-sm me-3" data-bs-toggle="modal" data-bs-target="#detailPenyesuaianStok">
+                    $btn .= '<a href="#" data-id="' . $row->id . '" class="btn btn-secondary btn-sm me-3" data-bs-toggle="modal" data-bs-target="#detailPembelian">
                     Detail
                 </a>';
                 endif;
@@ -224,6 +224,7 @@ class PembelianController extends Controller
                 
                 $detail_updates = array_merge($commonFields, [
                     'pembelian_id' => $data->id,
+                    'tanggal' => date('Y-m-d', strtotime($request->tanggal)),
                     'satuan_id' => $row['satuan'],
                     'keterangan' => $row['keterangan'],
                     'harga_satuan' => str_replace(['Rp ', '.'], '', $row['harga_satuan']),
@@ -405,7 +406,13 @@ class PembelianController extends Controller
             abort(403);
         }
 
-        $data = Pembelian::with('gudang')->with('produk')->find($id);
+        $data = Pembelian::with([
+            'detail' => function ($query) {
+                $query->with('satuan_konversi', 'produk', 'gudang');
+            },
+            'supplier'
+        ])->find($id);
+        
 
         return response()->json([
             'data' => $data,

@@ -167,7 +167,7 @@
 
             $('#inputTanggal').daterangepicker({
                 "locale": {
-                    "format": "MM-DD-YYYY",
+                    "format": "DD-MM-YYYY",
                     "separator": " - ",
                     "daysOfWeek": [
                         "Su",
