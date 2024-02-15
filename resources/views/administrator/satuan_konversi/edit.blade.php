@@ -46,6 +46,16 @@
                         </div>
 
                         <div class="row">
+                            <div class="col-md-6 col-12">
+                                <div class="form-group">
+                                    <label for="inputKeterangan" class="form-label">Keterangan</label>
+                                    <textarea id="inputKeterangan" class="form-control" placeholder="Masukkan Keterangan" name="keterangan"
+                                        style="height: 150px;">{{ $data->keterangan }}</textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
                             <div class="col-12">
                                 <label for="inputNamaKonversi" class="form-label">Satuan <i class="bi bi-info-circle-fill ms-1 pt-3" style="cursor: pointer" data-bs-toggle="tooltip" data-bs-placement="top"
                                     title="Kuantitas Konversi "></i></label>
@@ -86,16 +96,6 @@
                             </div>
                         </div>
                         
-                        <div class="row">
-                            <div class="col-md-6 col-12">
-                                <div class="form-group">
-                                    <label for="inputKeterangan" class="form-label">Keterangan</label>
-                                    <textarea id="inputKeterangan" class="form-control" placeholder="Masukkan Keterangan" name="keterangan"
-                                        style="height: 150px;">{{ $data->keterangan }}</textarea>
-                                </div>
-                            </div>
-                        </div>
-
                         <div class="row">
                             <div class="col-12">
                                 <div class='form-group mandatory'>
