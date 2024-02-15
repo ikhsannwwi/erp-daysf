@@ -4,10 +4,12 @@ namespace App\Http\Controllers\admin;
 
 use DataTables;
 use App\Models\Satuan;
+use PDF;
 use App\Models\admin\Produk;
 use Illuminate\Http\Request;
 use App\Models\admin\Kategori;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\View;
 use Picqer\Barcode\BarcodeGeneratorHTML;
 
 class ProdukController extends Controller
@@ -65,18 +67,23 @@ class ProdukController extends Controller
             ->addColumn('action', function ($row) {
                 $btn = "";
                 if (isAllowed(static::$module, "delete")) : //Check permission
-                    $btn .= '<a href="#" data-id="' . $row->id . '" class="btn btn-danger btn-sm delete me-3 ">
+                    $btn .= '<a href="#" data-id="' . $row->id . '" class="btn btn-danger btn-sm delete mx-2 ">
                     Delete
                 </a>';
                 endif;
                 if (isAllowed(static::$module, "edit")) : //Check permission
-                    $btn .= '<a href="'.route('admin.produk.edit',$row->id).'" class="btn btn-primary btn-sm me-3 ">
+                    $btn .= '<a href="'.route('admin.produk.edit',$row->id).'" class="btn btn-primary btn-sm mx-2 ">
                     Edit
                 </a>';
                 endif;
                 if (isAllowed(static::$module, "detail")) : //Check permission
-                    $btn .= '<a href="#" data-id="' . $row->id . '" class="btn btn-secondary btn-sm me-3" data-bs-toggle="modal" data-bs-target="#detailProduk">
+                    $btn .= '<a href="#" data-id="' . $row->id . '" class="btn btn-secondary btn-sm mx-2" data-bs-toggle="modal" data-bs-target="#detailProduk">
                     Detail
+                    </a>';
+                endif;
+                if (isAllowed(static::$module, "cetak")) : //Check permission
+                    $btn .= '<a href="'.route('admin.produk.cetak',$row->kode).'" class="btn btn-secondary btn-sm mx-2 " target="_blank" title="Cetak Barcode">
+                    <i class="bi bi-printer-fill"></i>
                 </a>';
                 endif;
                 return $btn;
@@ -265,6 +272,28 @@ class ProdukController extends Controller
             'status' => 'success',
             'message' => 'Pengguna telah dihapus.',
         ]);
+    }
+
+    public function cetak($kode)
+    {
+        ini_set('max_execution_time', 600); // Set the maximum execution time to 600 seconds (5 minutes)
+
+        $data = Produk::where('kode', $kode)->first();
+
+        // Render the view using Laravel's View class
+        $html = View::make('administrator.produk.cetak', compact('data'))->render();
+
+        // Configure PDF settings (optional)
+        $pdf = PDF::loadHTML($html);
+        $pdf->setPaper([0, 0, 300, 120]);
+        // $pdf->setPaper('legal', 'landscape');
+
+        // Output the PDF (open in browser)
+        try {
+            return $pdf->stream('barcode-produk.pdf');
+        } catch (\Exception $e) {
+            return $e->getMessage(); // Output any error message to help diagnose the problem
+        }
     }
 
     public function getDataSatuan(Request $request){

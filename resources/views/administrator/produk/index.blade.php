@@ -37,7 +37,7 @@
                             <th width="100%">Nama</th>
                             <th width="150px">Kode</th>
                             <th width="150px">Status</th>
-                            <th width="250px">Action</th>
+                            <th width="290px">Action</th>
                         </tr>
                     </thead>
                 </table>

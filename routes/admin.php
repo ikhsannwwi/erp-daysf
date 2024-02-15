@@ -150,7 +150,8 @@ Route::prefix('admin')->group(function () {
         Route::post('produk/changeStatus',[ProdukController::class, 'changeStatus'])->name('admin.produk.changeStatus');
         Route::post('produk/checkNama',[ProdukController::class, 'checkNama'])->name('admin.produk.checkNama');
         Route::get('produk/getDataSatuan', [ProdukController::class, 'getDataSatuan'])->name('admin.produk.getDataSatuan');
-
+        Route::get('produk/cetak/{kode}', [ProdukController::class, 'cetak'])->name('admin.produk.cetak');
+        
         Route::get('produk/arsip',[ProdukController::class, 'arsip'])->name('admin.produk.arsip');
         Route::get('produk/arsip/getDataArsip',[ProdukController::class, 'getDataArsip'])->name('admin.produk.getDataArsip');
         Route::put('produk/arsip/restore',[ProdukController::class, 'restore'])->name('admin.produk.restore');
