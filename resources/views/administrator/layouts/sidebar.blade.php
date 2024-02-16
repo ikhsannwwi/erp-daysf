@@ -79,7 +79,7 @@
                     </ul>
                 </li>
 
-                <li class="sidebar-item  {{ Route::is('admin.produk*') ? 'active' : '' }}">
+                <li class="sidebar-item  {{ Route::is('admin.produk*')  && !Route::is('admin.produksi*') ? 'active' : '' }}">
                     <a href="{{ route('admin.produk') }}" class='sidebar-link'>
                         <i class="bi bi-file-earmark-medical-fill"></i>
                         <span>Produk</span>
@@ -125,15 +125,15 @@
                     </ul>
                 </li>
 
-                <li class="sidebar-item  {{ Route::is('admin.profile*') ? 'active' : '' }}">
-                    <a href="{{ route('admin.profile', auth()->user() ? auth()->user()->kode : '') }}" class='sidebar-link'>
+                <li class="sidebar-item  {{ Route::is('admin.formula*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.formula') }}" class='sidebar-link'>
                         <i class="bi bi-file-earmark-medical-fill"></i>
                         <span>Formula</span>
                     </a>
                 </li>
 
-                <li class="sidebar-item  {{ Route::is('admin.profile*') ? 'active' : '' }}">
-                    <a href="{{ route('admin.profile', auth()->user() ? auth()->user()->kode : '') }}" class='sidebar-link'>
+                <li class="sidebar-item  {{ Route::is('admin.produksi*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.produksi') }}" class='sidebar-link'>
                         <i class="bi bi-file-earmark-medical-fill"></i>
                         <span>Produksi</span>
                     </a>

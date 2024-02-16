@@ -10,9 +10,11 @@ use App\Http\Controllers\admin\MemberController;
 use App\Http\Controllers\admin\ModuleController;
 use App\Http\Controllers\admin\ProdukController;
 use App\Http\Controllers\admin\SatuanController;
+use App\Http\Controllers\admin\FormulaController;
 use App\Http\Controllers\admin\ProfileController;
 use App\Http\Controllers\admin\SettingController;
 use App\Http\Controllers\admin\KategoriController;
+use App\Http\Controllers\admin\ProduksiController;
 use App\Http\Controllers\admin\SupplierController;
 use App\Http\Controllers\admin\DashboardController;
 use App\Http\Controllers\admin\LogSystemController;
@@ -300,5 +302,36 @@ Route::prefix('admin')->group(function () {
         Route::get('toko/getDetail-{id}', [TokoController::class, 'getDetail'])->name('admin.toko.getDetail');
         Route::post('toko/checkName',[TokoController::class, 'checkName'])->name('admin.toko.checkName');
         Route::post('toko/changeStatus',[TokoController::class, 'changeStatus'])->name('admin.toko.changeStatus');
+        
+        //Formula
+        Route::get('formula', [FormulaController::class, 'index'])->name('admin.formula');
+        Route::get('formula/add', [FormulaController::class, 'add'])->name('admin.formula.add');
+        Route::get('formula/getData', [FormulaController::class, 'getData'])->name('admin.formula.getData');
+        Route::post('formula/save', [FormulaController::class, 'save'])->name('admin.formula.save');
+        Route::get('formula/edit/{id}', [FormulaController::class, 'edit'])->name('admin.formula.edit');
+        Route::put('formula/update', [FormulaController::class, 'update'])->name('admin.formula.update');
+        Route::delete('formula/delete', [FormulaController::class, 'delete'])->name('admin.formula.delete');
+        Route::get('formula/getDetail-{id}', [FormulaController::class, 'getDetail'])->name('admin.formula.getDetail');
+        Route::get('formula/getDataGudang', [FormulaController::class, 'getDataGudang'])->name('admin.formula.getDataGudang');
+        Route::get('formula/getDataSatuan', [FormulaController::class, 'getDataSatuan'])->name('admin.formula.getDataSatuan');
+        Route::get('formula/getDataProduk', [FormulaController::class, 'getDataProduk'])->name('admin.formula.getDataProduk');
+        Route::get('formula/getDataProdukProduksi', [FormulaController::class, 'getDataProdukProduksi'])->name('admin.formula.getDataProdukProduksi');
+        Route::delete('formula/deleteDetail', [FormulaController::class, 'deleteDetail'])->name('admin.formula.deleteDetail');
+        
+        //Produksi
+        Route::get('produksi', [ProduksiController::class, 'index'])->name('admin.produksi');
+        Route::get('produksi/add', [ProduksiController::class, 'add'])->name('admin.produksi.add');
+        Route::get('produksi/getData', [ProduksiController::class, 'getData'])->name('admin.produksi.getData');
+        Route::post('produksi/save', [ProduksiController::class, 'save'])->name('admin.produksi.save');
+        Route::get('produksi/edit/{id}', [ProduksiController::class, 'edit'])->name('admin.produksi.edit');
+        Route::put('produksi/update', [ProduksiController::class, 'update'])->name('admin.produksi.update');
+        Route::delete('produksi/delete', [ProduksiController::class, 'delete'])->name('admin.produksi.delete');
+        Route::get('produksi/getDetail-{id}', [ProduksiController::class, 'getDetail'])->name('admin.produksi.getDetail');
+        Route::get('produksi/getDataFormula', [ProduksiController::class, 'getDataFormula'])->name('admin.produksi.getDataFormula');
+        Route::get('produksi/getFormulaDetail', [ProduksiController::class, 'getFormulaDetail'])->name('admin.produksi.getFormulaDetail');
+        Route::get('produksi/getDataGudang', [ProduksiController::class, 'getDataGudang'])->name('admin.produksi.getDataGudang');
+        Route::get('produksi/getDataProduk', [ProduksiController::class, 'getDataProduk'])->name('admin.produksi.getDataProduk');
+        Route::post('produksi/checkStock', [ProduksiController::class, 'checkStock'])->name('admin.produksi.checkStock');
+        Route::delete('produksi/deleteDetail', [ProduksiController::class, 'deleteDetail'])->name('admin.produksi.deleteDetail');
     });
 });
