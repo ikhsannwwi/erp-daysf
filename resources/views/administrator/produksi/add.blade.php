@@ -145,18 +145,20 @@
                                             <label for="inputNama" class="form-label">Detail</label>
                                         </div>
                                     </div>
-                                    <table class="table" id="daftar_detail">
-                                        <thead>
-                                            <tr>
-                                                <th width="15px">No</th>
-                                                <th width="25%">Produk</th>
-                                                <th width="100px">Jumlah Unit</th>
-                                                <th width="25%">Satuan</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        </tbody>
-                                    </table>
+                                    <div class="main--overflow-y">
+                                        <table class="table" id="daftar_detail">
+                                            <thead>
+                                                <tr>
+                                                    <th width="15px">No</th>
+                                                    <th width="25%">Produk</th>
+                                                    <th width="100px">Jumlah Unit</th>
+                                                    <th width="25%">Satuan</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                     <div class="" style="color: #dc3545" id="accessErrorDetail"></div>
                                 </div>
                             </div>

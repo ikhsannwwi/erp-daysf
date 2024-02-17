@@ -19,6 +19,7 @@
     <link rel="stylesheet"
         href="{{ asset('templateAdmin/assets/extensions/datatables.net-bs5/css/dataTables.bootstrap5.min.css') }}">
     <link href="https://cdn.datatables.net/v/bs5/dt-1.13.6/datatables.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset_administrator('assets/css/main.css') }}">
     <link rel="stylesheet" href="{{ asset_administrator('assets/plugins/sweetalert2/sweetalert2.css') }}">
 
     <!-- Tautan ke calendarify CSS -->

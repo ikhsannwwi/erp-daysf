@@ -95,60 +95,62 @@
                                                     class="fa fa-plus"></i> Tambah Item</button>
                                         </div>
                                     </div>
-                                    <table class="table" id="daftar_detail">
-                                        <thead>
-                                            <tr>
-                                                <th width="15px">No</th>
-                                                <th width="25%">Produk</th>
-                                                <th width="100px">Jumlah Unit</th>
-                                                <th width="25%">Satuan</th>
-                                                <th width="2%">Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($data->detail as $key => $row)
-                                                <tr class="detail-list" childidx="{{ $key }}"
-                                                    style="position: relative;">
-                                                    <input type="hidden" class="id-item"
-                                                        name="detail[{{ $key }}][id]" id="id-item"
-                                                        value="{{ $row->id }}">
-                                                    <input type="hidden" class="input_id-item"
-                                                        name="detail[{{ $key }}][input_id]" id="input_id-item"
-                                                        value="{{ $row->produk_id }}">
-                                                    <input type="hidden" class="transaksi_stok_id-item"
-                                                        name="detail[{{ $key }}][transaksi_stok_id]"
-                                                        id="transaksi_stok_id-item"
-                                                        value="{{ $row->transaksi_stok_id }}">
-                                                    <td class="no-item text-center">{{ $key + 1 }}</td>
-                                                    <td>
-                                                        <span class="nama_produk-item">{{ $row->produk->nama }}</span>
-                                                        <input type="hidden" name="detail[{{ $key }}][produk]"
-                                                            class="produk_id-item" value="{{ $row->produk_id }}">
-                                                    </td>
-                                                    <td><input type="text"
-                                                            name="detail[{{ $key }}][jumlah_unit]"
-                                                            class="form-control text-end jumlah_unit-item"
-                                                            value="{{ $row->jumlah_unit }}" data-parsley-required="true"
-                                                            autocomplete="off" id="inputJumlahUnit"></td>
-                                                    <td>
-                                                        <span
-                                                            class="nama_satuan-item">{{ $row->satuan_id === 0 ? $row->produk->satuan->nama : $row->satuan_konversi->nama_konversi }}</span>
-                                                        <a class="btn btn-outline-primary btn-sm float-end searchSatuan"
-                                                            data-bs-toggle="modal" data-bs-target="#ModalSatuan"><i
-                                                                class="bi bi-search"></i></a>
-                                                        <input type="hidden" name="detail[{{$key}}][satuan]"
-                                                            value="{{ $row->satuan_id }}" class="satuan_id-item"
-                                                            data-parsley-required="true">
-                                                    </td>
-                                                    <td class="text-center"><a href="javascript:void(0)"
-                                                            class="btn btn-outline-danger removeData" style="display: {{count($data->detail) > 1 ? 'block' : 'none'}}"
-                                                            data-ix="{{ $row->id }}"
-                                                            data-formula_id="{{ $row->formula_id }}"><i
-                                                                class='fa fa-times'></a></td>
+                                    <div class="main--overflow-y">
+                                        <table class="table" id="daftar_detail">
+                                            <thead>
+                                                <tr>
+                                                    <th width="15px">No</th>
+                                                    <th width="25%">Produk</th>
+                                                    <th width="100px">Jumlah Unit</th>
+                                                    <th width="25%">Satuan</th>
+                                                    <th width="2%">Action</th>
                                                 </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($data->detail as $key => $row)
+                                                    <tr class="detail-list" childidx="{{ $key }}"
+                                                        style="position: relative;">
+                                                        <input type="hidden" class="id-item"
+                                                            name="detail[{{ $key }}][id]" id="id-item"
+                                                            value="{{ $row->id }}">
+                                                        <input type="hidden" class="input_id-item"
+                                                            name="detail[{{ $key }}][input_id]" id="input_id-item"
+                                                            value="{{ $row->produk_id }}">
+                                                        <input type="hidden" class="transaksi_stok_id-item"
+                                                            name="detail[{{ $key }}][transaksi_stok_id]"
+                                                            id="transaksi_stok_id-item"
+                                                            value="{{ $row->transaksi_stok_id }}">
+                                                        <td class="no-item text-center">{{ $key + 1 }}</td>
+                                                        <td>
+                                                            <span class="nama_produk-item">{{ $row->produk->nama }}</span>
+                                                            <input type="hidden" name="detail[{{ $key }}][produk]"
+                                                                class="produk_id-item" value="{{ $row->produk_id }}">
+                                                        </td>
+                                                        <td><input type="text"
+                                                                name="detail[{{ $key }}][jumlah_unit]"
+                                                                class="form-control text-end jumlah_unit-item"
+                                                                value="{{ $row->jumlah_unit }}" data-parsley-required="true"
+                                                                autocomplete="off" id="inputJumlahUnit"></td>
+                                                        <td>
+                                                            <span
+                                                                class="nama_satuan-item">{{ $row->satuan_id === 0 ? $row->produk->satuan->nama : $row->satuan_konversi->nama_konversi }}</span>
+                                                            <a class="btn btn-outline-primary btn-sm float-end searchSatuan"
+                                                                data-bs-toggle="modal" data-bs-target="#ModalSatuan"><i
+                                                                    class="bi bi-search"></i></a>
+                                                            <input type="hidden" name="detail[{{$key}}][satuan]"
+                                                                value="{{ $row->satuan_id }}" class="satuan_id-item"
+                                                                data-parsley-required="true">
+                                                        </td>
+                                                        <td class="text-center"><a href="javascript:void(0)"
+                                                                class="btn btn-outline-danger removeData" style="display: {{count($data->detail) > 1 ? 'block' : 'none'}}"
+                                                                data-ix="{{ $row->id }}"
+                                                                data-formula_id="{{ $row->formula_id }}"><i
+                                                                    class='fa fa-times'></a></td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
                                     <div class="" style="color: #dc3545" id="accessErrorDetail"></div>
                                 </div>
                             </div>

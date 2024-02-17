@@ -147,37 +147,39 @@
                                             <label for="inputNama" class="form-label">Detail</label>
                                         </div>
                                     </div>
-                                    <table class="table" id="daftar_detail">
-                                        <thead>
-                                            <tr>
-                                                <th width="15px">No</th>
-                                                <th width="25%">Produk</th>
-                                                <th width="100px">Jumlah Unit</th>
-                                                <th width="25%">Satuan</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($data->detail as $key => $row)
-                                                <tr class="detail-list" childidx="{{$key}}" style="position: relative;">
-                                                    <input type="hidden" class="input_id-item" name="detail[{{$key}}][id]" id="input_id-item" value="{{$row->id}}">
-                                                    <input type="hidden" class="formula_detail_id-item" name="detail[{{$key}}][formula_detail_id]" id="formula_detail_id-item" value="{{$row->formula_detail_id}}">
-                                                    <input type="hidden" class="transaksi_stok_id-item" name="detail[{{$key}}][transaksi_stok_id]" id="transaksi_stok_id-item" value="{{$row->transaksi_stok_id}}">
-                                                    <td class="no-item text-center">{{$key + 1}}</td>
-                                                    <td>
-                                                        <span class="nama_produk-item">{{$row->produk->nama}}</span>
-                                                        <input type="hidden" name="detail[{{$key}}][produk]" class="produk_id-item" value="{{$row->produk_id}}">
-                                                    </td>
-                                                    <td><input type="text" name="detail[{{$key}}][jumlah_unit]" class="form-control text-end jumlah_unit-item" value="{{number_format($row->jumlah_unit, 0, '.', ',')}}"
-                                                            data-parsley-required="true" autocomplete="off" id="inputJumlahUnit" readonly></td>
-                                                    <td>
-                                                        <span class="nama_satuan-item">{{$row->formula_detail->satuan_id === 0 ? $row->formula_detail->produk->satuan->nama : $row->formula_detail->satuan_konversi->nama_konversi}}</span>
-                                                        <input type="hidden" name="detail[{{$key}}][satuan]" class="satuan_id-item" data-parsley-required="true" value="{{$row->formula_detail->satuan_id}}">
-                                                        <input type="hidden" name="detail[{{$key}}][jumlah_unit_formula]" class="jumlah_unit_formula-item" value="{{$row->formula_detail->jumlah_unit}}" data-parsley-required="true">
-                                                    </td>
+                                    <div class="main--overflow-y">
+                                        <table class="table" id="daftar_detail">
+                                            <thead>
+                                                <tr>
+                                                    <th width="15px">No</th>
+                                                    <th width="25%">Produk</th>
+                                                    <th width="100px">Jumlah Unit</th>
+                                                    <th width="25%">Satuan</th>
                                                 </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($data->detail as $key => $row)
+                                                    <tr class="detail-list" childidx="{{$key}}" style="position: relative;">
+                                                        <input type="hidden" class="input_id-item" name="detail[{{$key}}][id]" id="input_id-item" value="{{$row->id}}">
+                                                        <input type="hidden" class="formula_detail_id-item" name="detail[{{$key}}][formula_detail_id]" id="formula_detail_id-item" value="{{$row->formula_detail_id}}">
+                                                        <input type="hidden" class="transaksi_stok_id-item" name="detail[{{$key}}][transaksi_stok_id]" id="transaksi_stok_id-item" value="{{$row->transaksi_stok_id}}">
+                                                        <td class="no-item text-center">{{$key + 1}}</td>
+                                                        <td>
+                                                            <span class="nama_produk-item">{{$row->produk->nama}}</span>
+                                                            <input type="hidden" name="detail[{{$key}}][produk]" class="produk_id-item" value="{{$row->produk_id}}">
+                                                        </td>
+                                                        <td><input type="text" name="detail[{{$key}}][jumlah_unit]" class="form-control text-end jumlah_unit-item" value="{{number_format($row->jumlah_unit, 0, '.', ',')}}"
+                                                                data-parsley-required="true" autocomplete="off" id="inputJumlahUnit" readonly></td>
+                                                        <td>
+                                                            <span class="nama_satuan-item">{{$row->formula_detail->satuan_id === 0 ? $row->formula_detail->produk->satuan->nama : $row->formula_detail->satuan_konversi->nama_konversi}}</span>
+                                                            <input type="hidden" name="detail[{{$key}}][satuan]" class="satuan_id-item" data-parsley-required="true" value="{{$row->formula_detail->satuan_id}}">
+                                                            <input type="hidden" name="detail[{{$key}}][jumlah_unit_formula]" class="jumlah_unit_formula-item" value="{{$row->formula_detail->jumlah_unit}}" data-parsley-required="true">
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
                                     <div class="" style="color: #dc3545" id="accessErrorDetail"></div>
                                 </div>
                             </div>

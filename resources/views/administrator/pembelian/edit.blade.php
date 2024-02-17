@@ -86,100 +86,102 @@
                                                     class="fa fa-plus"></i> Tambah Item</button>
                                         </div>
                                     </div>
-                                    <table class="table" id="daftar_detail">
-                                        <thead>
-                                            <tr>
-                                                <th width="15px">No</th>
-                                                <th width="20%">Produk</th>
-                                                <th width="20%">Gudang</th>
-                                                <th width="100px">Jumlah Unit</th>
-                                                <th width="15%">Satuan</th>
-                                                <th width="100px">Harga Satuan</th>
-                                                <th width="100px">Keterangan</th>
-                                                <th width="100px">Sub Total</th>
-                                                <th width="20px">Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($data->detail as $key => $row)
-                                                <tr class="detail-list" childidx="{{ $key }}"
-                                                    style="position: relative;">
-                                                    <input type="hidden" class="id-item"
-                                                        name="detail[{{ $key }}][id]" id="id-item"
-                                                        value="{{ $row->id }}">
-                                                    <input type="hidden" class="input_id-item"
-                                                        name="detail[{{ $key }}][input_id]" id="input_id-item"
-                                                        value="{{ $row->produk_id }}">
-                                                    <input type="hidden" class="transaksi_stok_id-item"
-                                                        name="detail[{{ $key }}][transaksi_stok_id]"
-                                                        id="transaksi_stok_id-item"
-                                                        value="{{ $row->transaksi_stok_id }}">
-                                                    <td class="no-item text-center">{{ $key + 1 }}</td>
-                                                    <td>
-                                                        <span class="nama_produk-item">{{ $row->produk->nama }}</span>
-                                                        <input type="hidden" name="detail[{{ $key }}][produk]"
-                                                            class="produk_id-item" value="{{ $row->produk_id }}">
-                                                    </td>
-                                                    <td>
-                                                        <span class="nama_gudang-item">{{ $row->gudang->nama }}</span>
-                                                        <a class="btn btn-outline-primary btn-sm float-end searchGudang"
-                                                            data-bs-toggle="modal" data-bs-target="#ModalGudang"><i
-                                                                class="bi bi-search"></i></a>
-                                                        <input type="hidden" name="detail[{{ $key }}][gudang]"
-                                                            class="gudang_id-item" data-parsley-required="true"
-                                                            value="{{ $row->gudang_id }}">
-                                                    </td>
-                                                    <td><input type="text"
-                                                            name="detail[{{ $key }}][jumlah_unit]"
-                                                            class="form-control text-end jumlah_unit-item"
-                                                            value="{{ $row->jumlah_unit }}" data-parsley-required="true"
-                                                            autocomplete="off" id="inputJumlahUnit"></td>
-                                                    <td>
-                                                        <span
-                                                            class="nama_satuan-item">{{ $row->satuan_id === 0 ? $row->produk->satuan->nama : $row->satuan_konversi->nama_konversi }}</span>
-                                                        <a class="btn btn-outline-primary btn-sm float-end searchSatuan"
-                                                            data-bs-toggle="modal" data-bs-target="#ModalSatuan"><i
-                                                                class="bi bi-search"></i></a>
-                                                        <input type="hidden" name="detail[0][satuan]"
-                                                            value="{{ $row['satuan_id'] }}" class="satuan_id-item"
-                                                            data-parsley-required="true">
-                                                    </td>
-                                                    <td><input type="text"
-                                                            name="detail[{{ $key }}][harga_satuan]"
-                                                            class="form-control text-end harga_satuan-item"
-                                                            value="Rp {{ number_format($row->harga_satuan, 0, ',', '.') }}"
-                                                            data-parsley-required="true" autocomplete="off"
-                                                            id="inputHargaSatuan"></td>
-                                                    <td><input type="text"
-                                                            name="detail[{{ $key }}][keterangan]"
-                                                            class="form-control keterangan-item"
-                                                            value="{{ $row->keterangan }}" autocomplete="off"
-                                                            id="inputKeterangan"></td>
-                                                    <td>
-                                                        <span class="sub_total-item">Rp
-                                                            {{ number_format($row->sub_total, 0, ',', '.') }}</span>
-                                                        <input type="hidden"
-                                                            name="detail[{{ $key }}][sub_total]"
-                                                            class="input_sub_total-item" value="{{ $row->sub_total }}">
-                                                    </td>
-                                                    <td class="text-center"><a href="javascript:void(0)" style="display: {{count($data->detail) > 1 ? 'block' : 'none'}}"
-                                                            class="btn btn-outline-danger removeData"
-                                                            data-ix="{{ $row->id }}"
-                                                            data-pembelian_id="{{ $row->pembelian_id }}"><i
-                                                                class='fa fa-times'></a></td>
+                                    <div class="main--overflow-y">
+                                        <table class="table" id="daftar_detail">
+                                            <thead>
+                                                <tr>
+                                                    <th width="15px">No</th>
+                                                    <th width="20%">Produk</th>
+                                                    <th width="20%">Gudang</th>
+                                                    <th width="100px">Jumlah Unit</th>
+                                                    <th width="15%">Satuan</th>
+                                                    <th width="100px">Harga Satuan</th>
+                                                    <th width="100px">Keterangan</th>
+                                                    <th width="100px">Sub Total</th>
+                                                    <th width="20px">Action</th>
                                                 </tr>
-                                            @endforeach
-                                        </tbody>
-                                        <tfoot>
-                                            <tr>
-                                                <th colspan="7" class="text-end">Total</th>
-                                                <th id="totalText" class="total-item">Rp
-                                                    {{ number_format($data->total, 0, ',', '.') }}</th>
-                                                <th><input type="hidden" name="total" value="{{ $data->total }}"
-                                                        class="inputTotal-item" id="inputTotal"></th>
-                                            </tr>
-                                        </tfoot>
-                                    </table>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($data->detail as $key => $row)
+                                                    <tr class="detail-list" childidx="{{ $key }}"
+                                                        style="position: relative;">
+                                                        <input type="hidden" class="id-item"
+                                                            name="detail[{{ $key }}][id]" id="id-item"
+                                                            value="{{ $row->id }}">
+                                                        <input type="hidden" class="input_id-item"
+                                                            name="detail[{{ $key }}][input_id]" id="input_id-item"
+                                                            value="{{ $row->produk_id }}">
+                                                        <input type="hidden" class="transaksi_stok_id-item"
+                                                            name="detail[{{ $key }}][transaksi_stok_id]"
+                                                            id="transaksi_stok_id-item"
+                                                            value="{{ $row->transaksi_stok_id }}">
+                                                        <td class="no-item text-center">{{ $key + 1 }}</td>
+                                                        <td>
+                                                            <span class="nama_produk-item">{{ $row->produk->nama }}</span>
+                                                            <input type="hidden" name="detail[{{ $key }}][produk]"
+                                                                class="produk_id-item" value="{{ $row->produk_id }}">
+                                                        </td>
+                                                        <td>
+                                                            <span class="nama_gudang-item">{{ $row->gudang->nama }}</span>
+                                                            <a class="btn btn-outline-primary btn-sm float-end searchGudang"
+                                                                data-bs-toggle="modal" data-bs-target="#ModalGudang"><i
+                                                                    class="bi bi-search"></i></a>
+                                                            <input type="hidden" name="detail[{{ $key }}][gudang]"
+                                                                class="gudang_id-item" data-parsley-required="true"
+                                                                value="{{ $row->gudang_id }}">
+                                                        </td>
+                                                        <td><input type="text"
+                                                                name="detail[{{ $key }}][jumlah_unit]"
+                                                                class="form-control text-end jumlah_unit-item"
+                                                                value="{{ $row->jumlah_unit }}" data-parsley-required="true"
+                                                                autocomplete="off" id="inputJumlahUnit"></td>
+                                                        <td>
+                                                            <span
+                                                                class="nama_satuan-item">{{ $row->satuan_id === 0 ? $row->produk->satuan->nama : $row->satuan_konversi->nama_konversi }}</span>
+                                                            <a class="btn btn-outline-primary btn-sm float-end searchSatuan"
+                                                                data-bs-toggle="modal" data-bs-target="#ModalSatuan"><i
+                                                                    class="bi bi-search"></i></a>
+                                                            <input type="hidden" name="detail[0][satuan]"
+                                                                value="{{ $row['satuan_id'] }}" class="satuan_id-item"
+                                                                data-parsley-required="true">
+                                                        </td>
+                                                        <td><input type="text"
+                                                                name="detail[{{ $key }}][harga_satuan]"
+                                                                class="form-control text-end harga_satuan-item"
+                                                                value="Rp {{ number_format($row->harga_satuan, 0, ',', '.') }}"
+                                                                data-parsley-required="true" autocomplete="off"
+                                                                id="inputHargaSatuan"></td>
+                                                        <td><input type="text"
+                                                                name="detail[{{ $key }}][keterangan]"
+                                                                class="form-control keterangan-item"
+                                                                value="{{ $row->keterangan }}" autocomplete="off"
+                                                                id="inputKeterangan"></td>
+                                                        <td>
+                                                            <span class="sub_total-item">Rp
+                                                                {{ number_format($row->sub_total, 0, ',', '.') }}</span>
+                                                            <input type="hidden"
+                                                                name="detail[{{ $key }}][sub_total]"
+                                                                class="input_sub_total-item" value="{{ $row->sub_total }}">
+                                                        </td>
+                                                        <td class="text-center"><a href="javascript:void(0)" style="display: {{count($data->detail) > 1 ? 'block' : 'none'}}"
+                                                                class="btn btn-outline-danger removeData"
+                                                                data-ix="{{ $row->id }}"
+                                                                data-pembelian_id="{{ $row->pembelian_id }}"><i
+                                                                    class='fa fa-times'></a></td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <th colspan="7" class="text-end">Total</th>
+                                                    <th id="totalText" class="total-item">Rp
+                                                        {{ number_format($data->total, 0, ',', '.') }}</th>
+                                                    <th><input type="hidden" name="total" value="{{ $data->total }}"
+                                                            class="inputTotal-item" id="inputTotal"></th>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
                                     <div class="" style="color: #dc3545" id="accessErrorDetail"></div>
                                 </div>
                             </div>

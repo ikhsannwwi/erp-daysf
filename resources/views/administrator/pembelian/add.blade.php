@@ -83,31 +83,33 @@
                                                     class="fa fa-plus"></i> Tambah Item</button>
                                         </div>
                                     </div>
-                                    <table class="table" id="daftar_detail">
-                                        <thead>
-                                            <tr>
-                                                <th width="15px">No</th>
-                                                <th width="20%">Produk</th>
-                                                <th width="20%">Gudang</th>
-                                                <th width="100px">Jumlah Unit</th>
-                                                <th width="15%">Satuan</th>
-                                                <th width="100px">Harga Satuan</th>
-                                                <th width="100px">Keterangan</th>
-                                                <th width="100px">Sub Total</th>
-                                                <th width="20px">Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        </tbody>
-                                        <tfoot>
-                                            <tr>
-                                                <th colspan="7" class="text-end">Total</th>
-                                                <th id="totalText" class="total-item">Rp 0</th>
-                                                <th><input type="hidden" name="total" class="input_total-item"
-                                                        id="inputTotal"></th>
-                                            </tr>
-                                        </tfoot>
-                                    </table>
+                                    <div class="main--overflow-y">
+                                        <table class="table" id="daftar_detail">
+                                            <thead>
+                                                <tr>
+                                                    <th width="15px">No</th>
+                                                    <th width="20%">Produk</th>
+                                                    <th width="20%">Gudang</th>
+                                                    <th width="100px">Jumlah Unit</th>
+                                                    <th width="15%">Satuan</th>
+                                                    <th width="100px">Harga Satuan</th>
+                                                    <th width="100px">Keterangan</th>
+                                                    <th width="100px">Sub Total</th>
+                                                    <th width="20px">Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <th colspan="7" class="text-end">Total</th>
+                                                    <th id="totalText" class="total-item">Rp 0</th>
+                                                    <th><input type="hidden" name="total" class="input_total-item"
+                                                            id="inputTotal"></th>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
                                     <div class="" style="color: #dc3545" id="accessErrorDetail"></div>
                                 </div>
                             </div>
