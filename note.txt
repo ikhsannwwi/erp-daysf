@@ -7,13 +7,142 @@ stok : status = done, module = transaksi_stok
 stock card : status = done, module = penyesuaian_stok
 
 pembelian : status = done , module = pembelian
-resep/formula : status = ... , module = ...
-produksi : status = ... , module = ...
+resep/formula : status = done , module = formula
+produksi : status = done , module = produksi
 penjualan : status = ... , module = ...
+surat jalan : status = ... , module = ...
 invoice : status = ... , module = ...
+karyawan : status = ... , module = ...
 
 
 catatan :
 
 9 febuari 2024
 penyesuaian stok : tambahkan column transaksi_stok_id untuk memudahkan edit data dan hapus data. status : done
+
+
+
+Tabel Stok Opname:
+
+ID Opname (Kunci Utama)
+Tanggal Opname
+ID Karyawan (Kunci Asing ke Tabel Informasi Karyawan)
+Status Opname (Dalam Proses, Selesai, Dibatalkan, dll.)
+Informasi Tambahan terkait stok opname
+Tabel Detail Stok Opname:
+
+ID Detail Opname (Kunci Utama)
+ID Opname (Kunci Asing ke Tabel Stok Opname)
+ID Barang (Kunci Asing ke Tabel Barang)
+Jumlah Stok Fisik
+Jumlah Selisih
+Keterangan
+Informasi Tambahan terkait detail stok opname
+
+
+Modul Inti:
+
+Keuangan dan Akuntansi:
+
+Daftar Akun
+Tabel Daftar Akun:
+ID Akun (Kunci Utama)
+Kode Akun
+Nama Akun
+Tipe Akun (Misalnya: Aset, Kewajiban, Modal, Pendapatan, Beban, dll.)
+Level Akun (Jika struktur akun memiliki hierarki)
+Informasi lainnya terkait akun
+
+Buku Besar
+Tabel Buku Besar:
+ID Entri Buku (Kunci Utama)
+Tanggal Entri
+ID Akun (Kunci Asing ke Tabel Daftar Akun)
+Debit
+Kredit
+Keterangan
+Informasi tambahan terkait entri buku
+
+Hutang Usaha
+Tabel Hutang Usaha:
+ID Hutang (Kunci Utama)
+ID Pemasok (Kunci Asing ke Tabel Pemasok)
+Tanggal Transaksi
+Jatuh Tempo
+Jumlah Hutang
+Status Pembayaran (Dibayar, Belum Dibayar, Dalam Proses, dll.)
+Keterangan
+Informasi tambahan terkait hutang usaha
+
+Piutang Usaha
+Laporan Keuangan
+
+
+
+Manajemen Rantai Pasokan:
+
+Manajemen Inventaris
+Manajemen Pesanan
+Pengadaan
+Manajemen Pemasok
+
+
+
+Sumber Daya Manusia:
+
+Informasi Karyawan
+Tabel Informasi Karyawan:
+ID Karyawan (Kunci Utama)
+Nama Depan
+Nama Belakang
+Tanggal Lahir
+Alamat
+Nomor Telepon
+Email
+Departemen (Kunci Asing ke Tabel Departemen)
+Jabatan
+Tanggal Bergabung
+Informasi Tambahan terkait karyawan
+
+Penggajian
+Tabel Penggajian:
+ID Gaji (Kunci Utama)
+ID Karyawan (Kunci Asing ke Tabel Informasi Karyawan)
+Periode Gaji
+Gaji Pokok
+Tunjangan
+Potongan
+Total Gaji
+Metode Pembayaran
+Status Pembayaran (Dibayar, Belum Dibayar, Dalam Proses, dll.)
+Informasi Tambahan terkait penggajian
+
+Waktu dan Kehadiran
+Tabel Waktu dan Kehadiran:
+ID Kehadiran (Kunci Utama)
+ID Karyawan (Kunci Asing ke Tabel Informasi Karyawan)
+Tanggal Kehadiran
+Jam Masuk
+Jam Keluar
+Durasi Kerja
+Status Kehadiran (Masuk, Izin, Sakit, Cuti, dll.)
+Informasi Tambahan terkait waktu dan kehadiran
+
+Administrasi Manfaat
+Tabel Administrasi Manfaat:
+ID Administrasi Manfaat (Kunci Utama)
+ID Karyawan (Kunci Asing ke Tabel Informasi Karyawan)
+Tanggal Pemberian Manfaat
+Jenis Manfaat (Asuransi Kesehatan, Asuransi Jiwa, Dana Pensiun, dll.)
+Nilai Manfaat
+Periode Manfaat (Bulanan, Tahunan, dll.)
+Informasi Tambahan terkait administrasi manfaat
+
+
+
+Manufaktur:
+
+Bill of Materials (BOM)
+Pesanan Kerja
+Perencanaan Produksi
+Pengendalian Kualitas

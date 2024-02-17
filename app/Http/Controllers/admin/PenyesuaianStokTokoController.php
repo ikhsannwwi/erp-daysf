@@ -4,17 +4,16 @@ namespace App\Http\Controllers\admin;
 
 use DB;
 use DataTables;
-use App\Models\Gudang;
+use App\Models\Toko;
 use App\Models\admin\Produk;
 use Illuminate\Http\Request;
 use App\Models\TransaksiStok;
 use App\Models\PenyesuaianStok;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Validator;
 
-class PenyesuaianStokController extends Controller
+class PenyesuaianStokTokoController extends Controller
 {
-    private static $module = "penyesuaian_stok";
+    private static $module = "penyesuaian_stok_toko";
 
     public function index(){
         //Check permission
@@ -22,11 +21,11 @@ class PenyesuaianStokController extends Controller
             abort(403);
         }
 
-        return view('administrator.penyesuaian_stok.index');
+        return view('administrator.penyesuaian_stok_toko.index');
     }
     
     public function getData(Request $request){
-        $data = PenyesuaianStok::query()->with('gudang')->with('produk')->where('satuan_id', 0)->get();
+        $data = PenyesuaianStok::query()->with('toko')->with('produk')->where('gudang_id', 0)->get();
 
         return DataTables::of($data)
             ->addColumn('action', function ($row) {
@@ -37,7 +36,7 @@ class PenyesuaianStokController extends Controller
                 </a>';
                 endif;
                 if (isAllowed(static::$module, "edit")) : //Check permission
-                    $btn .= '<a href="'.route('admin.penyesuaian_stok.edit',$row->id).'" class="btn btn-primary btn-sm me-3 ">
+                    $btn .= '<a href="'.route('admin.penyesuaian_stok_toko.edit',$row->id).'" class="btn btn-primary btn-sm me-3 ">
                     Edit
                 </a>';
                 endif;
@@ -58,7 +57,7 @@ class PenyesuaianStokController extends Controller
             abort(403);
         }
 
-        return view('administrator.penyesuaian_stok.add');
+        return view('administrator.penyesuaian_stok_toko.add');
     }
     
     public function save(Request $request){
@@ -70,7 +69,7 @@ class PenyesuaianStokController extends Controller
         
         $rules = [
             'tanggal' => 'required',
-            'gudang' => 'required',
+            'toko' => 'required',
             'produk' => 'required',
             'metode' => 'required|in:masuk,keluar',
             'jumlah' => 'required',
@@ -80,13 +79,13 @@ class PenyesuaianStokController extends Controller
 
         $jumlah = 0;
         $stok_masuk = TransaksiStok::where('produk_id', $request->produk)
-            ->where('gudang_id', $request->gudang)
+            ->where('toko_id', $request->toko)
             ->whereIn('metode_transaksi', ['masuk'])
             ->sum('jumlah_unit');
 
         // Ambil jumlah stok keluar
         $stok_keluar = TransaksiStok::where('produk_id', $request->produk)
-            ->where('gudang_id', $request->gudang)
+            ->where('toko_id', $request->toko)
             ->whereIn('metode_transaksi', ['keluar'])
             ->sum('jumlah_unit');
 
@@ -102,7 +101,8 @@ class PenyesuaianStokController extends Controller
             DB::beginTransaction();
             $data = PenyesuaianStok::create([
                 'tanggal' => date('Y-m-d', strtotime($request->tanggal)),
-                'gudang_id' => $request->gudang,
+                'gudang_id' => 0,
+                'toko_id' => $request->toko,
                 'produk_id' => $request->produk,
                 'metode_transaksi' => $request->metode,
                 'jumlah_unit' => str_replace(['.', ','], '', $request->jumlah),
@@ -113,7 +113,8 @@ class PenyesuaianStokController extends Controller
             
             $transaksi = TransaksiStok::create([
                 'tanggal' => date('Y-m-d', strtotime($request->tanggal)),
-                'gudang_id' => $request->gudang,
+                'gudang_id' => 0,
+                'toko_id' => $request->toko,
                 'produk_id' => $request->produk,
                 'metode_transaksi' => $request->metode,
                 'jenis_transaksi' => static::$module,
@@ -124,7 +125,7 @@ class PenyesuaianStokController extends Controller
             
             createLog(static::$module, __FUNCTION__, $data->id, ['Data yang disimpan' => $data]);
             DB::commit();
-            return redirect()->route('admin.penyesuaian_stok')->with('success', 'Data berhasil disimpan.');
+            return redirect()->route('admin.penyesuaian_stok_toko')->with('success', 'Data berhasil disimpan.');
         } catch (\Throwable $th) {
             DB::rollback();
             return back()->with('error', $th->getMessage());
@@ -140,7 +141,7 @@ class PenyesuaianStokController extends Controller
 
         $data = PenyesuaianStok::find($id);
 
-        return view('administrator.penyesuaian_stok.edit',compact('data'));
+        return view('administrator.penyesuaian_stok_toko.edit',compact('data'));
     }
     
     public function update(Request $request)
@@ -156,7 +157,7 @@ class PenyesuaianStokController extends Controller
 
         $rules = [
             'tanggal' => 'required',
-            'gudang' => 'required',
+            'toko' => 'required',
             'produk' => 'required',
             'metode' => 'required|in:masuk,keluar',
             'jumlah' => 'required',
@@ -165,13 +166,14 @@ class PenyesuaianStokController extends Controller
         $request->validate($rules);
 
         $previousData = [
-            'penyesuaian_stok' => $data->toArray(),
+            'penyesuaian_stok_toko' => $data->toArray(),
             'transaksi_stok' => $transaksi_stok->toArray()
         ];
 
         $updates = [
             'tanggal' => date('Y-m-d', strtotime($request->tanggal)),
-            'gudang_id' => $request->gudang,
+            'gudang_id' => 0,
+            'toko_id' => $request->toko,
             'produk_id' => $request->produk,
             'metode_transaksi' => $request->metode,
             'jumlah_unit' => str_replace(['.', ','], '', $request->jumlah),
@@ -181,7 +183,8 @@ class PenyesuaianStokController extends Controller
 
         $update_stok = [
             'tanggal' => date('Y-m-d', strtotime($request->tanggal)),
-            'gudang_id' => $request->gudang,
+            'gudang_id' => 0,
+            'toko_id' => $request->toko,
             'produk_id' => $request->produk,
             'metode_transaksi' => $request->metode,
             'jenis_transaksi' => static::$module,
@@ -190,7 +193,7 @@ class PenyesuaianStokController extends Controller
         ];
         
         $updatedData = [
-            'penyesuaian_stok' => array_intersect_key($updates, $data->getOriginal()),
+            'penyesuaian_stok_toko' => array_intersect_key($updates, $data->getOriginal()),
             'transaksi_stok' => array_intersect_key($update_stok, $transaksi_stok->getOriginal())
         ];
 
@@ -201,7 +204,7 @@ class PenyesuaianStokController extends Controller
             
             createLog(static::$module, __FUNCTION__, $data->id, ['Data sebelum diupdate' => $previousData, 'Data sesudah diupdate' => $updatedData]);
             DB::commit();
-            return redirect()->route('admin.penyesuaian_stok')->with('success', 'Data berhasil diupdate.');
+            return redirect()->route('admin.penyesuaian_stok_toko')->with('success', 'Data berhasil diupdate.');
         } catch (\Throwable $th) {
             DB::rollback();
             return back()->with('error', $th->getMessage());
@@ -249,7 +252,7 @@ class PenyesuaianStokController extends Controller
             abort(403);
         }
 
-        $data = PenyesuaianStok::with('gudang')->with('produk')->find($id);
+        $data = PenyesuaianStok::with('toko')->with('produk')->find($id);
 
         return response()->json([
             'data' => $data,
@@ -258,8 +261,8 @@ class PenyesuaianStokController extends Controller
         ]);
     }
 
-    public function getDataGudang(Request $request){
-        $data = Gudang::query();
+    public function getDataToko(Request $request){
+        $data = Toko::query();
         $data->where("status", 1)->get();
 
 
@@ -279,13 +282,13 @@ class PenyesuaianStokController extends Controller
     public function checkStock(Request $request){
         $jumlah = 0;
         $stok_masuk = TransaksiStok::where('produk_id', $request->produk)
-            ->where('gudang_id', $request->gudang)
+            ->where('toko_id', $request->toko)
             ->whereIn('metode_transaksi', ['masuk'])
             ->sum('jumlah_unit');
 
         // Ambil jumlah stok keluar
         $stok_keluar = TransaksiStok::where('produk_id', $request->produk)
-            ->where('gudang_id', $request->gudang)
+            ->where('toko_id', $request->toko)
             ->whereIn('metode_transaksi', ['keluar'])
             ->sum('jumlah_unit');
 

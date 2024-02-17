@@ -40,8 +40,8 @@
                 success: function(response) {
                     var data = response.data;
 
-                    var detail = data.detail;
-                    console.log(detail)
+                    var details = data.detail;
+                    console.log(details)
 
                     var detailTableHTML =
                         '<table id="table-detail" class="compact table table-bordered" width="100%">' +
@@ -58,8 +58,8 @@
 
                     detailTableHTML += '</tr></thead><tbody>';
 
-                    for (var i = 0; i < detail.length; i++) {
-                        var detail = detail[i];
+                    for (var i = 0; i < details.length; i++) {
+                        var detail = details[i];
 
                         const harga = parseFloat(detail.harga_satuan).toLocaleString('id-ID', {
                             style: 'currency',

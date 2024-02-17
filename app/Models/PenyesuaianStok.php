@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Toko;
 use App\Models\Gudang;
 use App\Models\admin\Produk;
 use Illuminate\Database\Eloquent\Model;
@@ -17,6 +18,10 @@ class PenyesuaianStok extends Model
 
     public function gudang(){
         return $this->belongsTo(Gudang::class);
+    }
+
+    public function toko(){
+        return $this->belongsTo(Toko::class);
     }
 
     public function produk(){

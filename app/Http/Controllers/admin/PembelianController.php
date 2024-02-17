@@ -408,7 +408,11 @@ class PembelianController extends Controller
 
         $data = Pembelian::with([
             'detail' => function ($query) {
-                $query->with('satuan_konversi', 'produk', 'gudang');
+                $query->with(['satuan_konversi', 'gudang',
+                    'produk' => function($produk_query){
+                        $produk_query->with('satuan');
+                    }
+                ]);
             },
             'supplier'
         ])->find($id);

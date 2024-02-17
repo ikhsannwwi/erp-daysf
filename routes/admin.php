@@ -24,7 +24,9 @@ use App\Http\Controllers\admin\OperatorKasirController;
 use App\Http\Controllers\admin\TransaksiStokController;
 use App\Http\Controllers\admin\SatuanKonversiController;
 use App\Http\Controllers\admin\PenyesuaianStokController;
+use App\Http\Controllers\admin\TransaksiStokTokoController;
 use App\Http\Controllers\admin\TransaksiPenjualanController;
+use App\Http\Controllers\admin\PenyesuaianStokTokoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -226,6 +228,20 @@ Route::prefix('admin')->group(function () {
         Route::post('transaksi-stok/checkEmail',[TransaksiStokController::class, 'checkEmail'])->name('admin.transaksi_stok.checkEmail');
         Route::post('transaksi-stok/checkTelepon',[TransaksiStokController::class, 'checkTelepon'])->name('admin.transaksi_stok.checkTelepon');
         Route::get('transaksi-stok/getGudang', [TransaksiStokController::class, 'getGudang'])->name('admin.transaksi_stok.getGudang');
+        
+        //Transaksi Stok Toko
+        Route::get('transaksi-stok-toko', [TransaksiStokTokoController::class, 'index'])->name('admin.transaksi_stok_toko');
+        Route::get('transaksi-stok-toko/{toko_id}/add/{kode}', [TransaksiStokTokoController::class, 'add'])->name('admin.transaksi_stok_toko.add');
+        Route::get('transaksi-stok-toko/getData', [TransaksiStokTokoController::class, 'getData'])->name('admin.transaksi_stok_toko.getData');
+        Route::get('transaksi-stok-toko/getDataProduk', [TransaksiStokTokoController::class, 'getDataProduk'])->name('admin.transaksi_stok_toko.getDataProduk');
+        Route::post('transaksi-stok-toko/save', [TransaksiStokTokoController::class, 'save'])->name('admin.transaksi_stok_toko.save');
+        Route::get('transaksi-stok-toko/edit/{id}', [TransaksiStokTokoController::class, 'edit'])->name('admin.transaksi_stok_toko.edit');
+        Route::put('transaksi-stok-toko/update', [TransaksiStokTokoController::class, 'update'])->name('admin.transaksi_stok_toko.update');
+        Route::delete('transaksi-stok-toko/delete', [TransaksiStokTokoController::class, 'delete'])->name('admin.transaksi_stok_toko.delete');
+        Route::get('transaksi-stok-toko/{toko_id}/detail/{kode}', [TransaksiStokTokoController::class, 'detail'])->name('admin.transaksi_stok_toko.detail');
+        Route::post('transaksi-stok-toko/checkEmail',[TransaksiStokTokoController::class, 'checkEmail'])->name('admin.transaksi_stok_toko.checkEmail');
+        Route::post('transaksi-stok-toko/checkTelepon',[TransaksiStokTokoController::class, 'checkTelepon'])->name('admin.transaksi_stok_toko.checkTelepon');
+        Route::get('transaksi-stok-toko/getToko', [TransaksiStokTokoController::class, 'getToko'])->name('admin.transaksi_stok_toko.getToko');
 
         //Gudang
         Route::get('gudang', [GudangController::class, 'index'])->name('admin.gudang');
@@ -251,6 +267,19 @@ Route::prefix('admin')->group(function () {
         Route::get('penyesuaian-stok/getDataGudang', [PenyesuaianStokController::class, 'getDataGudang'])->name('admin.penyesuaian_stok.getDataGudang');
         Route::get('penyesuaian-stok/getDataProduk', [PenyesuaianStokController::class, 'getDataProduk'])->name('admin.penyesuaian_stok.getDataProduk');
         Route::post('penyesuaian-stok/checkStock', [PenyesuaianStokController::class, 'checkStock'])->name('admin.penyesuaian_stok.checkStock');
+        
+        //Penyesuaian Stok Toko
+        Route::get('penyesuaian-stok-toko', [PenyesuaianStokTokoController::class, 'index'])->name('admin.penyesuaian_stok_toko');
+        Route::get('penyesuaian-stok-toko/add', [PenyesuaianStokTokoController::class, 'add'])->name('admin.penyesuaian_stok_toko.add');
+        Route::get('penyesuaian-stok-toko/getData', [PenyesuaianStokTokoController::class, 'getData'])->name('admin.penyesuaian_stok_toko.getData');
+        Route::post('penyesuaian-stok-toko/save', [PenyesuaianStokTokoController::class, 'save'])->name('admin.penyesuaian_stok_toko.save');
+        Route::get('penyesuaian-stok-toko/edit/{id}', [PenyesuaianStokTokoController::class, 'edit'])->name('admin.penyesuaian_stok_toko.edit');
+        Route::put('penyesuaian-stok-toko/update', [PenyesuaianStokTokoController::class, 'update'])->name('admin.penyesuaian_stok_toko.update');
+        Route::delete('penyesuaian-stok-toko/delete', [PenyesuaianStokTokoController::class, 'delete'])->name('admin.penyesuaian_stok_toko.delete');
+        Route::get('penyesuaian-stok-toko/getDetail-{id}', [PenyesuaianStokTokoController::class, 'getDetail'])->name('admin.penyesuaian_stok_toko.getDetail');
+        Route::get('penyesuaian-stok-toko/getDataToko', [PenyesuaianStokTokoController::class, 'getDataToko'])->name('admin.penyesuaian_stok_toko.getDataToko');
+        Route::get('penyesuaian-stok-toko/getDataProduk', [PenyesuaianStokTokoController::class, 'getDataProduk'])->name('admin.penyesuaian_stok_toko.getDataProduk');
+        Route::post('penyesuaian-stok-toko/checkStock', [PenyesuaianStokTokoController::class, 'checkStock'])->name('admin.penyesuaian_stok_toko.checkStock');
         
         //Pembelian
         Route::get('pembelian', [PembelianController::class, 'index'])->name('admin.pembelian');
