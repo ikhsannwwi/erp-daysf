@@ -61,7 +61,6 @@ class DepartemenController extends Controller
 
         $request->validate([
             'nama' => 'required',
-            'deskripsi' => 'required',
         ]);
     
         $data = Departemen::create([
@@ -98,7 +97,6 @@ class DepartemenController extends Controller
 
         $rules = [
             'nama' => 'required',
-            'deskripsi' => 'required',
         ];
 
         $request->validate($rules);
