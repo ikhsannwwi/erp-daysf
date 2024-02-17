@@ -159,6 +159,21 @@
 
                 <li class="sidebar-title">Other</li>
 
+                <li class="sidebar-item  has-sub {{ Route::is('admin.karyawan*', 'admin.departemen*') ? 'active' : '' }}">
+                    <a href="#" class='sidebar-link'>
+                        <i class="bi bi-grid-1x2-fill"></i>
+                        <span>SDM</span>
+                    </a>
+                    <ul class="submenu" style="display: {{ Route::is('admin.karyawan*', 'admin.departemen*') ? 'block' : 'none' }};">
+                        <li class="submenu-item {{ Route::is('admin.departemen*') ? 'active' : '' }} ">
+                            <a href="{{ route('admin.departemen') }}">Departemen</a>
+                        </li>
+                        <li class="submenu-item {{ Route::is('admin.karyawan*') ? 'active' : '' }} ">
+                            <a href="{{ route('admin.karyawan') }}">Karyawan</a>
+                        </li>
+                    </ul>
+                </li>
+
                 <li class="sidebar-item  has-sub {{ Route::is('admin.users*', 'admin.user_groups*', 'admin.operator_kasir*') ? 'active' : '' }}">
                     <a href="#" class='sidebar-link'>
                         <i class="bi bi-grid-1x2-fill"></i>
