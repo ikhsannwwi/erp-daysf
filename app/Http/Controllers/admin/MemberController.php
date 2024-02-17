@@ -5,6 +5,7 @@ namespace App\Http\Controllers\admin;
 use DB;
 use File;
 use DataTables;
+use App\Models\Karyawan;
 use App\Models\admin\User;
 use Illuminate\Support\Str;
 use App\Models\admin\Member;
@@ -386,14 +387,16 @@ class MemberController extends Controller
             $userWithEmail = User::where('email', $email);
             $userMemberWithEmail = UserMember::where('email', $email);
             $operatorKasirWithEmail = OperatorKasir::where('email', $email);
+            $KaryawanWithEmail = Karyawan::where('email', $email);
     
             if(isset($id)){
                 $userWithEmail->where('id', '!=', $id);
                 $userMemberWithEmail->where('id', '!=', $id);
                 $operatorKasirWithEmail->where('id', '!=', $id);
+                $KaryawanWithEmail->where('id', '!=', $id);
             }
     
-            $userExists = $userWithEmail->exists() || $userMemberWithEmail->exists() || $operatorKasirWithEmail->exists();
+            $userExists = $userWithEmail->exists() || $userMemberWithEmail->exists() || $operatorKasirWithEmail->exists() || $KaryawanWithEmail->exists();
     
             if($userExists){
                 return response()->json([

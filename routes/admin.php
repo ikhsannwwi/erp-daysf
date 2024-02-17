@@ -13,6 +13,7 @@ use App\Http\Controllers\admin\SatuanController;
 use App\Http\Controllers\admin\FormulaController;
 use App\Http\Controllers\admin\ProfileController;
 use App\Http\Controllers\admin\SettingController;
+use App\Http\Controllers\admin\KaryawanController;
 use App\Http\Controllers\admin\KategoriController;
 use App\Http\Controllers\admin\ProduksiController;
 use App\Http\Controllers\admin\SupplierController;
@@ -20,6 +21,7 @@ use App\Http\Controllers\admin\DashboardController;
 use App\Http\Controllers\admin\LogSystemController;
 use App\Http\Controllers\admin\PembelianController;
 use App\Http\Controllers\admin\UserGroupController;
+use App\Http\Controllers\admin\DepartemenController;
 use App\Http\Controllers\admin\OperatorKasirController;
 use App\Http\Controllers\admin\TransaksiStokController;
 use App\Http\Controllers\admin\SatuanKonversiController;
@@ -362,5 +364,30 @@ Route::prefix('admin')->group(function () {
         Route::get('produksi/getDataProduk', [ProduksiController::class, 'getDataProduk'])->name('admin.produksi.getDataProduk');
         Route::post('produksi/checkStock', [ProduksiController::class, 'checkStock'])->name('admin.produksi.checkStock');
         Route::delete('produksi/deleteDetail', [ProduksiController::class, 'deleteDetail'])->name('admin.produksi.deleteDetail');
+
+        //Karyawan
+        Route::get('karyawan', [KaryawanController::class, 'index'])->name('admin.karyawan');
+        Route::get('karyawan/add', [KaryawanController::class, 'add'])->name('admin.karyawan.add');
+        Route::get('karyawan/getData', [KaryawanController::class, 'getData'])->name('admin.karyawan.getData');
+        Route::post('karyawan/save', [KaryawanController::class, 'save'])->name('admin.karyawan.save');
+        Route::get('karyawan/edit/{id}', [KaryawanController::class, 'edit'])->name('admin.karyawan.edit');
+        Route::put('karyawan/update', [KaryawanController::class, 'update'])->name('admin.karyawan.update');
+        Route::delete('karyawan/delete', [KaryawanController::class, 'delete'])->name('admin.karyawan.delete');
+        Route::get('karyawan/getDetail-{id}', [KaryawanController::class, 'getDetail'])->name('admin.karyawan.getDetail');
+        Route::get('karyawan/getDataDepartemen', [KaryawanController::class, 'getDataDepartemen'])->name('admin.karyawan.getDataDepartemen');
+        Route::post('karyawan/checkEmail',[KaryawanController::class, 'checkEmail'])->name('admin.karyawan.checkEmail');
+        Route::post('karyawan/checkTelepon',[KaryawanController::class, 'checkTelepon'])->name('admin.karyawan.checkTelepon');
+        Route::post('karyawan/changeStatus',[KaryawanController::class, 'changeStatus'])->name('admin.karyawan.changeStatus');
+        
+        //Departemen
+        Route::get('departemen', [DepartemenController::class, 'index'])->name('admin.departemen');
+        Route::get('departemen/add', [DepartemenController::class, 'add'])->name('admin.departemen.add');
+        Route::get('departemen/getData', [DepartemenController::class, 'getData'])->name('admin.departemen.getData');
+        Route::post('departemen/save', [DepartemenController::class, 'save'])->name('admin.departemen.save');
+        Route::get('departemen/edit/{id}', [DepartemenController::class, 'edit'])->name('admin.departemen.edit');
+        Route::put('departemen/update', [DepartemenController::class, 'update'])->name('admin.departemen.update');
+        Route::delete('departemen/delete', [DepartemenController::class, 'delete'])->name('admin.departemen.delete');
+        Route::post('departemen/checkNama',[DepartemenController::class, 'checkNama'])->name('admin.departemen.checkNama');
+        Route::get('departemen/getDataKaryawan', [DepartemenController::class, 'getDataKaryawan'])->name('admin.departemen.getDataKaryawan');
     });
 });

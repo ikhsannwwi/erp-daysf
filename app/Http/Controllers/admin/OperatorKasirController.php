@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\admin;
 
 use DataTables;
+use App\Models\Karyawan;
 use App\Models\admin\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -317,14 +318,16 @@ class OperatorKasirController extends Controller
             $userWithEmail = User::where('email', $email);
             $userMemberWithEmail = UserMember::where('email', $email);
             $operatorKasirWithEmail = OperatorKasir::where('email', $email);
+            $KaryawanWithEmail = Karyawan::where('email', $email);
     
             if(isset($id)){
                 $userWithEmail->where('id', '!=', $id);
                 $userMemberWithEmail->where('id', '!=', $id);
                 $operatorKasirWithEmail->where('id', '!=', $id);
+                $KaryawanWithEmail->where('id', '!=', $id);
             }
     
-            $userExists = $userWithEmail->exists() || $userMemberWithEmail->exists() || $operatorKasirWithEmail->exists();
+            $userExists = $userWithEmail->exists() || $userMemberWithEmail->exists() || $operatorKasirWithEmail->exists() || $KaryawanWithEmail->exists();
     
             if($userExists){
                 return response()->json([

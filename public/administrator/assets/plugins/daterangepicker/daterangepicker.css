@@ -229,7 +229,17 @@
   padding: 1px;
   height: auto;
   margin: 0;
-  cursor: default;
+  cursor: pointer;
+  background-color: #357ebd;
+  border-color: transparent;
+  color: #fff;
+  border-radius: 5px;
+}
+
+.daterangepicker select.monthselect option, .daterangepicker select.yearselect option{
+  background-color: #fff!important;
+  border-color: transparent;
+  color: #000!important;
 }
 
 .daterangepicker select.monthselect {
