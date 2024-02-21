@@ -1,9 +1,9 @@
-<!-- Modal Detail User -->
+<!-- Modal Detail Operator Kasir -->
 <div class="modal fade" id="detailUser" tabindex="-1" aria-labelledby="detailUserLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="detailUserLabel">Detail User</h5>
+                <h5 class="modal-title" id="detailUserLabel">Detail Operator Kasir</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" id="detailUserBody">
@@ -66,6 +66,15 @@
                         '</div>' +
                         '<div class="col-7">' +
                         '<div class="data">: ' + data.id + '</div>' +
+                        '</div>' +
+                        '</div>' +
+
+                        '<div class="row">' +
+                        '<div class="col-5">' +
+                        '<div class="title">Toko</div>' +
+                        '</div>' +
+                        '<div class="col-7">' +
+                        '<div class="data">: ' + data.toko.nama + '</div>' +
                         '</div>' +
                         '</div>' +
 

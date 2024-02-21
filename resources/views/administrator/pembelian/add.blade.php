@@ -36,8 +36,6 @@
                             </div>
                         </div>
 
-
-
                         <div class="row">
                             <div class="form-group mandatory">
                                 <div class="col-md-4 col-12">
@@ -109,8 +107,8 @@
                                                 </tr>
                                             </tfoot>
                                         </table>
+                                        <div class="" style="color: #dc3545" id="accessErrorDetail"></div>
                                     </div>
-                                    <div class="" style="color: #dc3545" id="accessErrorDetail"></div>
                                 </div>
                             </div>
                         </div>

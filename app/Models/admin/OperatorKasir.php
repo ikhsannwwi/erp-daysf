@@ -2,12 +2,13 @@
 
 namespace App\Models\admin;
 
+use App\Models\Toko;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class OperatorKasir extends Authenticatable
 {
@@ -44,6 +45,10 @@ class OperatorKasir extends Authenticatable
     // relasi
     public function user_group(){
         return $this->belongsTo(UserGroup::class, 'user_group_id');
+    }
+
+    public function toko(){
+        return $this->belongsTo(Toko::class, 'toko_id');
     }
     
     public function profile(){

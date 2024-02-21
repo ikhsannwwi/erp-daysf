@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use App\Models\admin\Member;
 use App\Models\admin\Produk;
 use Illuminate\Http\Request;
+use App\Models\TransaksiStok;
 use App\Http\Controllers\Controller;
 use App\Models\admin\ItemPenjualanTitikPenjualan;
 use App\Models\admin\TransaksiPenjualanTitikPenjualan;
@@ -19,7 +20,7 @@ class TransaksiController extends Controller
 
     public function index(){
         //Check permission
-        if (!isAllowed(static::$module, "index")) {
+        if (!isAllowed(static::$module, "view")) {
             abort(403);
         }
 
@@ -28,7 +29,7 @@ class TransaksiController extends Controller
     
     public function save(Request $request){
         //Check permission
-        if (!isAllowed(static::$module, "index")) {
+        if (!isAllowed(static::$module, "view")) {
             abort(403);
         }
         
@@ -77,26 +78,40 @@ class TransaksiController extends Controller
             DB::beginTransaction();
             $data = TransaksiPenjualanTitikPenjualan::create([
                 'no_transaksi' => generateNoTransaksi(),
+                'toko_id' => auth()->guard('operator_kasir')->user() ? auth()->guard('operator_kasir')->user()->toko_id : 0,
                 'member_id' => $request->member ? $request->member : 0,
                 'tanggal_transaksi' => Carbon::now(),
                 'jumlah_total' => $request->jumlah_total_transaksi,
-                'created_by' => auth()->user() ? auth()->user()->kode : '',
+                'created_by' => auth()->guard('operator_kasir')->user() ? auth()->guard('operator_kasir')->user()->kode : '',
             ]);
             foreach ($request->detail as $row) {
                 $detail = ItemPenjualanTitikPenjualan::create([
                     'transaksi_id' => $data['id'],
+                    'transaksi_stok_id' => 0,
                     'produk_id' => $row['input_id'],
                     'jumlah' => $row['input_jumlah'],
                     'harga_satuan' => $row['input_harga_satuan'],
                     'harga_total' => $row['input_harga_total'],
-                    'created_by' => auth()->user() ? auth()->user()->kode : '',
+                    'created_by' => auth()->guard('operator_kasir')->user() ? auth()->guard('operator_kasir')->user()->kode : '',
                 ]);
+                
+                $stok = TransaksiStok::create([
+                    'tanggal' => now(),
+                    'gudang_id' => 0,
+                    'toko_id' => auth()->guard('operator_kasir')->user() ? auth()->guard('operator_kasir')->user()->toko_id : 0,
+                    'produk_id' => $row['input_id'],
+                    'metode_transaksi' => 'keluar',
+                    'jenis_transaksi' => static::$module,
+                    'jumlah_unit' => $row['input_jumlah'],
+                    'created_by' => auth()->guard('operator_kasir')->user() ? auth()->guard('operator_kasir')->user()->kode : '',
+                ]);
+                $detail->update(['transaksi_stok_id' => $stok->id]);
             }
             $pembayaran = PembayaranTransaksiPenjualanTitikPenjualan::create([
                 'transaksi_id' => $data['id'],
                 'nominal_pembayaran' => $request->jumlah_total_pembayaran_transaksi,
                 'nominal_kembalian' => $request->jumlah_total_kembalian_transaksi,
-                'created_by' => auth()->user() ? auth()->user()->kode : '',
+                'created_by' => auth()->guard('operator_kasir')->user() ? auth()->guard('operator_kasir')->user()->kode : '',
             ]);
     
             createLog(static::$module, __FUNCTION__, $data->id, ['Data yang disimpan' => ['Transaksi' => $data , 'Detail' => $detail]]);

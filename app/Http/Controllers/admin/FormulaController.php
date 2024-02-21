@@ -83,7 +83,7 @@ class FormulaController extends Controller
             ->first();
 
         // Nomor urut transaksi
-        $nomorUrut = $lastTransaction ? (int)substr($lastTransaction->no_pembelian, -4) + 1 : 1;
+        $nomorUrut = $lastTransaction ? (int)substr($lastTransaction->no_formula, -4) + 1 : 1;
 
         // Format nomor transaksi
         $nomorTransaksi = 'FR' . '/' . $formattedDate . '/' . str_pad($nomorUrut, 4, '0', STR_PAD_LEFT);

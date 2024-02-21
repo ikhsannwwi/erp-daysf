@@ -1,21 +1,23 @@
-<div class="col-md-6 col-12">
-    <label for="inputMember">Member</label>
-    <div class="row">
-        <div class="col-8" style="padding-right: 0;">
-            <!-- Menggunakan col-8 agar input lebih lebar dan menghapus padding kanan -->
-            <input type="text" class="form-control" id="inputMemberName" readonly>
-            <input type="text" class="d-none" name="module" id="inputMember">
-        </div>
-        <div class="col-4" style="padding-left: 0;">
-            <!-- Menggunakan col-4 agar tombol "Search" lebih kecil dan menghapus padding kiri -->
-            <a href="#" class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#modalMember">
-                Search
-            </a>
+<div class="row">
+    <div class="form-group ">
+        <div class="col-md-4 col-12">
+            <label for="triggerMember" class="form-label">Member</label>
+            <div class="input-group">
+                <span class="input-group-text pb-3" id="searchMember"><i
+                        class="bi bi-search"></i></span>
+                <input type="text" class="form-control" id="inputMemberName" readonly>
+                <input type="text" class="d-none" name="member" id="inputMember">
+                <div class="input-group-append">
+                    <!-- Menggunakan input-group-append agar elemen berikutnya ditambahkan setelah input -->
+                    <a href="#" class="btn btn-outline-secondary" data-bs-toggle="modal"
+                        data-bs-target="#modalMember" id="triggerMember">
+                        Search
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 </div>
-
-
 
 <!-- Modal Detail Module -->
 <div class="modal fade" id="modalMember" tabindex="-1" aria-labelledby="modalMemberLabel" aria-hidden="true">
@@ -147,7 +149,7 @@
             });
 
             // click di tombol Pilih Module
-            $('#selectDataMember').on('click', function() {
+            $('#selectDataMember').off().on('click', function() {
                 // Get the selected row data
                 var selectedRowData = data_table_module.rows('.selected').data()[0];
 

@@ -2,6 +2,7 @@
 
 namespace App\Models\admin;
 
+use App\Models\Toko;
 use App\Models\admin\Member;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\admin\ItemPenjualanTitikPenjualan;
@@ -18,6 +19,10 @@ class TransaksiPenjualanTitikPenjualan extends Model
 
     public function member(){
         return $this->belongsTo(Member::class, 'member_id', 'id');
+    }
+
+    public function toko(){
+        return $this->belongsTo(Toko::class, 'toko_id', 'id');
     }
     
     public function item(){

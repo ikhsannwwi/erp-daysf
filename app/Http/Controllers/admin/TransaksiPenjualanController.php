@@ -5,6 +5,7 @@ namespace App\Http\Controllers\admin;
 use DB;
 use DataTables;
 use Carbon\Carbon;
+use App\Models\Toko;
 use Milon\Barcode\DNS1D;
 use App\Models\admin\Member;
 use App\Models\admin\Produk;
@@ -33,7 +34,7 @@ class TransaksiPenjualanController extends Controller
     }
     
     public function getData(Request $request){
-        $data = TransaksiPenjualanTitikPenjualan::query()->with('member');
+        $data = TransaksiPenjualanTitikPenjualan::query()->with('member')->with('toko');
 
         if ($request->status ) {
             if ($request->status != "") {
@@ -85,6 +86,7 @@ class TransaksiPenjualanController extends Controller
 
         
         $rules = [
+            'toko' => 'required',
             'jumlah_total_transaksi' => 'required',
             'detail.*.input_id' => 'required',
             'detail.*.input_jumlah' => 'required',
@@ -130,6 +132,7 @@ class TransaksiPenjualanController extends Controller
             $data = TransaksiPenjualanTitikPenjualan::create([
                 'no_transaksi' => generateNoTransaksi(),
                 'member_id' => $request->member ? $request->member : 0,
+                'toko_id' => $request->toko,
                 'tanggal_transaksi' => Carbon::now(),
                 'jumlah_total' => $request->jumlah_total_transaksi,
                 'created_by' => auth()->user() ? auth()->user()->kode : '',
@@ -137,6 +140,7 @@ class TransaksiPenjualanController extends Controller
             foreach ($request->detail as $row) {
                 $detail = ItemPenjualanTitikPenjualan::create([
                     'transaksi_id' => $data['id'],
+                    'transaksi_stok_id' => 0,
                     'produk_id' => $row['input_id'],
                     'jumlah' => $row['input_jumlah'],
                     'harga_satuan' => $row['input_harga_satuan'],
@@ -147,8 +151,9 @@ class TransaksiPenjualanController extends Controller
                 $stok = TransaksiStok::create([
                     'tanggal' => now(),
                     'gudang_id' => 0,
+                    'toko_id' => $request->toko,
                     'produk_id' => $row['input_id'],
-                    'metode_transaksi' => 'masuk',
+                    'metode_transaksi' => 'keluar',
                     'jenis_transaksi' => static::$module,
                     'jumlah_unit' => $row['input_jumlah'],
                     'created_by' => auth()->user() ? auth()->user()->kode : '',
@@ -180,7 +185,7 @@ class TransaksiPenjualanController extends Controller
             abort(403);
         }
 
-        $data = TransaksiPenjualanTitikPenjualan::with('member')->with('item')->with('pembayaran')->find($id);
+        $data = TransaksiPenjualanTitikPenjualan::with('member')->with('toko')->with('item')->with('pembayaran')->find($id);
 
         return view('administrator.transaksi_penjualan.edit',compact('data'));
     }
@@ -196,6 +201,7 @@ class TransaksiPenjualanController extends Controller
         $transaksi = TransaksiPenjualanTitikPenjualan::find($id);
 
         $rules = [
+            'toko' => 'required',
             'jumlah_total_transaksi' => 'required',
             'detail.*.input_id' => 'required',
             'detail.*.input_jumlah' => 'required',
@@ -211,6 +217,7 @@ class TransaksiPenjualanController extends Controller
 
         $updates = [
             'member_id' => $request->member ? $request->member : 0,
+            'toko_id' => $request->toko,
             'jumlah_total' => $request->jumlah_total_transaksi,
             'updated_by' => auth()->user() ? auth()->user()->kode : '',
         ];
@@ -234,19 +241,43 @@ class TransaksiPenjualanController extends Controller
                         'harga_total' => $row['input_harga_total'],
                         'updated_by' => auth()->user() ? auth()->user()->kode : '',
                     ];
+
+                    $update_stok_items = [
+                        'gudang_id' => 0,
+                        'toko_id' => $request->toko,
+                        'produk_id' => $row['input_id'],
+                        'metode_transaksi' => 'masuk',
+                        'jenis_transaksi' => static::$module,
+                        'jumlah_unit' => $row['input_jumlah'],
+                        'updated_by' => auth()->user() ? auth()->user()->kode : '',
+                    ];
     
                     // Temukan detail yang sesuai berdasarkan 'id' dan update
-                    ItemPenjualanTitikPenjualan::find($row['id'])->update($update_items);
+                    $detail = ItemPenjualanTitikPenjualan::find($row['id'])->update($update_items);
+                    $stok = TransaksiStok::find($row['transaksi_stok_id'])->update($update_stok_items);
                 } else {
                     // Jika 'id' tidak ada, maka ini adalah detail baru dan perlu dibuat
                     $detail = ItemPenjualanTitikPenjualan::create([
                         'transaksi_id' => $transaksi->id,
+                        'transaksi_stok_id' => 0,
                         'produk_id' => $row['input_id'],
                         'jumlah' => $row['input_jumlah'],
                         'harga_satuan' => $row['input_harga_satuan'],
                         'harga_total' => $row['input_harga_total'],
                         'created_by' => auth()->user() ? auth()->user()->kode : '',
                     ]);
+                    
+                    $stok = TransaksiStok::create([
+                        'tanggal' => now(),
+                        'gudang_id' => 0,
+                        'toko_id' => $request->toko,
+                        'produk_id' => $row['input_id'],
+                        'metode_transaksi' => 'keluar',
+                        'jenis_transaksi' => static::$module,
+                        'jumlah_unit' => $row['input_jumlah'],
+                        'created_by' => auth()->user() ? auth()->user()->kode : '',
+                    ]);
+                    $detail->update(['transaksi_stok_id' => $stok->id]);
                 }
             }
     
@@ -326,26 +357,40 @@ class TransaksiPenjualanController extends Controller
         // Delete all related details with transaksi_id equal to $data->id
         $details = ItemPenjualanTitikPenjualan::where('transaksi_id', $data->id)->get();
         
-        if (!$details->isEmpty()) {
-            foreach ($details as $detail) {
-                $detail->delete();
+        try {
+            DB::beginTransaction();
+            if (!$details->isEmpty()) {
+                foreach ($details as $detail) {
+                    $stok = TransaksiStok::find($detail->transaksi_stok_id);
+                    if ($stok) {
+                        $stok->delete();
+                    }
+                    $detail->delete();
+                }
             }
+    
+            $pembayaran = PembayaranTransaksiPenjualanTitikPenjualan::where('transaksi_id', $data->id)->first();
+            if (!empty($pembayaran)) {
+                $pembayaran->delete();
+            }
+            // Delete the transaction
+            $data->delete();
+    
+            // Write logs only for soft delete (not force delete)
+            createLog(static::$module, __FUNCTION__, $id, ['Data yang dihapus' => $deletedData]);
+            DB::commit();
+    
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Data telah dihapus.',
+            ]);
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return response()->json([
+                'status' => 'error',
+                'message' => 'error : ' . $th->getMessage(),
+            ], 500);
         }
-
-        $pembayaran = PembayaranTransaksiPenjualanTitikPenjualan::where('transaksi_id', $data->id)->first();
-        if (!empty($pembayaran)) {
-            $pembayaran->delete();
-        }
-        // Delete the transaction
-        $data->delete();
-
-        // Write logs only for soft delete (not force delete)
-        createLog(static::$module, __FUNCTION__, $id, ['Data yang dihapus' => $deletedData]);
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Data telah dihapus.',
-        ]);
     }
     
     public function deleteItem(Request $request)
@@ -386,7 +431,7 @@ class TransaksiPenjualanController extends Controller
             abort(403);
         }
 
-        $data = TransaksiPenjualanTitikPenjualan::with('member')->with('item.produk')->with('pembayaran')->find($id);
+        $data = TransaksiPenjualanTitikPenjualan::with('member')->with('toko')->with('item.produk')->with('pembayaran')->find($id);
 
         return response()->json([
             'data' => $data,
@@ -404,6 +449,14 @@ class TransaksiPenjualanController extends Controller
             ->make(true);
     }
 
+    public function getDataToko(Request $request){
+        $data = Toko::query();
+        $data->where("status", 1)->get();
+
+
+        return DataTables::of($data)
+            ->make(true);
+    }
 
     public function getMember(){
         $member = Member::all();

@@ -25,7 +25,9 @@ use App\Http\Controllers\admin\DepartemenController;
 use App\Http\Controllers\admin\OperatorKasirController;
 use App\Http\Controllers\admin\TransaksiStokController;
 use App\Http\Controllers\admin\SatuanKonversiController;
+use App\Http\Controllers\admin\StokOpnameTokoController;
 use App\Http\Controllers\admin\PenyesuaianStokController;
+use App\Http\Controllers\admin\StokOpnameGudangController;
 use App\Http\Controllers\admin\TransaksiStokTokoController;
 use App\Http\Controllers\admin\TransaksiPenjualanController;
 use App\Http\Controllers\admin\PenyesuaianStokTokoController;
@@ -102,6 +104,7 @@ Route::prefix('admin')->group(function () {
         Route::put('operator-kasir/update', [OperatorKasirController::class, 'update'])->name('admin.operator_kasir.update');
         Route::delete('operator-kasir/delete', [OperatorKasirController::class, 'delete'])->name('admin.operator_kasir.delete');
         Route::get('operator-kasir/getDetail-{id}', [OperatorKasirController::class, 'getDetail'])->name('admin.operator_kasir.getDetail');
+        Route::get('operator-kasir/getDataToko', [OperatorKasirController::class, 'getDataToko'])->name('admin.operator_kasir.getDataToko');
         Route::get('operator-kasir/getUserGroup', [OperatorKasirController::class, 'getUserGroup'])->name('admin.operator_kasir.getUserGroup');
         Route::post('operator-kasir/changeStatus',[OperatorKasirController::class, 'changeStatus'])->name('admin.operator_kasir.changeStatus');
         Route::get('operator-kasir/generateKode',[OperatorKasirController::class, 'generateKode'])->name('admin.operator_kasir.generateKode');
@@ -205,6 +208,7 @@ Route::prefix('admin')->group(function () {
         Route::get('transaksi-penjualan/getData', [TransaksiPenjualanController::class, 'getData'])->name('admin.transaksi_penjualan.getData');
         Route::get('transaksi-penjualan/getDataProduk', [TransaksiPenjualanController::class, 'getDataProduk'])->name('admin.transaksi_penjualan.getDataProduk');
         Route::get('transaksi-penjualan/getDataMember', [TransaksiPenjualanController::class, 'getDataMember'])->name('admin.transaksi_penjualan.getDataMember');
+        Route::get('transaksi-penjualan/getDataToko', [TransaksiPenjualanController::class, 'getDataToko'])->name('admin.transaksi_penjualan.getDataToko');
         Route::post('transaksi-penjualan/save', [TransaksiPenjualanController::class, 'save'])->name('admin.transaksi_penjualan.save');
         Route::get('transaksi-penjualan/edit/{id}', [TransaksiPenjualanController::class, 'edit'])->name('admin.transaksi_penjualan.edit');
         Route::put('transaksi-penjualan/update', [TransaksiPenjualanController::class, 'update'])->name('admin.transaksi_penjualan.update');
@@ -389,5 +393,35 @@ Route::prefix('admin')->group(function () {
         Route::delete('departemen/delete', [DepartemenController::class, 'delete'])->name('admin.departemen.delete');
         Route::post('departemen/checkNama',[DepartemenController::class, 'checkNama'])->name('admin.departemen.checkNama');
         Route::get('departemen/getDataKaryawan', [DepartemenController::class, 'getDataKaryawan'])->name('admin.departemen.getDataKaryawan');
+        
+        //Stok Opname Gudang
+        Route::get('stok-opname-gudang', [StokOpnameGudangController::class, 'index'])->name('admin.stok_opname_gudang');
+        Route::get('stok-opname-gudang/add', [StokOpnameGudangController::class, 'add'])->name('admin.stok_opname_gudang.add');
+        Route::get('stok-opname-gudang/getData', [StokOpnameGudangController::class, 'getData'])->name('admin.stok_opname_gudang.getData');
+        Route::post('stok-opname-gudang/save', [StokOpnameGudangController::class, 'save'])->name('admin.stok_opname_gudang.save');
+        Route::get('stok-opname-gudang/edit/{id}', [StokOpnameGudangController::class, 'edit'])->name('admin.stok_opname_gudang.edit');
+        Route::put('stok-opname-gudang/update', [StokOpnameGudangController::class, 'update'])->name('admin.stok_opname_gudang.update');
+        Route::delete('stok-opname-gudang/delete', [StokOpnameGudangController::class, 'delete'])->name('admin.stok_opname_gudang.delete');
+        Route::get('stok-opname-gudang/getDetail-{id}', [StokOpnameGudangController::class, 'getDetail'])->name('admin.stok_opname_gudang.getDetail');
+        Route::get('stok-opname-gudang/getDataStok', [StokOpnameGudangController::class, 'getDataStok'])->name('admin.stok_opname_gudang.getDataStok');
+        Route::get('stok-opname-gudang/getDataGudang', [StokOpnameGudangController::class, 'getDataGudang'])->name('admin.stok_opname_gudang.getDataGudang');
+        Route::get('stok-opname-gudang/getDataKaryawan', [StokOpnameGudangController::class, 'getDataKaryawan'])->name('admin.stok_opname_gudang.getDataKaryawan');
+        Route::get('stok-opname-gudang/getDataProduk', [StokOpnameGudangController::class, 'getDataProduk'])->name('admin.stok_opname_gudang.getDataProduk');
+        Route::delete('stok-opname-gudang/deleteDetail', [StokOpnameGudangController::class, 'deleteDetail'])->name('admin.stok_opname_gudang.deleteDetail');
+        
+        //Stok Opname Toko
+        Route::get('stok-opname-toko', [StokOpnameTokoController::class, 'index'])->name('admin.stok_opname_toko');
+        Route::get('stok-opname-toko/add', [StokOpnameTokoController::class, 'add'])->name('admin.stok_opname_toko.add');
+        Route::get('stok-opname-toko/getData', [StokOpnameTokoController::class, 'getData'])->name('admin.stok_opname_toko.getData');
+        Route::post('stok-opname-toko/save', [StokOpnameTokoController::class, 'save'])->name('admin.stok_opname_toko.save');
+        Route::get('stok-opname-toko/edit/{id}', [StokOpnameTokoController::class, 'edit'])->name('admin.stok_opname_toko.edit');
+        Route::put('stok-opname-toko/update', [StokOpnameTokoController::class, 'update'])->name('admin.stok_opname_toko.update');
+        Route::delete('stok-opname-toko/delete', [StokOpnameTokoController::class, 'delete'])->name('admin.stok_opname_toko.delete');
+        Route::get('stok-opname-toko/getDetail-{id}', [StokOpnameTokoController::class, 'getDetail'])->name('admin.stok_opname_toko.getDetail');
+        Route::get('stok-opname-toko/getDataStok', [StokOpnameTokoController::class, 'getDataStok'])->name('admin.stok_opname_toko.getDataStok');
+        Route::get('stok-opname-toko/getDataToko', [StokOpnameTokoController::class, 'getDataToko'])->name('admin.stok_opname_toko.getDataToko');
+        Route::get('stok-opname-toko/getDataKaryawan', [StokOpnameTokoController::class, 'getDataKaryawan'])->name('admin.stok_opname_toko.getDataKaryawan');
+        Route::get('stok-opname-toko/getDataProduk', [StokOpnameTokoController::class, 'getDataProduk'])->name('admin.stok_opname_toko.getDataProduk');
+        Route::delete('stok-opname-toko/deleteDetail', [StokOpnameTokoController::class, 'deleteDetail'])->name('admin.stok_opname_toko.deleteDetail');
     });
 });

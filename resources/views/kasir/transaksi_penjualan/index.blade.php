@@ -117,7 +117,7 @@
             <td class="nama-item" style="vertical-align:middle;"></td>
             <input type="hidden" class="input_id-item" name="detail[0][input_id]" id="input_id-item">
             <td class="jumlah-item" style="vertical-align:middle;">
-                <input type="text" class="input_jumlah-item form-control" name="detail[0][input_jumlah]" placeholder="Masukan jumlah item"
+                <input type="text" class="input_jumlah-item form-control text-end" name="detail[0][input_jumlah]" placeholder="Masukan jumlah item"
                     id="input_jumlah-item" data-parsley-required="true" autocomplete="off"
                     data-parsley-required-message="Field ini wajib diisi" data-parsley-type="number"
                     data-parsley-type-message="Field ini hanya boleh diisi dengan angka"

@@ -158,8 +158,8 @@
                                             <tbody>
                                             </tbody>
                                         </table>
+                                        <div class="" style="color: #dc3545" id="accessErrorDetail"></div>
                                     </div>
-                                    <div class="" style="color: #dc3545" id="accessErrorDetail"></div>
                                 </div>
                             </div>
                         </div>

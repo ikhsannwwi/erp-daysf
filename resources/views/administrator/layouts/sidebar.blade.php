@@ -86,12 +86,12 @@
                     </a>
                 </li>
 
-                <li class="sidebar-item  has-sub {{ Route::is('admin.satuan_konversi*', 'admin.transaksi_stok*','admin.penyesuaian_stok*') && !Route::is('admin.transaksi_stok_toko*', 'admin.penyesuaian_stok_toko*') ? 'active' : '' }}">
+                <li class="sidebar-item  has-sub {{ Route::is('admin.satuan_konversi*', 'admin.transaksi_stok*','admin.penyesuaian_stok*', 'admin.stok_opname_gudang*') && !Route::is('admin.transaksi_stok_toko*', 'admin.penyesuaian_stok_toko*') ? 'active' : '' }}">
                     <a href="#" class='sidebar-link'>
                         <i class="bi bi-stack"></i>
                         <span>Track Gudang</span>
                     </a>
-                    <ul class="submenu" style="display: {{ Route::is('admin.satuan_konversi*', 'admin.transaksi_stok*','admin.penyesuaian_stok*') && !Route::is('admin.transaksi_stok_toko*', 'admin.penyesuaian_stok_toko*') ? 'block' : 'none' }};">
+                    <ul class="submenu" style="display: {{ Route::is('admin.satuan_konversi*', 'admin.transaksi_stok*','admin.penyesuaian_stok*', 'admin.stok_opname_gudang*') && !Route::is('admin.transaksi_stok_toko*', 'admin.penyesuaian_stok_toko*') ? 'block' : 'none' }};">
                         <li class="submenu-item {{ Route::is('admin.satuan_konversi*') ? 'active' : '' }}">
                             <a href="{{route('admin.satuan_konversi')}}">Satuan Konversi</a>
                         </li>
@@ -101,20 +101,26 @@
                         <li class="submenu-item {{ Route::is('admin.penyesuaian_stok*') ? 'active' : '' }}">
                             <a href="{{route('admin.penyesuaian_stok')}}">Penyesuaian Stok</a>
                         </li>
+                        <li class="submenu-item {{ Route::is('admin.stok_opname_gudang*') ? 'active' : '' }}">
+                            <a href="{{route('admin.stok_opname_gudang')}}">Stok Opname Gudang</a>
+                        </li>
                     </ul>
                 </li>
 
-                <li class="sidebar-item  has-sub {{ Route::is('admin.transaksi_stok_toko*') ? 'active' : '' }}">
+                <li class="sidebar-item  has-sub {{ Route::is('admin.transaksi_stok_toko*', 'admin.penyesuaian_stok_toko*', 'admin.stok_opname_toko*') ? 'active' : '' }}">
                     <a href="#" class='sidebar-link'>
                         <i class="bi bi-stack"></i>
                         <span>Track Toko</span>
                     </a>
-                    <ul class="submenu" style="display: {{ Route::is('admin.transaksi_stok_toko*', 'admin.penyesuaian_stok_toko*') ? 'block' : 'none' }};">
+                    <ul class="submenu" style="display: {{ Route::is('admin.transaksi_stok_toko*', 'admin.penyesuaian_stok_toko*', 'admin.stok_opname_toko*') ? 'block' : 'none' }};">
                         <li class="submenu-item {{ Route::is('admin.transaksi_stok_toko*') ? 'active' : '' }}">
                             <a href="{{route('admin.transaksi_stok_toko')}}">Transaksi Stok</a>
                         </li>
                         <li class="submenu-item {{ Route::is('admin.penyesuaian_stok_toko*') ? 'active' : '' }}">
                             <a href="{{route('admin.penyesuaian_stok_toko')}}">Penyesuaian Stok</a>
+                        </li>
+                        <li class="submenu-item {{ Route::is('admin.stok_opname_toko*') ? 'active' : '' }}">
+                            <a href="{{route('admin.stok_opname_toko')}}">Stok Opname Toko</a>
                         </li>
                     </ul>
                 </li>

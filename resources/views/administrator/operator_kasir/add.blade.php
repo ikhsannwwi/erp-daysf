@@ -31,6 +31,29 @@
                                 </div>
                             </div>
                         </div>
+                        
+                        <div class="row">
+                            <div class="form-group mandatory">
+                                <div class="col-md-4 col-12">
+                                    <label for="triggerToko" class="form-label">Toko</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text pb-3" id="searchToko"><i
+                                                class="bi bi-search"></i></span>
+                                        <input type="text" class="form-control" id="inputTokoName"
+                                            data-parsley-required="true" readonly>
+                                        <input type="text" class="d-none" name="toko" id="inputToko">
+                                        <div class="input-group-append">
+                                            <!-- Menggunakan input-group-append agar elemen berikutnya ditambahkan setelah input -->
+                                            <a href="#" class="btn btn-outline-secondary" data-bs-toggle="modal"
+                                                data-bs-target="#ModalToko" id="triggerToko">
+                                                Search
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="row">
                             <div class="col-md-6 col-12">
                                 <div class="form-group mandatory">
@@ -136,6 +159,7 @@
         </div>
 
     </section>
+    @include('administrator.operator_kasir.modal.toko')
     <!-- Basic Tables end -->
 @endsection
 

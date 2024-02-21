@@ -58,10 +58,10 @@
 
                         '<div class="row">' +
                         '<div class="col-5">' +
-                        '<div class="title">Gudang</div>' +
+                        '<div class="title">Toko</div>' +
                         '</div>' +
                         '<div class="col-7">' +
-                        '<div class="data">: ' + data.gudang.nama + '</div>' +
+                        '<div class="data">: ' + data.toko.nama + '</div>' +
                         '</div>' +
                         '</div>' +
 

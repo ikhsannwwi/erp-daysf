@@ -38,10 +38,7 @@
                     var data = response.data;
 
                     // Gunakan fungsi formatRupiah di dalam kode Anda
-                    var hargaFormatted = parseFloat(data.jumlah_total).toLocaleString('id-ID', {
-                        style: 'currency',
-                        currency: 'IDR'
-                    });
+                    var hargaFormatted = formatRupiah(data.jumlah_total)
 
                     var items = data.item;
 
@@ -62,15 +59,9 @@
                     for (var i = 0; i < items.length; i++) {
                         var item = items[i];
 
-                        const harga = parseFloat(item.harga_satuan).toLocaleString('id-ID', {
-                            style: 'currency',
-                            currency: 'IDR'
-                        });
+                        const harga = formatRupiah(item.harga_satuan)
 
-                        const total = parseFloat(item.harga_total).toLocaleString('id-ID', {
-                            style: 'currency',
-                            currency: 'IDR'
-                        });
+                        const total = formatRupiah(item.harga_total)
 
                         itemTableHTML += '<tr class="item-list">' +
                             '<td>' + (i + 1) + '</td>' +
@@ -84,16 +75,8 @@
                     let nominal_pembayaran, nominal_kembalian;
 
                     if (data.pembayaran.length != 0) {
-                        nominal_pembayaran = parseFloat(data.pembayaran[0].nominal_pembayaran)
-                            .toLocaleString('id-ID', {
-                                style: 'currency',
-                                currency: 'IDR'
-                            });
-                        nominal_kembalian = parseFloat(data.pembayaran[0].nominal_kembalian)
-                            .toLocaleString('id-ID', {
-                                style: 'currency',
-                                currency: 'IDR'
-                            });
+                        nominal_pembayaran = formatRupiah(data.pembayaran[0].nominal_pembayaran)
+                        nominal_kembalian = formatRupiah(data.pembayaran[0].nominal_kembalian)
                     } else {
                         nominal_pembayaran = 'Rp 0';
                         nominal_kembalian = 'Rp 0';
@@ -115,6 +98,15 @@
                         '</div>' +
                         '<div class="col-md-10 col-7">' +
                         '<div class="data">: ' + data.id + '</div>' +
+                        '</div>' +
+                        '</div>' +
+
+                        '<div class="row">' +
+                        '<div class="col-md-2 col-5">' +
+                        '<div class="title">Toko</div>' +
+                        '</div>' +
+                        '<div class="col-md-10 col-7">' +
+                        '<div class="data">: ' + data.toko.nama + '</div>' +
                         '</div>' +
                         '</div>' +
 
@@ -171,11 +163,27 @@
                 }
             });
 
-            function formatRupiah(angka) {
-                var reverse = angka.toString().split('').reverse().join('');
-                var ribuan = reverse.match(/\d{1,3}/g);
-                ribuan = ribuan.join('.').split('').reverse().join('');
-                return 'Rp ' + ribuan + ',00';
+            function formatRupiah(amount) {
+                // Use Number.prototype.toLocaleString() to format the number as currency
+                return 'Rp ' + Number(amount).toLocaleString('id-ID');
+            }
+
+            function parseRupiah(rupiahString) {
+                // Remove currency symbol, separators, and parse as integer
+                const parsedValue = parseInt(rupiahString.replace(/[^\d]/g, ''));
+                return isNaN(parsedValue) ? 0 : parsedValue;
+            }
+
+            function formatNumber(number) {
+                // Use Number.prototype.toLocaleString() to format the number as currency
+                return Number(number).toLocaleString('id-ID');
+            }
+
+            function parseNumber(number) {
+                // Remove currency symbol, separators, and parse as integer
+                // Replace dot only if it exists in the number
+                const parsedValue = parseInt(number.replace(/[^\d]/g, ''));
+                return isNaN(parsedValue) ? 0 : parsedValue;
             }
         });
     </script>

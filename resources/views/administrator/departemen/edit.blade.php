@@ -53,8 +53,8 @@
                                     <div class="input-group">
                                         <span class="input-group-text pb-3" id="searchKaryawan"><i
                                                 class="bi bi-search"></i></span>
-                                        <input type="text" class="form-control" id="inputKaryawanName" readonly>
-                                        <input type="text" class="d-none" name="kepala_departemen" id="inputKaryawan">
+                                        <input type="text" class="form-control" id="inputKaryawanName" value="{{$data->karyawan->nama}}" readonly>
+                                        <input type="text" class="d-none" name="kepala_departemen" id="inputKaryawan" value="{{$data->kepala_departemen}}">
                                         <div class="input-group-append">
                                             <!-- Menggunakan input-group-append agar elemen berikutnya ditambahkan setelah input -->
                                             <a href="#" class="btn btn-outline-secondary" data-bs-toggle="modal"

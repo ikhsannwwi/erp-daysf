@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\admin;
 
 use DataTables;
+use App\Models\Toko;
 use App\Models\Karyawan;
 use App\Models\admin\User;
 use Illuminate\Support\Str;
@@ -28,7 +29,7 @@ class OperatorKasirController extends Controller
     }
     
     public function getData(Request $request){
-        $data = OperatorKasir::query()->with('user_group');
+        $data = OperatorKasir::query()->with('user_group')->with('toko');
 
         if ($request->status || $request->usergroup) {
             if ($request->status != "") {
@@ -105,6 +106,7 @@ class OperatorKasirController extends Controller
         }
 
         $request->validate([
+            'toko' => 'required',
             'name' => 'required',
             'email' => 'required|unique:users',
             'password' => 'required|min:8',
@@ -114,6 +116,7 @@ class OperatorKasirController extends Controller
         ]);
     
         $data = OperatorKasir::create([
+            'toko_id' => $request->toko,
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
@@ -144,7 +147,7 @@ class OperatorKasirController extends Controller
             abort(403);
         }
 
-        $data = OperatorKasir::find($id);
+        $data = OperatorKasir::with('toko')->find($id);
 
         return view('administrator.operator_kasir.edit',compact('data'));
     }
@@ -160,6 +163,7 @@ class OperatorKasirController extends Controller
         $data = OperatorKasir::find($id);
 
         $rules = [
+            'toko' => 'required',
             'name' => 'required',
             'email' => 'required|unique:users,email,'.$id,
             'user_group' => 'required',
@@ -177,6 +181,7 @@ class OperatorKasirController extends Controller
         $previousData = $data->toArray();
 
         $updates = [
+            'toko_id' => $request->toko,
             'name' => $request->name,
             'email' => $request->email,
             'user_group_id' => $request->user_group,
@@ -262,7 +267,7 @@ class OperatorKasirController extends Controller
             abort(403);
         }
 
-        $data = OperatorKasir::with('user_group')->with('profile')->find($id);
+        $data = OperatorKasir::with('user_group')->with('toko')->with('profile')->find($id);
 
         return response()->json([
             'data' => $data,
@@ -292,6 +297,15 @@ class OperatorKasirController extends Controller
             'status' => 'success',
             'message' => 'Status telah diubah.',
         ]);
+    }
+    
+    public function getDataToko(Request $request){
+        $data = Toko::query();
+        $data->where("status", 1)->get();
+
+
+        return DataTables::of($data)
+            ->make(true);
     }
     
     public function getUserGroup(){

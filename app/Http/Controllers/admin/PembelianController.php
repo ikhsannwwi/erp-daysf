@@ -306,11 +306,11 @@ class PembelianController extends Controller
         try {
             DB::beginTransaction();
             foreach ($detail as $row) {
-                $row->delete();
                 $stok = TransaksiStok::find($row->transaksi_stok_id);
                 if ($stok) {
                     $stok->delete();
                 }
+                $row->delete();
             }
             $data->delete();
     
