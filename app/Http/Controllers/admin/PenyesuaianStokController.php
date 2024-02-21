@@ -26,7 +26,7 @@ class PenyesuaianStokController extends Controller
     }
     
     public function getData(Request $request){
-        $data = PenyesuaianStok::query()->with('gudang')->with('produk')->where('satuan_id', 0)->get();
+        $data = PenyesuaianStok::query()->with('gudang')->with('produk')->where('toko_id', 0)->get();
 
         return DataTables::of($data)
             ->addColumn('action', function ($row) {
