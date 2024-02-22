@@ -98,7 +98,7 @@
                         <li class="submenu-item {{ Route::is('admin.transaksi_stok*') && !Route::is('admin.transaksi_stok_toko*') ? 'active' : '' }}">
                             <a href="{{route('admin.transaksi_stok')}}">Transaksi Stok</a>
                         </li>
-                        <li class="submenu-item {{ Route::is('admin.penyesuaian_stok*') ? 'active' : '' }}">
+                        <li class="submenu-item {{ Route::is('admin.penyesuaian_stok*') && !Route::is('admin.penyesuaian_stok_toko*') ? 'active' : '' }}">
                             <a href="{{route('admin.penyesuaian_stok')}}">Penyesuaian Stok</a>
                         </li>
                         <li class="submenu-item {{ Route::is('admin.stok_opname_gudang*') ? 'active' : '' }}">

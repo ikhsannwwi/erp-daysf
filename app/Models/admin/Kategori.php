@@ -2,8 +2,9 @@
 
 namespace App\Models\admin;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\admin\Produk;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Kategori extends Model
 {
@@ -12,4 +13,8 @@ class Kategori extends Model
     protected $table = 'kategori';
 
     protected $guarded = ['id'];
+
+    public function produk(){
+        return $this->hasMany(Produk::class, 'kategori_id');
+    }
 }

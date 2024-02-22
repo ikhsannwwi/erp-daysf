@@ -9,23 +9,28 @@
     <link rel="stylesheet" href="{{asset('templateAdmin/assets/css/pages/auth.css')}}">
     <link rel="shortcut icon" href="{{ array_key_exists('favicon', $settings) ? img_src($settings['favicon'], 'settings') : '' }}" type="image/png">
 
-    <link rel="stylesheet" href="{{ asset('templateAdmin/assets/extensions/toastify-js/src/toastify.css') }}">
+    <link rel="stylesheet" href="{{ asset_administrator('assets/plugins/sweetalert2/sweetalert2.css') }}">
 
 
     @stack('css')
 </head>
 
 <body>
+    <div id="audioContainer" class="audioContainer">
+        <!-- Other content in the container -->
+     </div>
     @yield('content')
 
 
     <script src="{{ asset('jquery/dist/jquery.js') }}"></script>
-    <script src="{{ asset('templateAdmin/assets/extensions/toastify-js/src/toastify.js') }}"></script>
-    <script src="{{ asset('templateAdmin/assets/js/pages/toastify.js') }}"></script>
-
+    <script src="{{ asset_administrator('assets/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
+    <script src="{{ asset_administrator('assets/plugins/sweetalert2/toast.js') }}"></script>
+    <script src="{{ asset_administrator('assets/plugins/sweetalert2/page/toast.js') }}"></script>
+    
 
     <script>
         var toastMessages = {
+            path: "{{ asset_administrator('assets/plugins/toasty/') }}",
             errors: [],
             error: @json(session('error')),
             success: @json(session('success')),

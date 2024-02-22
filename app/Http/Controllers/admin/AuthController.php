@@ -14,11 +14,11 @@ class AuthController extends Controller
     public function login(){
         if (auth()->user() || auth()->guard('operator_kasir')->user() || auth()->guard('user_member')->user()) {
             if (auth()->user()) {
-                return redirect(route('admin.dashboard'));
+                return redirect(route('admin.dashboard'))->with('success', 'Anda sudah login.');
             } else if (auth()->guard('operator_kasir')->user()) {
-                return redirect(route('kasir.dashboard'));
+                return redirect(route('kasir.dashboard'))->with('success', 'Anda sudah login.');
             } else if (auth()->guard('user_member')->user()) {
-                return redirect(route('member.dashboard'));
+                return redirect(route('member.dashboard'))->with('success', 'Anda sudah login.');
             }
         }
 
@@ -28,7 +28,7 @@ class AuthController extends Controller
     public function loginProses(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'email' => 'required|string|email|max:255',
+            'email' => 'required|email|max:255',
             'password' => 'required|min:8|max:255',
         ]);
 
@@ -40,13 +40,13 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             // Admin login successful
-            return redirect()->route('admin.dashboard');
+            return redirect()->route('admin.dashboard')->with('success', 'Berhasil Login.');
         } else if (Auth::guard('operator_kasir')->attempt($credentials)) {
             // Operator Kasir login successful
-            return redirect()->route('kasir.dashboard');
+            return redirect()->route('kasir.dashboard')->with('success', 'Berhasil Login.');
         } else if (Auth::guard('user_member')->attempt($credentials)) {
             // Operator Kasir login successful
-            return redirect()->route('member.dashboard');
+            return redirect()->route('member.dashboard')->with('success', 'Berhasil Login.');
         }
         
         $userMember = UserMember::where('password', 'verify_required')->where('email', $request->email)->first();
@@ -71,6 +71,8 @@ class AuthController extends Controller
                 Auth::guard('user_member')->logout();
                 return redirect()->route('member.login')->with('success', 'Berhasil Logout.'); // Ganti 'login' dengan rute halaman masuk yang sesuai
             }
+        }else{
+            return redirect()->route('admin.login')->with('success', 'Berhasil Logout.'); // Ganti 'login' dengan rute halaman masuk yang sesuai
         }
     }
 }

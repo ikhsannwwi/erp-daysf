@@ -159,6 +159,7 @@ class ProdukController extends Controller
             'formula' => $request->formula ? $request->formula : 0,
             'produksi' => $request->produksi ? $request->produksi : 0,
             'penjualan' => $request->penjualan ? $request->penjualan : 0,
+            'e_commerce' => $request->e_commerce ? $request->e_commerce : 0,
             'created_by' => auth()->user() ? auth()->user()->kode : '',
         ]);
 
@@ -220,6 +221,7 @@ class ProdukController extends Controller
             'formula' => $request->formula ? $request->formula : 0,
             'produksi' => $request->produksi ? $request->produksi : 0,
             'penjualan' => $request->penjualan ? $request->penjualan : 0,
+            'e_commerce' => $request->e_commerce ? $request->e_commerce : 0,
             'updated_by' => auth()->user() ? auth()->user()->kode : '',
         ];
 

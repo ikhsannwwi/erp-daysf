@@ -93,8 +93,8 @@
                                         </label>
                                         <div class="form-check">
                                             <input class="form-check-input" type="radio" name="status" value="1"
-                                                id="flexRadioDefault1" checked data-parsley-required="true">
-                                            <label class="form-check-label form-label" for="flexRadioDefault1">
+                                                id="inputStatus" checked data-parsley-required="true">
+                                            <label class="form-check-label form-label" for="inputStatus">
                                                 Aktif
                                             </label>
                                         </div>
@@ -114,8 +114,8 @@
                                                 </label>
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="checkbox" name="pembelian"
-                                                        value="1" id="flexRadioDefault1">
-                                                    <label class="form-check-label form-label" for="flexRadioDefault1">
+                                                        value="1" id="inputPembelian">
+                                                    <label class="form-check-label form-label" for="inputPembelian">
                                                         Ya
                                                     </label>
                                                 </div>
@@ -130,8 +130,24 @@
                                                 </label>
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="checkbox" name="formula"
-                                                        value="1" id="flexRadioDefault1">
-                                                    <label class="form-check-label form-label" for="flexRadioDefault1">
+                                                        value="1" id="inputFormula">
+                                                    <label class="form-check-label form-label" for="inputFormula">
+                                                        Ya
+                                                    </label>
+                                                </div>
+                                            </fieldset>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class='form-group'>
+                                            <fieldset>
+                                                <label class="form-label">
+                                                    Tampilkan di e-commerce
+                                                </label>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="e_commerce"
+                                                        value="1" id="inputECommerce">
+                                                    <label class="form-check-label form-label" for="inputECommerce">
                                                         Ya
                                                     </label>
                                                 </div>
@@ -148,8 +164,8 @@
                                                 </label>
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="checkbox" name="produksi"
-                                                        value="1" id="flexRadioDefault1">
-                                                    <label class="form-check-label form-label" for="flexRadioDefault1">
+                                                        value="1" id="inputProduksi">
+                                                    <label class="form-check-label form-label" for="inputProduksi">
                                                         Ya
                                                     </label>
                                                 </div>
@@ -164,8 +180,8 @@
                                                 </label>
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="checkbox" name="penjualan"
-                                                        value="1" id="flexRadioDefault1">
-                                                    <label class="form-check-label form-label" for="flexRadioDefault1">
+                                                        value="1" id="inputPenjualan">
+                                                    <label class="form-check-label form-label" for="inputPenjualan">
                                                         Ya
                                                     </label>
                                                 </div>
