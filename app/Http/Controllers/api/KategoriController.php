@@ -11,6 +11,7 @@ class KategoriController extends Controller
     public function index(Request $request){
         $query = Kategori::with([
             'produk' => function($queryChild){
+                $queryChild->with('image');
                 $queryChild->where('status', 1)
                     ->where('e_commerce', 1);
             }
@@ -35,6 +36,7 @@ class KategoriController extends Controller
     public function detail(Request $request){
         $query = Kategori::with([
             'produk' => function($queryChild){
+                $queryChild->with('image');
                 $queryChild->where('status', 1)
                     ->where('e_commerce', 1);
             }

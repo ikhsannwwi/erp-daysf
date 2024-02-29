@@ -22,6 +22,7 @@ use App\Http\Controllers\admin\LogSystemController;
 use App\Http\Controllers\admin\PembelianController;
 use App\Http\Controllers\admin\UserGroupController;
 use App\Http\Controllers\admin\DepartemenController;
+use App\Http\Controllers\admin\ProdukPromoController;
 use App\Http\Controllers\admin\OperatorKasirController;
 use App\Http\Controllers\admin\TransaksiStokController;
 use App\Http\Controllers\admin\SatuanKonversiController;
@@ -155,6 +156,7 @@ Route::prefix('admin')->group(function () {
         Route::get('produk/edit/{id}', [ProdukController::class, 'edit'])->name('admin.produk.edit');
         Route::put('produk/update', [ProdukController::class, 'update'])->name('admin.produk.update');
         Route::delete('produk/delete', [ProdukController::class, 'delete'])->name('admin.produk.delete');
+        Route::delete('produk/deleteImage', [ProdukController::class, 'deleteImage'])->name('admin.produk.deleteImage');
         Route::get('produk/getDetail-{id}', [ProdukController::class, 'getDetail'])->name('admin.produk.getDetail');
         Route::get('produk/getKategori', [ProdukController::class, 'getKategori'])->name('admin.produk.getKategori');
         Route::post('produk/changeStatus',[ProdukController::class, 'changeStatus'])->name('admin.produk.changeStatus');
@@ -423,5 +425,19 @@ Route::prefix('admin')->group(function () {
         Route::get('stok-opname-toko/getDataKaryawan', [StokOpnameTokoController::class, 'getDataKaryawan'])->name('admin.stok_opname_toko.getDataKaryawan');
         Route::get('stok-opname-toko/getDataProduk', [StokOpnameTokoController::class, 'getDataProduk'])->name('admin.stok_opname_toko.getDataProduk');
         Route::delete('stok-opname-toko/deleteDetail', [StokOpnameTokoController::class, 'deleteDetail'])->name('admin.stok_opname_toko.deleteDetail');
+        
+        //Produk Promo
+        Route::get('produk-promo', [ProdukPromoController::class, 'index'])->name('admin.produk_promo');
+        Route::get('produk-promo/add', [ProdukPromoController::class, 'add'])->name('admin.produk_promo.add');
+        Route::get('produk-promo/getData', [ProdukPromoController::class, 'getData'])->name('admin.produk_promo.getData');
+        Route::post('produk-promo/save', [ProdukPromoController::class, 'save'])->name('admin.produk_promo.save');
+        Route::get('produk-promo/edit/{id}', [ProdukPromoController::class, 'edit'])->name('admin.produk_promo.edit');
+        Route::put('produk-promo/update', [ProdukPromoController::class, 'update'])->name('admin.produk_promo.update');
+        Route::delete('produk-promo/delete', [ProdukPromoController::class, 'delete'])->name('admin.produk_promo.delete');
+        Route::get('produk-promo/getDetail-{id}', [ProdukPromoController::class, 'getDetail'])->name('admin.produk_promo.getDetail');
+        Route::get('produk-promo/getDataStok', [ProdukPromoController::class, 'getDataStok'])->name('admin.produk_promo.getDataStok');
+        Route::get('produk-promo/getDataToko', [ProdukPromoController::class, 'getDataToko'])->name('admin.produk_promo.getDataToko');
+        Route::get('produk-promo/getDataProduk', [ProdukPromoController::class, 'getDataProduk'])->name('admin.produk_promo.getDataProduk');
+        Route::delete('produk-promo/deleteDetail', [ProdukPromoController::class, 'deleteDetail'])->name('admin.produk_promo.deleteDetail');
     });
 });

@@ -2,14 +2,18 @@
 
 namespace App\Http\Controllers\admin;
 
+use DB;
+use File;
+use PDF;
 use DataTables;
 use App\Models\Satuan;
-use PDF;
+use App\Models\ProdukImage;
 use App\Models\admin\Produk;
 use Illuminate\Http\Request;
 use App\Models\admin\Kategori;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\View;
+use Intervention\Image\Facades\Image;
 use Picqer\Barcode\BarcodeGeneratorHTML;
 
 class ProdukController extends Controller
@@ -143,28 +147,46 @@ class ProdukController extends Controller
         // Hapus 'Rp' dan karakter pemisah ribuan dari nilai harga
         $harga = str_replace('Rp ', '', $harga);
         $harga = str_replace('.', '', $harga);
-        // dd($harga);
 
-
-        $data = Produk::create([
-            'kategori_id' => $request->kategori,
-            'nama' => $request->nama,
-            'deskripsi' => $request->deskripsi,
-            'satuan_id' => $request->satuan,
-            'harga' => $harga,
-            'kode' => $KodeProduk,
-            'barcode' => $barcode,
-            'status' => $request->status,
-            'pembelian' => $request->pembelian ? $request->pembelian : 0,
-            'formula' => $request->formula ? $request->formula : 0,
-            'produksi' => $request->produksi ? $request->produksi : 0,
-            'penjualan' => $request->penjualan ? $request->penjualan : 0,
-            'e_commerce' => $request->e_commerce ? $request->e_commerce : 0,
-            'created_by' => auth()->user() ? auth()->user()->kode : '',
-        ]);
-
-        createLog(static::$module, __FUNCTION__, $data->id, ['Data yang disimpan' => $data]);
-        return redirect()->route('admin.produk')->with('success', 'Data berhasil disimpan.');
+        try {
+            DB::beginTransaction();
+            $data = Produk::create([
+                'kategori_id' => $request->kategori,
+                'nama' => $request->nama,
+                'deskripsi' => $request->deskripsi,
+                'satuan_id' => $request->satuan,
+                'harga' => $harga,
+                'kode' => $KodeProduk,
+                'barcode' => $barcode,
+                'status' => $request->status,
+                'pembelian' => $request->pembelian ? $request->pembelian : 0,
+                'formula' => $request->formula ? $request->formula : 0,
+                'produksi' => $request->produksi ? $request->produksi : 0,
+                'penjualan' => $request->penjualan ? $request->penjualan : 0,
+                'e_commerce' => $request->e_commerce ? $request->e_commerce : 0,
+                'created_by' => auth()->user() ? auth()->user()->kode : '',
+            ]);
+    
+            if ($request->hasFile('img')) {
+                foreach ($request->file('img') as $image) {
+                    $fileName = 'produk_' . $KodeProduk . '_' . date('Y-m-d-H-i-s') . '_' . uniqid(2) . '.' . $image->getClientOriginalExtension();
+                    $path = upload_path('produk') . $fileName;
+                    Image::make($image->getRealPath())->save($path, 100);
+    
+                    $image = ProdukImage::create([
+                        'produk_id' => $data->id,
+                        'image' => $fileName,
+                    ]);
+                }
+            }
+    
+            createLog(static::$module, __FUNCTION__, $data->id, ['Data yang disimpan' => $data]);
+            DB::commit();
+            return redirect()->route('admin.produk')->with('success', 'Data berhasil disimpan.');
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return back()->with('error', $th->getMessage());
+        }
     }
     
     
@@ -174,7 +196,7 @@ class ProdukController extends Controller
             abort(403);
         }
 
-        $data = Produk::with('satuan')->find($id);
+        $data = Produk::with('satuan')->with('image')->find($id);
 
         return view('administrator.produk.edit',compact('data'));
     }
@@ -210,32 +232,49 @@ class ProdukController extends Controller
         $harga = str_replace('Rp ', '', $harga);
         $harga = str_replace('.', '', $harga);
 
-        $updates = [
-            'kategori_id' => $request->kategori,
-            'nama' => $request->nama,
-            'deskripsi' => $request->deskripsi,
-            'satuan_id' => $request->satuan,
-            'harga' => $harga,
-            'status' => $request->status,
-            'pembelian' => $request->pembelian ? $request->pembelian : 0,
-            'formula' => $request->formula ? $request->formula : 0,
-            'produksi' => $request->produksi ? $request->produksi : 0,
-            'penjualan' => $request->penjualan ? $request->penjualan : 0,
-            'e_commerce' => $request->e_commerce ? $request->e_commerce : 0,
-            'updated_by' => auth()->user() ? auth()->user()->kode : '',
-        ];
-
-        // Filter only the updated data
-        $updatedData = array_intersect_key($updates, $data->getOriginal());
-
-        $data->update($updates);
-
-        createLog(static::$module, __FUNCTION__, $data->id, ['Data sebelum diupdate' => $previousData, 'Data sesudah diupdate' => $updatedData]);
-        return redirect()->route('admin.produk')->with('success', 'Data berhasil diupdate.');
+        try {
+            DB::beginTransaction();
+            $updates = [
+                'kategori_id' => $request->kategori,
+                'nama' => $request->nama,
+                'deskripsi' => $request->deskripsi,
+                'satuan_id' => $request->satuan,
+                'harga' => $harga,
+                'status' => $request->status,
+                'pembelian' => $request->pembelian ? $request->pembelian : 0,
+                'formula' => $request->formula ? $request->formula : 0,
+                'produksi' => $request->produksi ? $request->produksi : 0,
+                'penjualan' => $request->penjualan ? $request->penjualan : 0,
+                'e_commerce' => $request->e_commerce ? $request->e_commerce : 0,
+                'updated_by' => auth()->user() ? auth()->user()->kode : '',
+            ];
+            
+            if ($request->hasFile('img')) {
+                foreach ($request->file('img') as $image) {
+                    $fileName = 'produk_' . $data->kode . '_' . date('Y-m-d-H-i-s') . '_' . uniqid(2) . '.' . $image->getClientOriginalExtension();
+                    $path = upload_path('produk') . $fileName;
+                    Image::make($image->getRealPath())->save($path, 100);
+    
+                    $image = ProdukImage::create([
+                        'produk_id' => $data->id,
+                        'image' => $fileName,
+                    ]);
+                }
+            }
+    
+            // Filter only the updated data
+            $updatedData = array_intersect_key($updates, $data->getOriginal());
+    
+            $data->update($updates);
+    
+            createLog(static::$module, __FUNCTION__, $data->id, ['Data sebelum diupdate' => $previousData, 'Data sesudah diupdate' => $updatedData]);
+            DB::commit();
+            return redirect()->route('admin.produk')->with('success', 'Data berhasil diupdate.');
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return back()->with('error', $th->getMessage());
+        }
     }
-
-    
-    
     
     public function delete(Request $request)
     {
@@ -254,7 +293,7 @@ class ProdukController extends Controller
         if (!$data) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Pengguna tidak ditemukan'
+                'message' => 'Data tidak ditemukan'
             ], 404);
         }
 
@@ -272,7 +311,38 @@ class ProdukController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Pengguna telah dihapus.',
+            'message' => 'Data telah dihapus.',
+        ]);
+    }
+
+    public function deleteImage(Request $request)
+    {
+        // Check permission
+        if (!isAllowed(static::$module, "edit")) {
+            abort(403);
+        }
+        $id = $request->id;
+
+        $data = ProdukImage::find($id);
+
+        if (!$data) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Data tidak ditemukan'
+            ], 404);
+        }
+
+        $deletedData = $data->toArray();
+        $image_path = "./administrator/assets/media/produk/" . $data->image;
+        if (File::exists($image_path)) {
+            File::delete($image_path);
+        }
+        $data->delete();
+
+        createLog(static::$module, __FUNCTION__, $id, ['Data yang dihapus' => $deletedData]);
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Data telah dihapus.',
         ]);
     }
 

@@ -3,6 +3,7 @@
 namespace App\Models\admin;
 
 use App\Models\Satuan;
+use App\Models\ProdukImage;
 use App\Models\admin\Kategori;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -15,6 +16,10 @@ class Produk extends Model
     protected $table = 'produk';
 
     protected $guarded = ['id'];
+
+    public function image(){
+        return $this->hasMany(ProdukImage::class, 'produk_id', 'id');
+    }
 
     public function kategori(){
         return $this->belongsTo(Kategori::class, 'kategori_id');

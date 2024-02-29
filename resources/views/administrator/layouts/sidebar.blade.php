@@ -79,11 +79,19 @@
                     </ul>
                 </li>
 
-                <li class="sidebar-item  {{ Route::is('admin.produk*')  && !Route::is('admin.produksi*') ? 'active' : '' }}">
-                    <a href="{{ route('admin.produk') }}" class='sidebar-link'>
-                        <i class="bi bi-file-earmark-medical-fill"></i>
-                        <span>Produk</span>
+                <li class="sidebar-item  has-sub {{ Route::is('admin.produk*', 'admin.produk_promo*') ? 'active' : '' }}">
+                    <a href="#" class='sidebar-link'>
+                        <i class="bi bi-stack"></i>
+                        <span>Barang</span>
                     </a>
+                    <ul class="submenu" style="display: {{ Route::is('admin.produk*', 'admin.produk_promo*') ? 'block' : 'none' }};">
+                        <li class="submenu-item {{ Route::is('admin.produk*') && !Route::is('admin.produk_promo*') ? 'active' : '' }}">
+                            <a href="{{route('admin.produk')}}">Produk</a>
+                        </li>
+                        <li class="submenu-item {{ Route::is('admin.produk_promo*') ? 'active' : '' }}">
+                            <a href="{{route('admin.produk_promo')}}">Promo</a>
+                        </li>
+                    </ul>
                 </li>
 
                 <li class="sidebar-item  has-sub {{ Route::is('admin.satuan_konversi*', 'admin.transaksi_stok*','admin.penyesuaian_stok*', 'admin.stok_opname_gudang*') && !Route::is('admin.transaksi_stok_toko*', 'admin.penyesuaian_stok_toko*') ? 'active' : '' }}">

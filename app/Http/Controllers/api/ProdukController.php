@@ -10,6 +10,7 @@ class ProdukController extends Controller
 {
     public function index(){
         $data = Produk::with('kategori')
+                        ->with('image')
                         ->where('e_commerce', 1)
                         ->where('status', 1)
                         ->get();

@@ -32,6 +32,9 @@ function upload_path($type = '', $file = '')
 		case 'member':
 			$target_folder = 'member';
 			break;
+		case 'produk':
+			$target_folder = 'produk';
+			break;
 		default:
 			$target_folder = '';
 			break;
@@ -56,6 +59,9 @@ function img_src($image = '', $img_type = '')
 				break;
 			case 'member':
 				$folder = '/member/';
+				break;
+			case 'produk':
+				$folder = '/produk/';
 				break;
 			default:
 				$folder = '/';

@@ -20,7 +20,7 @@
                         class="form" id="form" data-parsley-validate>
                         @csrf
                         @method('PUT')
-                        <input type="hidden" name="id" id="inputId" value="{{$data->id}}">
+                        <input type="hidden" name="id" id="inputId" value="{{ $data->id }}">
                         <div class="row">
                             <div class="col-md-6 col-12">
                                 <div class="form-group mandatory">
@@ -36,8 +36,9 @@
                             <div class="col-md-6 col-12">
                                 <div class="form-group mandatory">
                                     <label for="inputNama" class="form-label">Nama</label>
-                                    <input type="text" id="inputNama" class="form-control" placeholder="Masukan Nama" value="{{$data->nama}}"
-                                        name="nama" autocomplete="off" data-parsley-required="true">
+                                    <input type="text" id="inputNama" class="form-control" placeholder="Masukan Nama"
+                                        value="{{ $data->nama }}" name="nama" autocomplete="off"
+                                        data-parsley-required="true">
                                     <div class="" style="color: #dc3545" id="accessErrorNama"></div>
                                 </div>
                             </div>
@@ -47,8 +48,10 @@
                             <div class="col-md-6 col-12">
                                 <div class="form-group mandatory">
                                     <label for="inputHarga" class="form-label">Harga</label>
-                                    <input type="text" id="inputHarga" class="form-control" placeholder="Masukkan Harga" autocomplete="off" value="{{ rtrim(number_format($data->harga, 2, ',', '.'), '0') }}"
-                                        name="harga" data-parsley-required="true">
+                                    <input type="text" id="inputHarga" class="form-control" placeholder="Masukkan Harga"
+                                        autocomplete="off"
+                                        value="{{ rtrim(number_format($data->harga, 2, ',', '.'), '0') }}" name="harga"
+                                        data-parsley-required="true">
                                 </div>
                             </div>
                         </div>
@@ -60,9 +63,11 @@
                                     <div class="input-group">
                                         <span class="input-group-text pb-3" id="searchSatuan"><i
                                                 class="bi bi-search"></i></span>
-                                        <input type="text" class="form-control" id="inputSatuanName" value="{{$data->satuan ? $data->satuan->nama : ''}}"
+                                        <input type="text" class="form-control" id="inputSatuanName"
+                                            value="{{ $data->satuan ? $data->satuan->nama : '' }}"
                                             data-parsley-required="true" readonly>
-                                        <input type="text" class="d-none" name="satuan" id="inputSatuan" value="{{$data->satuan_id}}">
+                                        <input type="text" class="d-none" name="satuan" id="inputSatuan"
+                                            value="{{ $data->satuan_id }}">
                                         <div class="input-group-append">
                                             <!-- Menggunakan input-group-append agar elemen berikutnya ditambahkan setelah input -->
                                             <a href="#" class="btn btn-outline-secondary" data-bs-toggle="modal"
@@ -80,7 +85,52 @@
                                 <div class="form-group mandatory">
                                     <label for="inputDeskripsi" class="form-label">Deskripsi</label>
                                     <textarea id="inputDeskripsi" class="form-control" placeholder="Masukkan Deskripsi" name="deskripsi"
-                                        style="height: 150px;" data-parsley-required="true">{{$data->deskripsi}}</textarea>
+                                        style="height: 150px;" data-parsley-required="true">{{ $data->deskripsi }}</textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 col-12">
+                                <div class="form-group mandatory">
+                                    <label for="inputFotoProduk" class="form-label">Gambar</label>
+                                    <div class="fileinput fileinput-new" data-provides="fileinput">
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>No</th>
+                                                    <th>Preview</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="fileinput-preview-foto_produk">
+                                                @foreach ($data->image as $key => $row)
+                                                    <tr>
+                                                        <input type="hidden" class="input_id-item"
+                                                            value="{{ $row->id }}">
+                                                        <td class="text-center">{{ $key + 1 }}</td>
+                                                        <td>
+                                                            <div class="img-thumbnail-container"><img
+                                                                    class="img-thumbnail" width="200"
+                                                                    src="{{ img_src($row->image, 'produk') }}">
+                                                            </div>
+                                                        </td>
+                                                        <td class="text-center"><a
+                                                                class="btn btn-danger btn-sm deleteImg_data" data-ix="{{$row->id}}">Hapus</a></td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                        <div class="mt-3">
+                                            <label for="inputFotoProduk" class="btn btn-light btn-file">
+                                                <span class="fileinput-new">Select image</span>
+                                                <input type="file" class="d-none" id="inputFotoProduk"
+                                                    data-parsley-required="true" name="img[]" accept="image/*"
+                                                    multiple>
+                                                <!-- Tambahkan atribut "multiple" di sini -->
+                                            </label>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -124,7 +174,8 @@
                                                 </label>
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="checkbox" name="pembelian"
-                                                        value="1" id="inputPembelian" {{ $data->pembelian === 1 ? 'checked' : '' }}>
+                                                        value="1" id="inputPembelian"
+                                                        {{ $data->pembelian === 1 ? 'checked' : '' }}>
                                                     <label class="form-check-label form-label" for="inputPembelian">
                                                         Ya
                                                     </label>
@@ -140,7 +191,8 @@
                                                 </label>
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="checkbox" name="formula"
-                                                        value="1" id="inputFormula" {{ $data->formula === 1 ? 'checked' : '' }}>
+                                                        value="1" id="inputFormula"
+                                                        {{ $data->formula === 1 ? 'checked' : '' }}>
                                                     <label class="form-check-label form-label" for="inputFormula">
                                                         Ya
                                                     </label>
@@ -156,7 +208,8 @@
                                                 </label>
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="checkbox" name="e_commerce"
-                                                        value="1" id="inputECommerce" {{ $data->e_commerce === 1 ? 'checked' : '' }}>
+                                                        value="1" id="inputECommerce"
+                                                        {{ $data->e_commerce === 1 ? 'checked' : '' }}>
                                                     <label class="form-check-label form-label" for="inputECommerce">
                                                         Ya
                                                     </label>
@@ -174,7 +227,8 @@
                                                 </label>
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="checkbox" name="produksi"
-                                                        value="1" id="inputProduksi" {{ $data->produksi === 1 ? 'checked' : '' }}>
+                                                        value="1" id="inputProduksi"
+                                                        {{ $data->produksi === 1 ? 'checked' : '' }}>
                                                     <label class="form-check-label form-label" for="inputProduksi">
                                                         Ya
                                                     </label>
@@ -190,7 +244,8 @@
                                                 </label>
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="checkbox" name="penjualan"
-                                                        value="1" id="inputPenjualan" {{ $data->penjualan === 1 ? 'checked' : '' }}>
+                                                        value="1" id="inputPenjualan"
+                                                        {{ $data->penjualan === 1 ? 'checked' : '' }}>
                                                     <label class="form-check-label form-label" for="inputPenjualan">
                                                         Ya
                                                     </label>
@@ -229,7 +284,250 @@
     <script src="{{ asset('templateAdmin/assets/extensions/parsleyjs/parsley.min.js') }}"></script>
     <script src="{{ asset('templateAdmin/assets/js/pages/parsley.js') }}"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.8/jquery.inputmask.min.js" integrity="sha512-efAcjYoYT0sXxQRtxGY37CKYmqsFVOIwMApaEbrxJr4RwqVVGw8o+Lfh/+59TU07+suZn1BWq4fDl5fdgyCNkw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.8/jquery.inputmask.min.js"
+        integrity="sha512-efAcjYoYT0sXxQRtxGY37CKYmqsFVOIwMApaEbrxJr4RwqVVGw8o+Lfh/+59TU07+suZn1BWq4fDl5fdgyCNkw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+    <script>
+        // Fungsi untuk menangani perubahan pada file input
+        function handleFileInputChange() {
+            const newInput = this; // 'this' mengacu pada elemen file input yang dipicu oleh perubahan
+
+            // Mendapatkan file yang baru dipilih
+            const newFiles = newInput.files;
+
+            // Lakukan sesuatu dengan file yang baru dipilih
+            for (let i = 0; i < newFiles.length; i++) {
+                const newFile = newFiles[i];
+
+                // Lakukan sesuatu dengan setiap file, misalnya, tampilkan informasi di konsol
+                console.log(`File Baru: ${newFile.name}, Tipe: ${newFile.type}, Ukuran: ${newFile.size} bytes`);
+            }
+
+            // Anda dapat menambahkan logika lain sesuai kebutuhan Anda di sini
+        }
+
+        // Variabel untuk menyimpan array file
+        let filesArray = [];
+
+        const inputFotoProduk = document.getElementById("inputFotoProduk");
+        const previewContainerGambarLainnya = document.querySelector(".fileinput-preview-foto_produk");
+
+        inputFotoProduk.addEventListener("change", function() {
+            const files = this.files;
+
+            // Set your desired maximum limit
+            let maxLimit = 10 - $(".fileinput-preview-foto_produk").find('tr').length;
+
+            // Check if the number of selected files exceeds the limit
+            if (files.length > maxLimit || filesArray.length > maxLimit || files.length > (maxLimit - filesArray
+                    .length)) {
+                const swalWithBootstrapButtons = Swal.mixin({
+                    customClass: {
+                        confirmButton: 'btn btn-success mx-4',
+                        cancelButton: 'btn btn-danger'
+                    },
+                    buttonsStyling: false
+                });
+
+                let content = ''
+                if (files.length > maxLimit) {
+                    maxLimit = maxLimit
+                    content = 'Tidak boleh lebih dari ' + maxLimit + ' Image.'
+                } else if (filesArray.length > maxLimit) {
+                    maxLimit = maxLimit - filesArray.length
+                    content = 'Tidak boleh lebih dari ' + maxLimit + ' Image.'
+                } else if (files.length > (maxLimit - filesArray.length)) {
+                    maxLimit = maxLimit - filesArray.length
+                    content = 'Tidak boleh lebih dari ' + maxLimit + ' Image.'
+                }
+
+                swalWithBootstrapButtons.fire({
+                    title: 'Gagal!',
+                    text: content,
+                    icon: 'error',
+                    timer: 2500, // 2 detik
+                    showConfirmButton: false
+                });
+                // You may want to clear the selected files or take other actions here
+                return;
+            }
+
+            // Loop melalui semua file yang dipilih
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const imageType = /^image\//;
+
+                if (!imageType.test(file.type)) {
+                    continue;
+                }
+
+                const tableRow = document.createElement("tr");
+
+                // No column
+                const noCell = document.createElement("td");
+                noCell.classList.add("text-center");
+                noCell.textContent = $(".fileinput-preview-foto_produk").find('tr').length + 1; // Start from 1
+                tableRow.appendChild(noCell);
+
+                // Preview column
+                const previewCell = document.createElement("td");
+                const imgContainer = document.createElement("div");
+                imgContainer.classList.add("img-thumbnail-container");
+                const img = document.createElement("img");
+                img.classList.add("img-thumbnail");
+                img.width = 200; // Sesuaikan ukuran gambar sesuai kebutuhan
+                img.src = URL.createObjectURL(file);
+                imgContainer.appendChild(img);
+                previewCell.appendChild(imgContainer);
+
+                // Action column
+                const actionCell = document.createElement("td");
+                actionCell.classList.add("text-center");
+                const deleteButton = document.createElement("a");
+                deleteButton.classList.add("btn", "btn-danger", "btn-sm", "deleteImg");
+                deleteButton.textContent = "Hapus";
+
+                function refreshRowNumbers() {
+                    const rows = previewContainerGambarLainnya.getElementsByTagName("tr");
+
+                    for (let i = 0; i < rows.length; i++) {
+                        const noCell = rows[i].getElementsByTagName("td")[0];
+                        noCell.textContent = i + 1;
+                    }
+                }
+
+                deleteButton.addEventListener("click", function() {
+
+                    const swalWithBootstrapButtons = Swal.mixin({
+                        customClass: {
+                            confirmButton: 'btn btn-success mx-4',
+                            cancelButton: 'btn btn-danger'
+                        },
+                        buttonsStyling: false
+                    });
+
+                    swalWithBootstrapButtons.fire({
+                        title: 'Apakah anda yakin ingin menghapus image ini',
+                        icon: 'warning',
+                        buttonsStyling: false,
+                        showCancelButton: true,
+                        confirmButtonText: 'Ya, Saya yakin!',
+                        cancelButtonText: 'Tidak, Batalkan!',
+                        reverseButtons: true
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+
+                            // Hapus gambar saat tombol "Hapus" diklik
+                            const fileIndex = filesArray.indexOf(file);
+                            if (fileIndex !== -1) {
+                                filesArray.splice(fileIndex, 1);
+
+                                // Buat objek DataTransfer baru
+                                const newFilesList = new DataTransfer();
+
+                                // Tambahkan file ke objek DataTransfer
+                                filesArray.forEach(file => newFilesList.items.add(file));
+
+                                // Set nilai baru untuk file input
+                                inputFotoProduk.files = newFilesList.files;
+
+                                // Tambahkan event listener ke file input baru
+                                inputFotoProduk.addEventListener("change",
+                                    handleFileInputChange);
+                            }
+
+                            tableRow.remove();
+
+                            refreshRowNumbers();
+                        }
+                    });
+                });
+
+                actionCell.appendChild(deleteButton);
+
+                tableRow.appendChild(noCell);
+                tableRow.appendChild(previewCell);
+                tableRow.appendChild(actionCell);
+
+                // Append the table row to the tbody
+                previewContainerGambarLainnya.appendChild(tableRow);
+
+                // Tambahkan file ke dalam array
+                filesArray.push(file);
+                // Buat objek DataTransfer baru
+                const newFilesList = new DataTransfer();
+
+                // Tambahkan file ke objek DataTransfer
+                filesArray.forEach(file => newFilesList.items.add(file));
+
+                // Set nilai baru untuk file input
+                inputFotoProduk.files = newFilesList.files;
+
+                // Tambahkan event listener ke file input baru
+                inputFotoProduk.addEventListener("change",
+                    handleFileInputChange);
+            }
+        });
+
+        function refreshRowNumbers() {
+            const rows = $(".fileinput-preview-foto_produk").find('tr');
+
+            for (let i = 0; i < rows.length; i++) {
+                const noCell = rows[i].getElementsByTagName("td")[0];
+                noCell.textContent = i + 1;
+            }
+        }
+
+        $('.deleteImg_data').off().on("click", function() {
+            let another = this
+            let id = $(this).data('ix')
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success mx-4',
+                    cancelButton: 'btn btn-danger'
+                },
+                buttonsStyling: false
+            });
+
+            swalWithBootstrapButtons.fire({
+                title: 'Apakah anda yakin ingin menghapus image ini',
+                icon: 'warning',
+                buttonsStyling: false,
+                showCancelButton: true,
+                confirmButtonText: 'Ya, Saya yakin!',
+                cancelButtonText: 'Tidak, Batalkan!',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: "DELETE",
+                        url: "{{ route('admin.produk.deleteImage') }}",
+                        data: {
+                            "_token": "{{ csrf_token() }}",
+                            "_method": "DELETE",
+                            "id": id,
+                        },
+                        success: function() {
+                            $(another).closest('tr').remove()
+                            
+                            swalWithBootstrapButtons.fire({
+                                title: 'Berhasil!',
+                                text: 'Image berhasil dihapus secara permanen',
+                                icon: 'success',
+                                timer: 2500, // 2 detik
+                                showConfirmButton: false
+                            });
+                            
+                            refreshRowNumbers();
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+
 
     <script type="text/javascript">
         $(document).ready(function() {
