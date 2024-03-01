@@ -244,11 +244,15 @@
     </section>
     <!-- Basic Tables end -->
     @include('administrator.produk.modal.satuan')
+    @include('administrator.produk.modal.crop')
 @endsection
-
+@push('css')
+<link href="{{ asset_administrator('assets/plugins/cropperjs/css/cropper.css') }}" rel="stylesheet" type="text/css">
+@endpush
 @push('js')
     <script src="{{ asset('templateAdmin/assets/extensions/parsleyjs/parsley.min.js') }}"></script>
     <script src="{{ asset('templateAdmin/assets/js/pages/parsley.js') }}"></script>
+    <script src="{{ asset_administrator('assets/plugins/cropperjs/js/cropper.js') }}" ></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.8/jquery.inputmask.min.js"
         integrity="sha512-efAcjYoYT0sXxQRtxGY37CKYmqsFVOIwMApaEbrxJr4RwqVVGw8o+Lfh/+59TU07+suZn1BWq4fDl5fdgyCNkw=="
@@ -337,6 +341,7 @@
 
                 // Preview column
                 const previewCell = document.createElement("td");
+                previewCell.classList.add("text-center");
                 const imgContainer = document.createElement("div");
                 imgContainer.classList.add("img-thumbnail-container");
                 const img = document.createElement("img");
@@ -350,8 +355,39 @@
                 const actionCell = document.createElement("td");
                 actionCell.classList.add("text-center");
                 const deleteButton = document.createElement("a");
-                deleteButton.classList.add("btn", "btn-danger", "btn-sm", "deleteImg");
+                deleteButton.classList.add("btn", "btn-danger", "btn-sm", "deleteImg", "mx-1");
                 deleteButton.textContent = "Hapus";
+
+                // Button Crop
+                const cropButton = document.createElement("a");
+                cropButton.href = "#";
+                cropButton.classList.add("btn", "btn-outline-secondary", "triggerCrop", "mx-1");
+                cropButton.setAttribute("data-bs-toggle", "modal");
+                cropButton.setAttribute("data-bs-target", "#ModalCrop");
+                cropButton.setAttribute("data-src", URL.createObjectURL(file));
+                cropButton.textContent = "Crop";
+
+                let trLength = $(".fileinput-preview-foto_produk").find('tr').length
+                // Input hidden untuk data crop
+                const widthItem = document.createElement("input");
+                widthItem.type = "hidden";
+                widthItem.classList.add("width-item");
+                widthItem.name = 'dataImage['+trLength+'][width]';
+
+                const heightItem = document.createElement("input");
+                heightItem.type = "hidden";
+                heightItem.classList.add("height-item");
+                heightItem.name = 'dataImage['+trLength+'][height]';
+
+                const xItem = document.createElement("input");
+                xItem.type = "hidden";
+                xItem.classList.add("x-item");
+                xItem.name = 'dataImage['+trLength+'][x]';
+
+                const yItem = document.createElement("input");
+                yItem.type = "hidden";
+                yItem.classList.add("y-item");
+                yItem.name = 'dataImage['+trLength+'][y]';
 
                 function refreshRowNumbers() {
                     const rows = previewContainerGambarLainnya.getElementsByTagName("tr");
@@ -359,6 +395,18 @@
                     for (let i = 0; i < rows.length; i++) {
                         const noCell = rows[i].getElementsByTagName("td")[0];
                         noCell.textContent = i + 1;
+
+                        const inputWidth = rows[i].getElementsByClassName('width-item')[0];
+                        inputWidth.name = 'dataImage['+i+'][width]';
+
+                        const inputHeight = rows[i].getElementsByClassName('height-item')[0];
+                        inputHeight.name = 'dataImage['+i+'][height]';
+
+                        const inputX = rows[i].getElementsByClassName('x-item')[0];
+                        inputX.name = 'dataImage['+i+'][x]';
+
+                        const inputY = rows[i].getElementsByClassName('y-item')[0];
+                        inputY.name = 'dataImage['+i+'][y]';
                     }
                 }
 
@@ -410,6 +458,12 @@
                 });
 
                 actionCell.appendChild(deleteButton);
+                actionCell.appendChild(cropButton);
+
+                tableRow.appendChild(widthItem);
+                tableRow.appendChild(heightItem);
+                tableRow.appendChild(xItem);
+                tableRow.appendChild(yItem);
 
                 tableRow.appendChild(noCell);
                 tableRow.appendChild(previewCell);

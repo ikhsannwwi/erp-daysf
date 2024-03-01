@@ -168,15 +168,32 @@ class ProdukController extends Controller
             ]);
     
             if ($request->hasFile('img')) {
+                $no = 0;
                 foreach ($request->file('img') as $image) {
-                    $fileName = 'produk_' . $KodeProduk . '_' . date('Y-m-d-H-i-s') . '_' . uniqid(2) . '.' . $image->getClientOriginalExtension();
-                    $path = upload_path('produk') . $fileName;
-                    Image::make($image->getRealPath())->save($path, 100);
+                    // Crop gambar
+                    $croppedImage = Image::make($image->getRealPath())
+                    ->crop(
+                        ($request->dataImage[$no]['width'] !== null ? $request->dataImage[$no]['width'] : 720),
+                        ($request->dataImage[$no]['height'] !== null ? $request->dataImage[$no]['height'] : 1080),
+                        ($request->dataImage[$no]['x'] !== null ? $request->dataImage[$no]['x'] : 488),
+                        ($request->dataImage[$no]['y'] !== null ? $request->dataImage[$no]['y'] : 0)
+                    );
     
-                    $image = ProdukImage::create([
+                    // Kompres gambar dengan kualitas tertentu (contoh: 80%)
+                    $compressedImage = $croppedImage->encode('jpg', 80);
+    
+                    // Simpan gambar hasil cropping dan kompresi
+                    $fileName = $data->kode . '_' . $no . '_' . date('Y-m-d-H-i-s') . '_' . uniqid(2) . '.jpg';
+                    $path = upload_path('produk') . $fileName;
+                    $compressedImage->save($path);
+    
+                    // Simpan data gambar ke database
+                    $imageModel = ProdukImage::create([
                         'produk_id' => $data->id,
                         'image' => $fileName,
                     ]);
+
+                    $no++;
                 }
             }
     
@@ -248,17 +265,57 @@ class ProdukController extends Controller
                 'e_commerce' => $request->e_commerce ? $request->e_commerce : 0,
                 'updated_by' => auth()->user() ? auth()->user()->kode : '',
             ];
-            
+
+            foreach ($request->dataImage as $key => $row) {
+                if (!empty($row['id'])) {
+                    $image = ProdukImage::find($row['id']);
+                    $image_path = "./administrator/assets/media/produk/" . $image->image;
+                    if (File::exists($image_path)) {
+                        if (($row['width'] !== null) || ($row['height'] !== null) || ($row['x'] !== null) || ($row['y'] !== null) ) {
+                            $croppedImage = Image::make($image_path)
+                                ->crop(
+                                    intVal($row['width']),
+                                    intVal($row['height']),
+                                    intVal($row['x']),
+                                    intVal($row['y'])
+                                );
+        
+                            // Simpan gambar hasil cropping dan kompresi
+                            $path = upload_path('produk') . $image->image;
+                            $croppedImage->save($path);
+                        }
+                    }
+                    
+                }
+            }
+
             if ($request->hasFile('img')) {
+                $no = 0;
                 foreach ($request->file('img') as $image) {
-                    $fileName = 'produk_' . $data->kode . '_' . date('Y-m-d-H-i-s') . '_' . uniqid(2) . '.' . $image->getClientOriginalExtension();
-                    $path = upload_path('produk') . $fileName;
-                    Image::make($image->getRealPath())->save($path, 100);
+                    // Crop gambar
+                    $croppedImage = Image::make($image->getRealPath())
+                    ->crop(
+                        ($request->dataImage[$no]['width'] !== null ? $request->dataImage[$no]['width'] : 720),
+                        ($request->dataImage[$no]['height'] !== null ? $request->dataImage[$no]['height'] : 1080),
+                        ($request->dataImage[$no]['x'] !== null ? $request->dataImage[$no]['x'] : 488),
+                        ($request->dataImage[$no]['y'] !== null ? $request->dataImage[$no]['y'] : 0)
+                    );
     
-                    $image = ProdukImage::create([
+                    // Kompres gambar dengan kualitas tertentu (contoh: 80%)
+                    $compressedImage = $croppedImage->encode('jpg', 80);
+    
+                    // Simpan gambar hasil cropping dan kompresi
+                    $fileName = $data->kode . '_' . $no . '_' . date('Y-m-d-H-i-s') . '_' . uniqid(2) . '.jpg';
+                    $path = upload_path('produk') . $fileName;
+                    $compressedImage->save($path);
+    
+                    // Simpan data gambar ke database
+                    $imageModel = ProdukImage::create([
                         'produk_id' => $data->id,
                         'image' => $fileName,
                     ]);
+
+                    $no++;
                 }
             }
     
@@ -525,9 +582,18 @@ class ProdukController extends Controller
         $id = $request->id;
 
         $data = Produk::withTrashed()->find($id);
+        $image = ProdukImage::where('produk_id', $id)->get();
 
         if (!$data) {
             return redirect()->route('admin.produk.arsip')->with('error', 'Data tidak ditemukan.');
+        }
+
+        foreach ($image as $key => $row) {
+            $image_path = "./administrator/assets/media/produk/" . $row->image;
+            if (File::exists($image_path)) {
+                File::delete($image_path);
+            }
+            $row->delete();
         }
 
         $data->forceDelete();

@@ -106,8 +106,12 @@
                                             <tbody class="fileinput-preview-foto_produk">
                                                 @foreach ($data->image as $key => $row)
                                                     <tr>
+                                                        <input type="hidden" class="width-item" name="dataImage[{{$key}}][width]">
+                                                        <input type="hidden" class="height-item" name="dataImage[{{$key}}][height]">
+                                                        <input type="hidden" class="x-item" name="dataImage[{{$key}}][x]">
+                                                        <input type="hidden" class="y-item" name="dataImage[{{$key}}][y]">
                                                         <input type="hidden" class="input_id-item"
-                                                            value="{{ $row->id }}">
+                                                            value="{{ $row->id }}" name="dataImage[{{$key}}][id]">
                                                         <td class="text-center">{{ $key + 1 }}</td>
                                                         <td>
                                                             <div class="img-thumbnail-container"><img
@@ -116,7 +120,12 @@
                                                             </div>
                                                         </td>
                                                         <td class="text-center"><a
-                                                                class="btn btn-danger btn-sm deleteImg_data" data-ix="{{$row->id}}">Hapus</a></td>
+                                                                class="btn btn-danger btn-sm deleteImg_data" data-ix="{{$row->id}}">Hapus</a>
+                                                            <a href="#" class="btn btn-outline-secondary triggerCrop" data-bs-toggle="modal"
+                                                                data-bs-target="#ModalCrop" data-src="{{ img_src($row->image, 'produk') }}">
+                                                                Crop
+                                                            </a>
+                                                        </td>
                                                     </tr>
                                                 @endforeach
                                             </tbody>
@@ -125,7 +134,7 @@
                                             <label for="inputFotoProduk" class="btn btn-light btn-file">
                                                 <span class="fileinput-new">Select image</span>
                                                 <input type="file" class="d-none" id="inputFotoProduk"
-                                                    data-parsley-required="true" name="img[]" accept="image/*"
+                                                    data-parsley-required="{{count($data->image) === 0 ? 'true' : 'false'}}" name="img[]" accept="image/*"
                                                     multiple>
                                                 <!-- Tambahkan atribut "multiple" di sini -->
                                             </label>
@@ -277,12 +286,16 @@
 
     </section>
     @include('administrator.produk.modal.satuan')
+    @include('administrator.produk.modal.crop')
     <!-- Basic Tables end -->
 @endsection
-
+@push('css')
+<link href="{{ asset_administrator('assets/plugins/cropperjs/css/cropper.css') }}" rel="stylesheet" type="text/css">
+@endpush
 @push('js')
     <script src="{{ asset('templateAdmin/assets/extensions/parsleyjs/parsley.min.js') }}"></script>
     <script src="{{ asset('templateAdmin/assets/js/pages/parsley.js') }}"></script>
+    <script src="{{ asset_administrator('assets/plugins/cropperjs/js/cropper.js') }}" ></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.8/jquery.inputmask.min.js"
         integrity="sha512-efAcjYoYT0sXxQRtxGY37CKYmqsFVOIwMApaEbrxJr4RwqVVGw8o+Lfh/+59TU07+suZn1BWq4fDl5fdgyCNkw=="
@@ -373,6 +386,7 @@
 
                 // Preview column
                 const previewCell = document.createElement("td");
+                previewCell.classList.add("text-center");
                 const imgContainer = document.createElement("div");
                 imgContainer.classList.add("img-thumbnail-container");
                 const img = document.createElement("img");
@@ -386,8 +400,39 @@
                 const actionCell = document.createElement("td");
                 actionCell.classList.add("text-center");
                 const deleteButton = document.createElement("a");
-                deleteButton.classList.add("btn", "btn-danger", "btn-sm", "deleteImg");
+                deleteButton.classList.add("btn", "btn-danger", "btn-sm", "deleteImg", "mx-1");
                 deleteButton.textContent = "Hapus";
+
+                // Button Crop
+                const cropButton = document.createElement("a");
+                cropButton.href = "#";
+                cropButton.classList.add("btn", "btn-outline-secondary", "triggerCrop", "mx-1");
+                cropButton.setAttribute("data-bs-toggle", "modal");
+                cropButton.setAttribute("data-bs-target", "#ModalCrop");
+                cropButton.setAttribute("data-src", URL.createObjectURL(file));
+                cropButton.textContent = "Crop";
+
+                let trLength = $(".fileinput-preview-foto_produk").find('tr').length
+                // Input hidden untuk data crop
+                const widthItem = document.createElement("input");
+                widthItem.type = "hidden";
+                widthItem.classList.add("width-item");
+                widthItem.name = 'dataImage['+trLength+'][width]';
+
+                const heightItem = document.createElement("input");
+                heightItem.type = "hidden";
+                heightItem.classList.add("height-item");
+                heightItem.name = 'dataImage['+trLength+'][height]';
+
+                const xItem = document.createElement("input");
+                xItem.type = "hidden";
+                xItem.classList.add("x-item");
+                xItem.name = 'dataImage['+trLength+'][x]';
+
+                const yItem = document.createElement("input");
+                yItem.type = "hidden";
+                yItem.classList.add("y-item");
+                yItem.name = 'dataImage['+trLength+'][y]';
 
                 function refreshRowNumbers() {
                     const rows = previewContainerGambarLainnya.getElementsByTagName("tr");
@@ -395,6 +440,18 @@
                     for (let i = 0; i < rows.length; i++) {
                         const noCell = rows[i].getElementsByTagName("td")[0];
                         noCell.textContent = i + 1;
+
+                        const inputWidth = rows[i].getElementsByClassName('width-item')[0];
+                        inputWidth.name = 'dataImage['+i+'][width]';
+
+                        const inputHeight = rows[i].getElementsByClassName('height-item')[0];
+                        inputHeight.name = 'dataImage['+i+'][height]';
+
+                        const inputX = rows[i].getElementsByClassName('x-item')[0];
+                        inputX.name = 'dataImage['+i+'][x]';
+
+                        const inputY = rows[i].getElementsByClassName('y-item')[0];
+                        inputY.name = 'dataImage['+i+'][y]';
                     }
                 }
 
@@ -446,6 +503,12 @@
                 });
 
                 actionCell.appendChild(deleteButton);
+                actionCell.appendChild(cropButton);
+
+                tableRow.appendChild(widthItem);
+                tableRow.appendChild(heightItem);
+                tableRow.appendChild(xItem);
+                tableRow.appendChild(yItem);
 
                 tableRow.appendChild(noCell);
                 tableRow.appendChild(previewCell);
