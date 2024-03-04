@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\api\TokoController;
 use App\Http\Controllers\api\ProdukController;
 use App\Http\Controllers\api\KategoriController;
+use App\Http\Controllers\api\ProdukPromoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,6 +29,10 @@ Route::get('produk/detail', [ProdukController::class, 'detail'])->name('api.prod
 //Kategori
 Route::get('kategori', [KategoriController::class, 'index'])->name('api.kategori');
 Route::get('kategori/detail', [KategoriController::class, 'detail'])->name('api.kategori.detail');
+
+//ProdukPromo
+Route::get('promo', [ProdukPromoController::class, 'index'])->name('api.produk_promo');
+Route::get('promo/detail', [ProdukPromoController::class, 'detail'])->name('api.produk_promo.detail');
 
 //Toko
 Route::get('toko', [TokoController::class, 'index'])->name('api.toko');

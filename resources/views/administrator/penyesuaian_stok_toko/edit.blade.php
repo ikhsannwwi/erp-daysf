@@ -47,8 +47,8 @@
                                     <div class="input-group">
                                         <span class="input-group-text pb-3" id="searchToko"><i
                                                 class="bi bi-search"></i></span>
-                                        <input type="text" class="form-control" id="inputTokoName" value="{{$data->gudang->nama}}" data-parsley-required="true" readonly>
-                                        <input type="text" class="d-none" name="toko" id="inputToko" value="{{$data->gudang_id}}">
+                                        <input type="text" class="form-control" id="inputTokoName" value="{{!empty($data->toko) ? $data->toko->nama : '-'}}" data-parsley-required="true" readonly>
+                                        <input type="text" class="d-none" name="toko" id="inputToko" value="{{$data->toko_id}}">
                                         <div class="input-group-append">
                                             <!-- Menggunakan input-group-append agar elemen berikutnya ditambahkan setelah input -->
                                             <a href="#" class="btn btn-outline-secondary" data-bs-toggle="modal"
@@ -68,7 +68,7 @@
                                     <div class="input-group">
                                         <span class="input-group-text pb-3" id="searchProduk"><i
                                                 class="bi bi-search"></i></span>
-                                        <input type="text" class="form-control" id="inputProdukName" value="{{$data->produk->nama}}" data-parsley-required="true" readonly>
+                                        <input type="text" class="form-control" id="inputProdukName" value="{{!empty($data->produk) ? $data->produk->nama : '-'}}" data-parsley-required="true" readonly>
                                         <input type="text" class="d-none" name="produk" id="inputProduk" value="{{$data->produk_id}}">
                                         <div class="input-group-append">
                                             <!-- Menggunakan input-group-append agar elemen berikutnya ditambahkan setelah input -->

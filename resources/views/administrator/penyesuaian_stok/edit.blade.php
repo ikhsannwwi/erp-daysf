@@ -47,7 +47,7 @@
                                     <div class="input-group">
                                         <span class="input-group-text pb-3" id="searchGudang"><i
                                                 class="bi bi-search"></i></span>
-                                        <input type="text" class="form-control" id="inputGudangName" value="{{$data->gudang->nama}}" data-parsley-required="true" readonly>
+                                        <input type="text" class="form-control" id="inputGudangName" value="{{!empty($data->gudang) ? $data->gudang->nama : '-'}}" data-parsley-required="true" readonly>
                                         <input type="text" class="d-none" name="gudang" id="inputGudang" value="{{$data->gudang_id}}">
                                         <div class="input-group-append">
                                             <!-- Menggunakan input-group-append agar elemen berikutnya ditambahkan setelah input -->
@@ -68,7 +68,7 @@
                                     <div class="input-group">
                                         <span class="input-group-text pb-3" id="searchProduk"><i
                                                 class="bi bi-search"></i></span>
-                                        <input type="text" class="form-control" id="inputProdukName" value="{{$data->produk->nama}}" data-parsley-required="true" readonly>
+                                        <input type="text" class="form-control" id="inputProdukName" value="{{!empty($data->produk) ? $data->produk->nama : '-'}}" data-parsley-required="true" readonly>
                                         <input type="text" class="d-none" name="produk" id="inputProduk" value="{{$data->produk_id}}">
                                         <div class="input-group-append">
                                             <!-- Menggunakan input-group-append agar elemen berikutnya ditambahkan setelah input -->

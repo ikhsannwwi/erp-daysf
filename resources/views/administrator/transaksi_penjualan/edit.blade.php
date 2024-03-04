@@ -51,7 +51,7 @@
                                     <div class="input-group">
                                         <span class="input-group-text pb-3" id="searchToko"><i
                                                 class="bi bi-search"></i></span>
-                                        <input type="text" class="form-control" id="inputTokoName" value="{{$data->toko->nama}}"
+                                        <input type="text" class="form-control" id="inputTokoName" value="{{!empty($data->toko) ? $data->toko->nama : '-'}}"
                                             data-parsley-required="true" readonly>
                                         <input type="text" class="d-none" name="toko" id="inputToko" value="{{$data->toko_id}}">
                                         <div class="input-group-append">
@@ -103,7 +103,7 @@
                                                         <td class="no-item text-center" style="vertical-align:middle;">
                                                             {{ $index + 1 }}</td>
                                                         <td class="nama-item" style="vertical-align:middle;">
-                                                            {{ $row->produk->nama }}</td>
+                                                            {{ !empty($row->produk) ? $row->produk->nama : '-' }}</td>
                                                         <input type="hidden" class="input_id-item"
                                                             name="detail[{{ $index }}][input_id]" id="input_id-item"
                                                             value="{{ $row->produk_id }}">

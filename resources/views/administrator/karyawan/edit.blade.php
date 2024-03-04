@@ -30,7 +30,7 @@
                                     <div class="input-group">
                                         <span class="input-group-text pb-3" id="searchDepartemen"><i
                                                 class="bi bi-search"></i></span>
-                                        <input type="text" class="form-control" id="inputDepartemenName" value="{{$data->departemen->nama}}"
+                                        <input type="text" class="form-control" id="inputDepartemenName" value="{{!empty($data->departemen) ? $data->departemen->nama : '-'}}"
                                             data-parsley-required="true" readonly>
                                         <input type="text" class="d-none" name="departemen" id="inputDepartemen" value="{{$data->departemen_id}}">
                                         <div class="input-group-append">

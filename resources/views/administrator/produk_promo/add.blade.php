@@ -242,7 +242,7 @@
 
             let dateOption = {
                 "locale": {
-                    "format": "DD-MM-YYYY hh:mm A",
+                    "format": "DD-MM-YYYY HH:mm",
                     "separator": " ~ ",
                     "daysOfWeek": [
                         "Su",
@@ -270,6 +270,7 @@
                     "firstDay": 1
                 },
                 timePicker: true,
+                timePicker24Hour: true,
                 singleDatePicker: false,
                 autoApply: true,
                 // showDropdowns: true,

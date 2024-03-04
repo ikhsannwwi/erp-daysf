@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\api;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\admin\Kategori;
 use App\Http\Controllers\Controller;
@@ -9,12 +10,26 @@ use App\Http\Controllers\Controller;
 class KategoriController extends Controller
 {
     public function index(Request $request){
+        
         $query = Kategori::with([
-            'produk' => function($queryChild){
+            'produk' => function ($queryChild) {
+                $queryChild->with([
+                    'promo' => function ($queryPromo) {
+                        $today = now('Asia/Jakarta');
+        
+                        $queryPromo->whereHas('master', function ($queryPromoMaster) use ($today) {
+                            // Check if 'master' relationship is not null and apply date conditions
+                            $queryPromoMaster->where('tanggal_mulai', '<=', $today)
+                                ->where('tanggal_berakhir', '>=', $today)
+                                ->orderBy('tanggal_berakhir', 'asc') // Order within the subquery
+                                ->take(1);
+                        });
+                    },
+                ]);
                 $queryChild->with('image');
                 $queryChild->where('status', 1)
                     ->where('e_commerce', 1);
-            }
+            },
         ]);
 
         $notShow = json_decode(urldecode($request->notShow), true);

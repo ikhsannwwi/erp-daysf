@@ -55,7 +55,7 @@
                                     <div class="input-group">
                                         <span class="input-group-text pb-3" id="searchGudang"><i
                                                 class="bi bi-search"></i></span>
-                                        <input type="text" class="form-control" id="inputGudangName" value="{{$data->gudang->nama}}"
+                                        <input type="text" class="form-control" id="inputGudangName" value="{{!empty($data->gudang) ? $data->gudang->nama : '-'}}"
                                             data-parsley-required="true" readonly>
                                         <input type="text" class="d-none" name="gudang" id="inputGudang" value="{{$data->gudang_id}}">
                                         <div class="input-group-append">
@@ -77,7 +77,7 @@
                                     <div class="input-group">
                                         <span class="input-group-text pb-3" id="searchProduk"><i
                                                 class="bi bi-search"></i></span>
-                                        <input type="text" class="form-control" id="inputProdukName" value="{{$data->produk->nama}}"
+                                        <input type="text" class="form-control" id="inputProdukName" value="{{!empty($data->produk) ? $data->produk->nama : '-'}}"
                                             data-parsley-required="true" readonly>
                                         <input type="text" class="d-none" name="produk" id="inputProduk" value="{{$data->produk_id}}">
                                         <div class="input-group-append">
@@ -99,7 +99,7 @@
                                     <div class="input-group">
                                         <span class="input-group-text pb-3" id="searchFormula"><i
                                                 class="bi bi-search"></i></span>
-                                        <input type="text" class="form-control" id="inputFormulaName" value="{{$data->formula->nama}}"
+                                        <input type="text" class="form-control" id="inputFormulaName" value="{{!empty($data->formula) ? $data->formula->nama : '-'}}"
                                             data-parsley-required="true" readonly>
                                         <input type="text" class="d-none" name="formula" id="inputFormula" value="{{$data->formula_id}}">
                                         <div class="input-group-append">
@@ -165,13 +165,13 @@
                                                         <input type="hidden" class="transaksi_stok_id-item" name="detail[{{$key}}][transaksi_stok_id]" id="transaksi_stok_id-item" value="{{$row->transaksi_stok_id}}">
                                                         <td class="no-item text-center">{{$key + 1}}</td>
                                                         <td>
-                                                            <span class="nama_produk-item">{{$row->produk->nama}}</span>
+                                                            <span class="nama_produk-item">{{!empty($row->produk) ? $row->produk->nama : '-'}}</span>
                                                             <input type="hidden" name="detail[{{$key}}][produk]" class="produk_id-item" value="{{$row->produk_id}}">
                                                         </td>
                                                         <td><input type="text" name="detail[{{$key}}][jumlah_unit]" class="form-control text-end jumlah_unit-item" value="{{number_format($row->jumlah_unit, 0, '.', ',')}}"
                                                                 data-parsley-required="true" autocomplete="off" id="inputJumlahUnit" readonly></td>
                                                         <td>
-                                                            <span class="nama_satuan-item">{{$row->formula_detail->satuan_id === 0 ? $row->formula_detail->produk->satuan->nama : $row->formula_detail->satuan_konversi->nama_konversi}}</span>
+                                                            <span class="nama_satuan-item">{{$row->formula_detail->satuan_id === 0 ? (!empty($row->formula_detail) ? (!empty($row->formula_detail->produk) ? (!empty($row->formula_detail->produk->satuan) ? $row->formula_detail->produk->satuan->nama : '-') : '-') : '-') : (!empty($row->formula_detail) ? (!empty($row->formula_detail->satuan_konversi) ? $row->formula_detail->satuan_konversi->nama_konversi : '-') : '-')}}</span>
                                                             <input type="hidden" name="detail[{{$key}}][satuan]" class="satuan_id-item" data-parsley-required="true" value="{{$row->formula_detail->satuan_id}}">
                                                             <input type="hidden" name="detail[{{$key}}][jumlah_unit_formula]" class="jumlah_unit_formula-item" value="{{$row->formula_detail->jumlah_unit}}" data-parsley-required="true">
                                                         </td>

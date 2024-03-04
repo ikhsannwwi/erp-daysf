@@ -57,7 +57,7 @@
                                         <span class="input-group-text pb-3" id="searchProdukProduksi"><i
                                                 class="bi bi-search"></i></span>
                                         <input type="text" class="form-control" id="inputProdukProduksiName"
-                                            data-parsley-required="true" value="{{ $data->produk->nama }}" readonly>
+                                            data-parsley-required="true" value="{{ !empty($data->produk) ? $data->produk->nama : '-' }}" readonly>
                                         <input type="text" class="d-none" name="produk" id="inputProdukProduksi"
                                             value="{{ $data->produk_id }}">
                                         <div class="input-group-append">
@@ -122,7 +122,7 @@
                                                             value="{{ $row->transaksi_stok_id }}">
                                                         <td class="no-item text-center">{{ $key + 1 }}</td>
                                                         <td>
-                                                            <span class="nama_produk-item">{{ $row->produk->nama }}</span>
+                                                            <span class="nama_produk-item">{{ !empty($row->produk) ? $row->produk->nama : '-' }}</span>
                                                             <input type="hidden" name="detail[{{ $key }}][produk]"
                                                                 class="produk_id-item" value="{{ $row->produk_id }}">
                                                         </td>
@@ -133,7 +133,8 @@
                                                                 autocomplete="off" id="inputJumlahUnit"></td>
                                                         <td>
                                                             <span
-                                                                class="nama_satuan-item">{{ $row->satuan_id === 0 ? $row->produk->satuan->nama : $row->satuan_konversi->nama_konversi }}</span>
+                                                                class="nama_satuan-item">{{ $row->satuan_id === 0 ? (!empty($row->produk) ? (!empty($row->produk->satuan) ? $row->produk->satuan->nama : '-') : '-') : (!empty($row->satuan_konversi) ? $row->satuan_konversi->nama_konversi : '-') }}
+                                                            </span>
                                                             <a class="btn btn-outline-primary btn-sm float-end searchSatuan"
                                                                 data-bs-toggle="modal" data-bs-target="#ModalSatuan"><i
                                                                     class="bi bi-search"></i></a>

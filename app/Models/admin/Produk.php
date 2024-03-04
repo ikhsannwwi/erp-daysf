@@ -5,6 +5,7 @@ namespace App\Models\admin;
 use App\Models\Satuan;
 use App\Models\ProdukImage;
 use App\Models\admin\Kategori;
+use App\Models\ProdukPromoDetail;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -27,5 +28,9 @@ class Produk extends Model
 
     public function satuan(){
         return $this->belongsTo(Satuan::class, 'satuan_id');
+    }
+
+    public function promo(){
+        return $this->hasMany(ProdukPromoDetail::class, 'produk_id', 'id');
     }
 }

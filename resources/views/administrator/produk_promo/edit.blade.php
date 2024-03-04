@@ -41,7 +41,7 @@
                                             <label for="inputTanggal" class="form-label">Periode Promo</label>
                                             <div class="d-flex">
                                                 <input type="text" id="inputTanggal" class="form-control datepicker"
-                                                    placeholder="Masukan Tanggal" name="periode" autocomplete="off" value="{{date('d-m-Y hh:mm A', strtotime($data->tanggal_mulai)) . ' ~ ' . date('d-m-Y hh:mm A', strtotime($data->tanggal_berakhir)) }}"
+                                                    placeholder="Masukan Tanggal" name="periode" autocomplete="off" value="{{date('d-m-Y HH:mm', strtotime($data->tanggal_mulai)) . ' ~ ' . date('d-m-Y HH:mm', strtotime($data->tanggal_berakhir)) }}"
                                                     data-parsley-required="true">
                                             </div>
                                         </div>
@@ -118,11 +118,11 @@
                                                     <input type="hidden" class="input_id-item" name="detail[{{$key}}][id]" id="input_id-item" value="{{$row->id}}">
                                                     <td class="no-item text-center">{{$key + 1}}</td>
                                                     <td>
-                                                        <span class="nama_produk-item">{{$row->produk->nama}}</span>
+                                                        <span class="nama_produk-item">{{ !empty($row->produk) ? $row->produk->nama : '-' }}</span>
                                                         <input type="hidden" name="detail[{{$key}}][produk]" class="produk_id-item" value="{{$row->produk_id}}">
                                                     </td>
                                                     <td class="text-end">
-                                                        <span class="harga_awal-item">Rp {{number_format($row->produk->harga, 0, ',', '.')}}</span>
+                                                        <span class="harga_awal-item">Rp {{!empty($row->produk) ? number_format($row->produk->harga, 0, ',', '.') : '-'}}</span>
                                                     </td>
                                                     <td class="text-end text-sm">
                                                         <input type="text" name="detail[{{$key}}][diskon_persentase]" class="form-control text-end diskon_persentase-item" value="{{$data->jenis === 'persentase' ? $row->persentase : ''}} %"
@@ -297,7 +297,7 @@
 
             let dateOption = {
                 "locale": {
-                    "format": "DD-MM-YYYY hh:mm A",
+                    "format": "DD-MM-YYYY HH:mm",
                     "separator": " ~ ",
                     "daysOfWeek": [
                         "Su",
@@ -325,10 +325,11 @@
                     "firstDay": 1
                 },
                 timePicker: true,
+                timePicker24Hour: true,
                 singleDatePicker: false,
                 autoApply: true,
                 // showDropdowns: true,
-                minDate: moment().format('DD-MM-YYYY'),
+                minDate: ('{{date("d-m-Y", strtotime($data->tanggal_mulai))}}' < moment().format('DD-MM-YYYY') ? '{{date("d-m-Y", strtotime($data->tanggal_mulai))}}' : moment().format('DD-MM-YYYY')),
                 maxYear: parseInt(moment().format('YYYY'), 10)
             }
 

@@ -347,14 +347,9 @@ class ProdukPromoController extends Controller
         }
 
         $data = ProdukPromo::with([
-            'detail' => function ($query) {
-                $query->with([
-                    'produk' => function($query_produk){
-                        $query_produk->with('satuan');
-                    }
-                ]);
-            },
-            'toko', 'karyawan'
+            'detail' => function($query){
+                $query->with('produk');
+            }
         ])->find($id);
         
 
