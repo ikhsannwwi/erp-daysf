@@ -23,17 +23,17 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 //Produk
-Route::get('produk', [ProdukController::class, 'index'])->name('api.produk');
-Route::get('produk/detail', [ProdukController::class, 'detail'])->name('api.produk.detail');
+Route::middleware('token')->get('produk', [ProdukController::class, 'index'])->name('api.produk');
+Route::middleware('token')->get('produk/detail', [ProdukController::class, 'detail'])->name('api.produk.detail');
 
 //Kategori
-Route::get('kategori', [KategoriController::class, 'index'])->name('api.kategori');
-Route::get('kategori/detail', [KategoriController::class, 'detail'])->name('api.kategori.detail');
+Route::middleware('token')->get('kategori', [KategoriController::class, 'index'])->name('api.kategori');
+Route::middleware('token')->get('kategori/detail', [KategoriController::class, 'detail'])->name('api.kategori.detail');
 
 //ProdukPromo
-Route::get('promo', [ProdukPromoController::class, 'index'])->name('api.produk_promo');
-Route::get('promo/detail', [ProdukPromoController::class, 'detail'])->name('api.produk_promo.detail');
+Route::middleware('token')->get('promo', [ProdukPromoController::class, 'index'])->name('api.produk_promo');
+Route::middleware('token')->get('promo/detail', [ProdukPromoController::class, 'detail'])->name('api.produk_promo.detail');
 
 //Toko
-Route::get('toko', [TokoController::class, 'index'])->name('api.toko');
-Route::get('toko/detail', [TokoController::class, 'detail'])->name('api.toko.detail');
+Route::middleware('token')->get('toko', [TokoController::class, 'index'])->name('api.toko');
+Route::middleware('token')->get('toko/detail', [TokoController::class, 'detail'])->name('api.toko.detail');
