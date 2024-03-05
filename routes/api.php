@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\api\TokoController;
 use App\Http\Controllers\api\ProdukController;
 use App\Http\Controllers\api\KategoriController;
+use App\Http\Controllers\api\BestSellerController;
 use App\Http\Controllers\api\ProdukPromoController;
 
 /*
@@ -37,3 +38,7 @@ Route::middleware('token')->get('promo/detail', [ProdukPromoController::class, '
 //Toko
 Route::middleware('token')->get('toko', [TokoController::class, 'index'])->name('api.toko');
 Route::middleware('token')->get('toko/detail', [TokoController::class, 'detail'])->name('api.toko.detail');
+
+//Best Seller
+Route::middleware('token')->get('best-seller', [BestSellerController::class, 'index'])->name('api.best_seller');
+Route::middleware('token')->get('best-seller/detail', [BestSellerController::class, 'detail'])->name('api.best_seller.detail');

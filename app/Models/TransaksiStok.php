@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\admin\Produk;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class TransaksiStok extends Model
 {
@@ -12,4 +13,8 @@ class TransaksiStok extends Model
     protected $table = 'transaksi_stok';
     
     protected $guarded = ['id'];
+
+    public function produk(){
+        return $this->belongsTo(Produk::class, 'produk_id', 'id');
+    }
 }

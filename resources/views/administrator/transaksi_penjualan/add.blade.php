@@ -34,7 +34,7 @@
                                         <div class="input-group-append">
                                             <!-- Menggunakan input-group-append agar elemen berikutnya ditambahkan setelah input -->
                                             <a href="#" class="btn btn-outline-secondary" data-bs-toggle="modal"
-                                                data-bs-target="#ModalMember" id="button_member">
+                                                data-bs-target="#modalMember" id="button_member">
                                                 Search
                                             </a>
                                         </div>
