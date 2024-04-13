@@ -133,10 +133,71 @@ class TransaksiController extends Controller
     }
     
     public function getDataProduk(Request $request)
-        {
-            $data = Produk::query()->with('kategori')->where('status', 1)->where('penjualan', 1)->get();
+    {
+        $data = Produk::query()->with('kategori')->with([
+            'promo' => function ($queryPromo) {
+                $today = now('Asia/Jakarta');
 
-            return DataTables::of($data)
-                ->make(true);
+                $queryPromo->whereHas('master', function ($queryPromoMaster) use ($today) {
+                    // Check if 'master' relationship is not null and apply date conditions
+                    $queryPromoMaster->where('tanggal_mulai', '<=', $today)
+                        ->where('tanggal_berakhir', '>=', $today)
+                        ->orderBy('tanggal_berakhir', 'asc') // Order within the subquery
+                        ->take(1);
+                });
+            },
+        ])->where('status', 1)->where('penjualan', 1)->get();
+
+        return DataTables::of($data)
+            ->make(true);
+    }
+    
+    public function history(){
+        //Check permission
+        if (!isAllowed(static::$module, "view")) {
+            abort(403);
         }
+        
+        return view('kasir.transaksi_penjualan.history');
+    }
+
+    public function getData(Request $request){
+        $data = TransaksiPenjualanTitikPenjualan::query()->with('member')->with('toko')->where('created_by', auth()->guard('operator_kasir')->user()->kode);
+
+        if ($request->status ) {
+            if ($request->status != "") {
+                $status = $request->status == "Aktif" ? 1 : 0;
+                $data->where("status", $status);
+            }
+        }
+        $data->get();
+
+        return DataTables::of($data)
+            ->addColumn('action', function ($row) {
+                $btn = "";
+                if (isAllowed(static::$module, "detail")) : //Check permission
+                    $btn .= '<a href="#" data-id="' . $row->id . '" class="btn btn-secondary btn-sm me-3" data-bs-toggle="modal" data-bs-target="#detailTransaksi">
+                    Detail
+                </a>';
+                endif;
+                return $btn;
+            })
+            ->rawColumns(['action'])
+            ->make(true);
+    }
+
+    public function getDetail($id){
+        //Check permission
+        if (!isAllowed(static::$module, "view")) {
+            abort(403);
+        }
+
+        $data = TransaksiPenjualanTitikPenjualan::with('member')->with('toko')->with('item.produk')->with('pembayaran')->find($id);
+
+        return response()->json([
+            'data' => $data,
+            'status' => 'success',
+            'message' => 'Sukses memuat detail data.',
+        ]);
+    }
 }

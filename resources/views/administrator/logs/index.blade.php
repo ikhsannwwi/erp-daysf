@@ -27,7 +27,8 @@
                             </a>
                         @endif
                         @if (isallowed('log_system', 'export'))
-                            <a href="{{route('admin.logSystems.generatePDF')}}" target="_blank" class="btn btn-primary ms-3 float-end">
+                            <a href="{{ route('admin.logSystems.generatePDF') }}" target="_blank"
+                                class="btn btn-primary ms-3 float-end">
                                 Export
                             </a>
                         @endif
@@ -109,6 +110,15 @@
                         name: 'created_at'
                     }
                 ],
+            });
+
+            $('body').on('keydown', function(e) {
+                // Periksa apakah tombol Alt dan tombol S ditekan
+                if (e.ctrlKey && e.key === 'f') {
+                    // Fokuskan input pada elemen #datatable_filter
+                    $('#datatable_filter input').focus();
+                    e.preventDefault();
+                }
             });
 
             $('#filterButton').on('click', function() {

@@ -113,6 +113,8 @@ class ProduksiController extends Controller
 
         try {
             DB::beginTransaction();
+            $log = [];
+
             $data = Produksi::create([
                 'tanggal' => date('Y-m-d', strtotime($request->tanggal)),
                 'no_produksi' => $this->generateNomorProduksi(),
@@ -136,6 +138,10 @@ class ProduksiController extends Controller
             ]);
             $data->update(['transaksi_stok_id' => $stok->id]);
             
+            $log[] = [
+                'Produksi' => $data->toArray(),
+                'Transaksi Stok' => $stok->toArray()
+            ];
             foreach ($request->detail as $row) {
                 $produksi_detail = ProduksiDetail::create([
                     'produksi_id' => $data->id,
@@ -163,9 +169,13 @@ class ProduksiController extends Controller
                     'created_by' => auth()->user() ? auth()->user()->kode : '',
                 ]);
                 $produksi_detail->update(['transaksi_stok_id' => $stok_detail->id]);
+                $log['Detail'][] = [
+                    'Data Detail' => $produksi_detail->toArray(),
+                    'Transaksi Stok' => $stok_detail->toArray()
+                ];
             }
             
-            createLog(static::$module, __FUNCTION__, $data->id, ['Data yang disimpan' => $data]);
+            createLog(static::$module, __FUNCTION__, $data->id, ['Data yang disimpan' => $log]);
             DB::commit();
             return redirect()->route('admin.produksi')->with('success', 'Data berhasil disimpan.');
         } catch (\Throwable $th) {
@@ -307,21 +317,21 @@ class ProduksiController extends Controller
                     $detail = ProduksiDetail::find($row['id']);
                     $transaksi_stok = TransaksiStok::find($row['transaksi_stok_id']);
                     
-                    $previousData['detail']['produksi'] = $detail->toArray();
-                    $previousData['detail']['transaksi_stok'] = $transaksi_stok->toArray();
+                    $previousData['detail']['produksi'][] = $detail->toArray();
+                    $previousData['detail']['transaksi_stok'][] = $transaksi_stok->toArray();
                     
                     $detail->update($detail_updates);
                     $transaksi_stok->update($update_stok_detail);
 
-                    $previousData['detail']['produksi'] = array_intersect_key($detail_updates, $detail->getOriginal());
-                    $previousData['detail']['transaksi_stok'] = array_intersect_key($update_stok_detail, $transaksi_stok->getOriginal());
+                    $updatedData['detail']['produksi'][] = array_intersect_key($detail_updates, $detail->getOriginal());
+                    $updatedData['detail']['transaksi_stok'][] = array_intersect_key($update_stok_detail, $transaksi_stok->getOriginal());
                 } else {
                     $detail = ProduksiDetail::create($detail_updates);
                     $transaksi_stok = TransaksiStok::create($update_stok_detail);
                     $detail->update(['transaksi_stok_id' => $transaksi_stok->id]);
 
-                    $previousData['detail']['produksi'] = $detail->toArray();
-                    $previousData['detail']['transaksi_stok'] = $transaksi_stok->toArray();
+                    $previousData['detail']['produksi'][] = $detail->toArray();
+                    $previousData['detail']['transaksi_stok'][] = $transaksi_stok->toArray();
                 }
             }
             
@@ -353,19 +363,26 @@ class ProduksiController extends Controller
             ], 404);
         }
 
-        $deletedData = $data->toArray();
+        $deletedData = [
+            $data->toArray(),
+            'Transaksi Stok' => [],
+            'detail' => []
+        ];
 
         try {
             DB::beginTransaction();
             foreach ($detail as $row) {
                 $row->delete();
+                $deletedData['detail'][] = $row->toArray();
                 $stok_detail = TransaksiStok::find($row->transaksi_stok_id);
                 if ($stok_detail) {
+                    $deletedData['detail'][] = $stok_detail->toArray();
                     $stok_detail->delete();
                 }
             }
             $stok = TransaksiStok::find($data->transaksi_stok_id);
             if ($stok) {
+                $deletedData['Transaksi Stok'][] = $stok_detail->toArray();
                 $stok->delete();
             }
             $data->delete();
@@ -404,13 +421,15 @@ class ProduksiController extends Controller
             ], 404);
         }
 
-        $deletedData = $data->toArray();
-
+        $deletedData = [];
+        $deletedData[] = $data->toArray();
+        
         // Delete the transaction
         try {
             DB::beginTransaction();
             $stok = TransaksiStok::find($data->transaksi_stok_id);
             if ($stok) {
+                $deletedData[] = $stok->toArray();
                 $stok->delete();
             }
             $data->delete();

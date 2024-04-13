@@ -27,4 +27,12 @@ class PenyesuaianStok extends Model
     public function produk(){
         return $this->belongsTo(Produk::class);
     }
+
+    public function migrasiToko(){
+        return $this->belongsTo(Toko::class, 'migrasi_id');
+    }
+
+    public function migrasiGudang(){
+        return $this->belongsTo(Gudang::class, 'migrasi_id');
+    }
 }

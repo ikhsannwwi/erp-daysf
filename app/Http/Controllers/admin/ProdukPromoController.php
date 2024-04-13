@@ -131,6 +131,7 @@ class ProdukPromoController extends Controller
                 'created_by' => auth()->user() ? auth()->user()->kode : '',
             ]);
             
+            $log_detail = [];
             foreach ($request->detail as $row) {
                 $detail = ProdukPromoDetail::create([
                     'produk_promo_id' => $data->id,
@@ -141,9 +142,10 @@ class ProdukPromoController extends Controller
                     'batas_pembelian' => str_replace(['.', ','], '', $row['batas_pembelian']),
                     'created_by' => auth()->user() ? auth()->user()->kode : '',
                 ]);
+                $log_detail[] = $detail;
             }
             
-            createLog(static::$module, __FUNCTION__, $data->id, ['Data yang disimpan' => $data]);
+            createLog(static::$module, __FUNCTION__, $data->id, ['Data yang disimpan' => [$data, 'Detail' => $log_detail]]);
             DB::commit();
             return redirect()->route('admin.produk_promo')->with('success', 'Data berhasil disimpan.');
         } catch (\Throwable $th) {
@@ -187,7 +189,10 @@ class ProdukPromoController extends Controller
         $request->validate($rules);
 
         // Simpan data sebelum diupdate
-        $previousData = $data->toArray();
+        $previousData = [
+            'Master' => $data->toArray(),
+            'Detail' => []
+        ];
 
         try {
             DB::beginTransaction();
@@ -214,6 +219,11 @@ class ProdukPromoController extends Controller
                 'updated_by' => auth()->user() ? auth()->user()->kode : '',
             ];
 
+            $updatedData = [
+                'Master' => array_intersect_key($updates, $data->getOriginal()),
+                'Detail' => []
+            ];
+            
             foreach ($request->detail as $row) {
                 $update_details = [
                     'produk_promo_id' => $data->id,
@@ -227,7 +237,9 @@ class ProdukPromoController extends Controller
                 if (!empty($row['id'])) {
                     $update_details['updated_by'] = auth()->user() ? auth()->user()->kode : '';
                     $detail = ProdukPromoDetail::find($row['id']);
+                    $previousData['Detail'][] = $detail;
                     $detail->update($update_details);
+                    $updatedData['Detail'][] =  array_intersect_key($update_details, $detail->getOriginal());
                 }else {
                     $detail = ProdukPromoDetail::create([
                         'produk_promo_id' => $data->id,
@@ -238,11 +250,11 @@ class ProdukPromoController extends Controller
                         'batas_pembelian' => str_replace(['.', ','], '', $row['batas_pembelian']),
                         'created_by' => auth()->user() ? auth()->user()->kode : '',
                     ]);
+                    $updatedData['Detail'][] = $detail->toArray();
                 }
             }
             
             // Filter only the updated data
-            $updatedData = array_intersect_key($updates, $data->getOriginal());
     
             $data->update($updates);
     
@@ -274,16 +286,18 @@ class ProdukPromoController extends Controller
             ], 404);
         }
 
-        $deletedData = $data->toArray();
+        $log = [];
+        $log[] = $data->toArray();
 
         try {
             DB::beginTransaction();
             foreach ($detail as $row) {
+                $log['Detail'][] = $row->toArray();
                 $row->delete();
             }
             $data->delete();
     
-            createLog(static::$module, __FUNCTION__, $id, ['Data yang dihapus' => $deletedData]);
+            createLog(static::$module, __FUNCTION__, $id, ['Data yang dihapus' => $log]);
             
             DB::commit();
             return response()->json([
@@ -317,14 +331,14 @@ class ProdukPromoController extends Controller
             ], 404);
         }
 
-        $deletedData = $data->toArray();
+        $log = $data->toArray();
 
         // Delete the transaction
         try {
             DB::beginTransaction();
             $data->delete();
     
-            createLog(static::$module, __FUNCTION__, $id, ['Data yang dihapus' => $deletedData]);
+            createLog(static::$module, __FUNCTION__, $id, ['Data yang dihapus' => $log]);
             
             DB::commit();
             return response()->json([
@@ -362,7 +376,7 @@ class ProdukPromoController extends Controller
 
     public function getDataProduk(Request $request){
         $data = Produk::query()->with('kategori')->with('satuan');
-        $data->where("status", 1)->get();
+        $data->where("status", 1)->where("penjualan", 1)->get();
 
         return DataTables::of($data)
             ->make(true);

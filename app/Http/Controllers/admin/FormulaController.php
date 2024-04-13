@@ -117,6 +117,8 @@ class FormulaController extends Controller
                 'keterangan' => $request->keterangan,
                 'created_by' => auth()->user() ? auth()->user()->kode : '',
             ]);
+
+            $log_detail = [];
             
             foreach ($request->detail as $row) {
                 // dd($row);
@@ -127,9 +129,10 @@ class FormulaController extends Controller
                     'jumlah_unit' => str_replace(['.', ','], '', $row['jumlah_unit']),
                     'created_by' => auth()->user() ? auth()->user()->kode : '',
                 ]);
+                $log_detail[] = $detail;
             }
             
-            createLog(static::$module, __FUNCTION__, $data->id, ['Data yang disimpan' => $data]);
+            createLog(static::$module, __FUNCTION__, $data->id, ['Data yang disimpan' => ['master' => $data, 'detail' => $log_detail]]);
             DB::commit();
             return redirect()->route('admin.formula')->with('success', 'Data berhasil disimpan.');
         } catch (\Throwable $th) {
@@ -192,7 +195,7 @@ class FormulaController extends Controller
                 'detail' => []
             ];
             // dd($request->detail);
-            foreach ($request->detail as $row) {
+            foreach ($request->detail as $key => $row) {
                 $commonFields = [
                     'produk_id' => $row['produk'],
                     'satuan_id' => $row['satuan'],
@@ -201,21 +204,21 @@ class FormulaController extends Controller
                 $detail_updates = array_merge($commonFields, [
                     'formula_id' => $data->id,
                     'jumlah_unit' => str_replace(['.', ','], '', $row['jumlah_unit']),
-                    'created_by' => !empty($row['id']) ? auth()->user()->kode : '',
-                    'updated_by' => empty($row['id']) ? auth()->user()->kode : '',
+                    'updated_by' => !empty($row['id']) ? auth()->user()->kode : null,
                 ]);
     
                 if (!empty($row['id'])) {
                     $detail = FormulaDetail::find($row['id']);
                     
-                    $previousData['detail']['formula'] = $detail->toArray();
+                    $previousData['detail'][$key] = $detail->toArray();
                     
                     $detail->update($detail_updates);
 
-                    $previousData['detail']['formula'] = array_intersect_key($detail_updates, $detail->getOriginal());
+                    $updatedData['detail'][$key] = array_intersect_key($detail_updates, $detail->getOriginal());
                 } else {
+                    $detail_updates['created_by'] = auth()->user() ? auth()->user()->kode : null;
                     $detail = FormulaDetail::create($detail_updates);
-                    $previousData['detail']['formula'] = $detail->toArray();
+                    $updatedData['detail'][$key] = $detail->toArray();
                 }
             }
             
@@ -248,15 +251,17 @@ class FormulaController extends Controller
         }
 
         $deletedData = $data->toArray();
+        $log_detail = [];
 
         try {
             DB::beginTransaction();
             foreach ($detail as $row) {
+                $log_detail[] = $row;
                 $row->delete();
             }
             $data->delete();
     
-            createLog(static::$module, __FUNCTION__, $id, ['Data yang dihapus' => $deletedData]);
+            createLog(static::$module, __FUNCTION__, $id, ['Data yang dihapus' => ['master' => $deletedData, 'detail' => $log_detail]]);
             
             DB::commit();
             return response()->json([
@@ -376,7 +381,7 @@ class FormulaController extends Controller
     
     public function getDataProduk(Request $request){
         $data = Produk::query()->with('kategori');
-        $data->where("status", 1)->where("pembelian", 1)->get();
+        $data->where("status", 1)->where("formula", 1)->get();
 
         return DataTables::of($data)
             ->make(true);

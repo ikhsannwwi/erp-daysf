@@ -197,6 +197,35 @@
 
     <script type="text/javascript">
         $(document).ready(function() {
+            var optionToast = {
+                classname: "toast",
+                transition: "fade",
+                insertBefore: true,
+                duration: 4000,
+                enableSounds: true,
+                autoClose: true,
+                progressBar: true,
+                sounds: {
+                    info: toastMessages.path + "/sounds/info/1.mp3",
+                    // path to sound for successfull message:
+                    success: toastMessages.path + "/sounds/success/1.mp3",
+                    // path to sound for warn message:
+                    warning: toastMessages.path + "/sounds/warning/1.mp3",
+                    // path to sound for error message:
+                    error: toastMessages.path + "/sounds/error/1.mp3",
+                },
+
+                onShow: function(type) {
+                    console.log("a toast " + type + " message is shown!");
+                },
+                onHide: function(type) {
+                    console.log("the toast " + type + " message is hidden!");
+                },
+
+                // the placement where prepend the toast container:
+                prependTo: document.body.childNodes[0],
+            };
+
             // function scanBarcode() {
             //     // Get the file input element
             //     var input = document.getElementById('fileInput');
@@ -361,11 +390,15 @@
                             data: 'harga',
                             name: 'harga',
                             render: function(data, type, row, meta) {
-                                // Assuming data is a number, you can use toLocaleString to format it
-                                return formatRupiah(data);
+                                if (row.promo && row.promo.length > 0) {
+                                    let respon = `<div><span class="text-sm mx-2" style="text-decoration: line-through;">${formatRupiah(data)}</span>${formatRupiah(row.promo[0].diskon)}</div>`
+                                    return respon;
+                                } else {
+                                    return formatRupiah(data);
+                                }
                             },
                             class: 'text-end'
-                        },
+                        }
                     ],
                     'rowCallback': function(row, data, dataIndex) {
                         // Get row ID
@@ -467,19 +500,25 @@
                                     tr_clone.find(".input_id-item").val(data_i.id);
                                     tr_clone.find(".nama-item").text(data_i.nama);
                                     tr_clone.find(".input_jumlah-item").val('');
-                                    var hargaSatuan = parseFloat(data_i.harga);
+                                    var hargaSatuan = parseFloat(data_i.promo.length > 0 ? data_i
+                                        .promo[0].diskon : data_i.harga);
 
                                     if (!isNaN(hargaSatuan)) {
                                         var formattedHargaSatuan = formatRupiah(
-                                            hargaSatuan);
-                                        tr_clone.find(".harga_satuan-item").text(
-                                            formattedHargaSatuan);
+                                        hargaSatuan);
+                                        if (data_i.promo.length > 0) {
+                                            tr_clone.find(".harga_satuan-item").html(`<span class="text-sm mx-2" style="text-decoration: line-through;">${formatRupiah(data_i.harga)}</span>${formattedHargaSatuan}`
+                                            );
+                                        } else {
+                                            tr_clone.find(".harga_satuan-item").text(
+                                                formattedHargaSatuan);
+                                        }
                                     } else {
                                         console.error('Harga tidak valid.');
                                     }
 
                                     tr_clone.find(".input_harga_satuan-item").val(data_i
-                                        .harga);
+                                        .promo.length > 0 ? data_i.promo[0].diskon : data_i.harga);
 
                                     tr_clone.find(".input_jumlah-item").on("input",
                                         function() {
@@ -648,6 +687,11 @@
                     accessErrorDetail.text(
                         'Setidaknya harus ada salah satu detail transaksi'
                     ); // Set the error message from the response
+
+                    var toasty = new Toasty(optionToast);
+                    toasty.configure(optionToast);
+                    toasty.error('Setidaknya harus ada salah satu detail transaksi');
+
                     console.log("Table body is empty");
                     indicatorNone();
                     return;
@@ -658,8 +702,31 @@
                     accessErrorDetail.text('');
                 }
 
+                const inputPembayaran = $("#input_jumlah_total_pembayaran_transaksi");
+                const jumlahPembayaran = parseRupiah(inputPembayaran.val())
+                const jumlahTotal = parseRupiah($('#jumlah_total_transaksi').val())
+                const accessErrorPembayaran = $("#accessErrorPembayaran");
+                if ( jumlahPembayaran === 0 || (jumlahPembayaran < jumlahTotal)) {
+                    inputPembayaran.css("color", "#dc3545"); // Mengatur warna langsung menggunakan jQuery
+                    accessErrorPembayaran.addClass('invalid-feedback');
+                    inputPembayaran.addClass('is-invalid');
+                    accessErrorPembayaran.text(
+                        'Pembayaran tidak boleh kurang dari ' + formatRupiah(jumlahTotal)
+                    ); // Set the error message from the response
+                    console.log('Pembayaran tidak boleh kurang dari ' + formatRupiah(jumlahTotal));
 
+                    var toasty = new Toasty(optionToast);
+                    toasty.configure(optionToast);
+                    toasty.error('Pembayaran tidak boleh kurang dari ' + formatRupiah(jumlahTotal));
 
+                    indicatorNone();
+                    return;
+                } else {
+                    inputPembayaran.css("color", ""); // Menghapus properti warna menggunakan jQuery
+                    accessErrorPembayaran.removeClass('invalid-feedback');
+                    inputPembayaran.removeClass('is-invalid');
+                    accessErrorPembayaran.text('');
+                }
 
                 // Validate the form using Parsley
                 if ($(form).parsley().validate()) {

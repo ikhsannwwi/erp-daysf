@@ -102,6 +102,7 @@ class StokOpnameTokoController extends Controller
 
         $request->validate($rules);
 
+        $log = [];
         try {
             DB::beginTransaction();
             $data = StokOpnameToko::create([
@@ -112,6 +113,7 @@ class StokOpnameTokoController extends Controller
                 'keterangan' => $request->keterangan,
                 'created_by' => auth()->user() ? auth()->user()->kode : '',
             ]);
+            $log[] = $data->toArray();
             
             foreach ($request->detail as $row) {
                 // dd($row);
@@ -123,9 +125,10 @@ class StokOpnameTokoController extends Controller
                     'keterangan' => $row['keterangan'],
                     'created_by' => auth()->user() ? auth()->user()->kode : '',
                 ]);
+                $log['detail'][] = $detail->toArray();
             }
             
-            createLog(static::$module, __FUNCTION__, $data->id, ['Data yang disimpan' => $data]);
+            createLog(static::$module, __FUNCTION__, $data->id, ['Data yang disimpan' => $log]);
             DB::commit();
             return redirect()->route('admin.stok_opname_toko')->with('success', 'Data berhasil disimpan.');
         } catch (\Throwable $th) {
@@ -153,16 +156,18 @@ class StokOpnameTokoController extends Controller
             ], 404);
         }
 
-        $deletedData = $data->toArray();
-
+        $log = [];
+        $log[] = $data->toArray();
+        
         try {
             DB::beginTransaction();
             foreach ($detail as $row) {
+                $log['detail'][] = $row->toArray();
                 $row->delete();
             }
             $data->delete();
     
-            createLog(static::$module, __FUNCTION__, $id, ['Data yang dihapus' => $deletedData]);
+            createLog(static::$module, __FUNCTION__, $id, ['Data yang dihapus' => $log]);
             
             DB::commit();
             return response()->json([
@@ -196,14 +201,14 @@ class StokOpnameTokoController extends Controller
             ], 404);
         }
 
-        $deletedData = $data->toArray();
+        $log = $data->toArray();
 
         // Delete the transaction
         try {
             DB::beginTransaction();
             $data->delete();
     
-            createLog(static::$module, __FUNCTION__, $id, ['Data yang dihapus' => $deletedData]);
+            createLog(static::$module, __FUNCTION__, $id, ['Data yang dihapus' => $log]);
             
             DB::commit();
             return response()->json([

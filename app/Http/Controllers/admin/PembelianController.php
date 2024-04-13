@@ -119,6 +119,8 @@ class PembelianController extends Controller
                 'created_by' => auth()->user() ? auth()->user()->kode : '',
             ]);
             
+            $log_detail = [];
+            
             foreach ($request->detail as $row) {
                 // dd($row);
                 $pembelian_detail = PembelianDetail::create([
@@ -152,9 +154,14 @@ class PembelianController extends Controller
                     'created_by' => auth()->user() ? auth()->user()->kode : '',
                 ]);
                 $pembelian_detail->update(['transaksi_stok_id' => $stok->id]);
+
+                $log_detail[] = [
+                    $pembelian_detail,
+                    'Transaksi Stok' => $stok
+                ];
             }
             
-            createLog(static::$module, __FUNCTION__, $data->id, ['Data yang disimpan' => $data]);
+            createLog(static::$module, __FUNCTION__, $data->id, ['Data yang disimpan' => ['Master' => $data, 'Detail' => $log_detail]]);
             DB::commit();
             return redirect()->route('admin.pembelian')->with('success', 'Data berhasil disimpan.');
         } catch (\Throwable $th) {
@@ -255,21 +262,21 @@ class PembelianController extends Controller
                     $detail = PembelianDetail::find($row['id']);
                     $transaksi_stok = TransaksiStok::find($row['transaksi_stok_id']);
                     
-                    $previousData['detail']['pembelian'] = $detail->toArray();
-                    $previousData['detail']['transaksi_stok'] = $transaksi_stok->toArray();
+                    $previousData['detail'][] = $detail->toArray();
+                    $previousData['detail'][] = ['Transaksi Stok' =>$transaksi_stok->toArray()];
                     
                     $detail->update($detail_updates);
                     $transaksi_stok->update($update_stok);
 
-                    $previousData['detail']['pembelian'] = array_intersect_key($detail_updates, $detail->getOriginal());
-                    $previousData['detail']['transaksi_stok'] = array_intersect_key($update_stok, $transaksi_stok->getOriginal());
+                    $updatedData['detail'][] = array_intersect_key($detail_updates, $detail->getOriginal());
+                    $updatedData['detail'][] = ['Transaksi Stok' => array_intersect_key($update_stok, $transaksi_stok->getOriginal())];
                 } else {
                     $detail = PembelianDetail::create($detail_updates);
                     $transaksi_stok = TransaksiStok::create($update_stok);
                     $detail->update(['transaksi_stok_id' => $transaksi_stok->id]);
 
-                    $previousData['detail']['pembelian'] = $detail->toArray();
-                    $previousData['detail']['transaksi_stok'] = $transaksi_stok->toArray();
+                    $previousData['detail'][] = $detail->toArray();
+                    $previousData['detail'][] = ['Transaksi Stok' =>$transaksi_stok->toArray()];
                 }
             }
             
@@ -305,16 +312,19 @@ class PembelianController extends Controller
 
         try {
             DB::beginTransaction();
+            $log_detail = [];
             foreach ($detail as $row) {
+                $log_detail[] = $row->toArray();
                 $stok = TransaksiStok::find($row->transaksi_stok_id);
                 if ($stok) {
+                    $log_detail['Transaksi Stok'][] = $stok->toArray();
                     $stok->delete();
                 }
                 $row->delete();
             }
             $data->delete();
     
-            createLog(static::$module, __FUNCTION__, $id, ['Data yang dihapus' => $deletedData]);
+            createLog(static::$module, __FUNCTION__, $id, ['Data yang dihapus' => ['Master' => $deletedData, 'Detail' => $log_detail]]);
             
             DB::commit();
             return response()->json([
@@ -349,17 +359,18 @@ class PembelianController extends Controller
         }
 
         $deletedData = $data->toArray();
-
+        
         // Delete the transaction
         try {
             DB::beginTransaction();
             $stok = TransaksiStok::find($data->transaksi_stok_id);
             if ($stok) {
+                $log_stok = $stok->toArray();
                 $stok->delete();
             }
             $data->delete();
     
-            createLog(static::$module, __FUNCTION__, $id, ['Data yang dihapus' => $deletedData]);
+            createLog(static::$module, __FUNCTION__, $id, ['Data yang dihapus' => ['Data' => $deletedData, 'Transaksi Stok' => $log_stok]]);
             
             DB::commit();
             return response()->json([

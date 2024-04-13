@@ -210,12 +210,6 @@
 
             const submitButton = document.getElementById("formSubmit");
 
-            form.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                }
-            });
-
             submitButton.addEventListener("click", async function(e) {
                 e.preventDefault();
 

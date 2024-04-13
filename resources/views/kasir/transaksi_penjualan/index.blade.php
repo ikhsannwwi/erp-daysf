@@ -9,13 +9,21 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <nav aria-label="breadcrumb">
-                            <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="{{ route('kasir.dashboard') }}">Dashboard</a>
-                                </li>
-                                <li class="breadcrumb-item active" aria-current="page">Transaksi</li>
-                            </ol>
-                        </nav>
+                        <div class="row">
+                            <div class="col-6">
+                                <nav aria-label="breadcrumb">
+                                    <ol class="breadcrumb">
+                                        <li class="breadcrumb-item"><a href="{{ route('kasir.dashboard') }}">Dashboard</a>
+                                        </li>
+                                        <li class="breadcrumb-item active" aria-current="page">Transaksi</li>
+                                    </ol>
+                                </nav>
+                            </div>
+                            <div class="col-6 text-end">
+                                <a href="{{ route('kasir.transaksi.history') }}" class="btn btn-primary" title="History"><i
+                                        class="fa-solid fa-clock-rotate-left"></i></a>
+                            </div>
+                        </div>
                     </div>
                     <div class="card-content">
                         <div class="card-body">
@@ -58,23 +66,27 @@
                                                 <tfoot>
                                                     <tr>
                                                         <td colspan="4">Total</td>
-                                                        <td class="text-end" id="jumlah_total_transaksi-item-tfoot">Rp 0</td>
+                                                        <td class="text-end" id="jumlah_total_transaksi-item-tfoot">Rp 0
+                                                        </td>
                                                         <td><input type="hidden" name="jumlah_total_transaksi"
                                                                 id="jumlah_total_transaksi"></td>
                                                     </tr>
                                                     <tr>
                                                         <td colspan="3">Pembayaran</td>
-                                                        <td> <input type="text" name="input_jumlah_total_pembayaran_transaksi"
+                                                        <td> <input type="text"
+                                                                name="input_jumlah_total_pembayaran_transaksi"
                                                                 id="input_jumlah_total_pembayaran_transaksi"
                                                                 placeholder="Masukan Nominal Pembayaran"
                                                                 class="form-control text-end" data-parsley-required="true"
                                                                 autocomplete="off"
                                                                 data-parsley-required-message="Field ini wajib diisi"
                                                                 onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                                            <div class="" style="color: #dc3545"
+                                                                id="accessErrorPembayaran"></div>
                                                         </td>
                                                         <td class="text-end" id="total_bayar-item-tfoot">Rp 0</td>
                                                         <td><input type="hidden" name="jumlah_total_pembayaran_transaksi"
-                                                            id="jumlah_total_pembayaran_transaksi"></td>
+                                                                id="jumlah_total_pembayaran_transaksi"></td>
                                                     </tr>
                                                     <tr>
                                                         <td colspan="4">Kembalian</td>
@@ -117,9 +129,9 @@
             <td class="nama-item" style="vertical-align:middle;"></td>
             <input type="hidden" class="input_id-item" name="detail[0][input_id]" id="input_id-item">
             <td class="jumlah-item" style="vertical-align:middle;">
-                <input type="text" class="input_jumlah-item form-control text-end" name="detail[0][input_jumlah]" placeholder="Masukan jumlah item"
-                    id="input_jumlah-item" data-parsley-required="true" autocomplete="off"
-                    data-parsley-required-message="Field ini wajib diisi" data-parsley-type="number"
+                <input type="text" class="input_jumlah-item form-control text-end" name="detail[0][input_jumlah]"
+                    placeholder="Masukan jumlah item" id="input_jumlah-item" data-parsley-required="true"
+                    autocomplete="off" data-parsley-required-message="Field ini wajib diisi" data-parsley-type="number"
                     data-parsley-type-message="Field ini hanya boleh diisi dengan angka"
                     onkeypress="return event.charCode >= 48 && event.charCode <= 57">
             </td>
@@ -156,6 +168,35 @@
 
     <script type="text/javascript">
         $(document).ready(function() {
+            var optionToast = {
+                classname: "toast",
+                transition: "fade",
+                insertBefore: true,
+                duration: 4000,
+                enableSounds: true,
+                autoClose: true,
+                progressBar: true,
+                sounds: {
+                    info: toastMessages.path + "/sounds/info/1.mp3",
+                    // path to sound for successfull message:
+                    success: toastMessages.path + "/sounds/success/1.mp3",
+                    // path to sound for warn message:
+                    warning: toastMessages.path + "/sounds/warning/1.mp3",
+                    // path to sound for error message:
+                    error: toastMessages.path + "/sounds/error/1.mp3",
+                },
+
+                onShow: function(type) {
+                    console.log("a toast " + type + " message is shown!");
+                },
+                onHide: function(type) {
+                    console.log("the toast " + type + " message is hidden!");
+                },
+
+                // the placement where prepend the toast container:
+                prependTo: document.body.childNodes[0],
+            };
+
             // function scanBarcode() {
             //     // Get the file input element
             //     var input = document.getElementById('fileInput');
@@ -241,16 +282,17 @@
                 updateTotalPembayaran(pembayaran);
             });
 
-            function updateTotalPembayaran(pembayaran){
+            function updateTotalPembayaran(pembayaran) {
                 $('#total_bayar-item-tfoot').text(
                     formatRupiah(parseRupiah(pembayaran))
                 );
                 $('#jumlah_total_pembayaran_transaksi').val(
                     parseRupiah(pembayaran)
                 );
-                
+
                 $('#total_kembalian-item-tfoot').text(
-                    formatRupiah(parseRupiah(pembayaran) - parseRupiah($('#jumlah_total_transaksi-item-tfoot').text()))
+                    formatRupiah(parseRupiah(pembayaran) - parseRupiah($('#jumlah_total_transaksi-item-tfoot')
+                        .text()))
                 );
                 $('#jumlah_total_kembalian_transaksi').val(
                     parseRupiah(pembayaran) - parseRupiah($('#jumlah_total_transaksi-item-tfoot').text())
@@ -319,11 +361,15 @@
                             data: 'harga',
                             name: 'harga',
                             render: function(data, type, row, meta) {
-                                // Assuming data is a number, you can use toLocaleString to format it
-                                return formatRupiah(data);
+                                if (row.promo && row.promo.length > 0) {
+                                    let respon = `<div><span class="text-sm mx-2" style="text-decoration: line-through;">${formatRupiah(data)}</span>${formatRupiah(row.promo[0].diskon)}</div>`
+                                    return respon;
+                                } else {
+                                    return formatRupiah(data);
+                                }
                             },
                             class: 'text-end'
-                        },
+                        }
                     ],
                     'rowCallback': function(row, data, dataIndex) {
                         // Get row ID
@@ -425,18 +471,25 @@
                                     tr_clone.find(".input_id-item").val(data_i.id);
                                     tr_clone.find(".nama-item").text(data_i.nama);
                                     tr_clone.find(".input_jumlah-item").val('');
-                                    var hargaSatuan = parseFloat(data_i.harga);
+                                    var hargaSatuan = parseFloat(data_i.promo.length > 0 ? data_i
+                                        .promo[0].diskon : data_i.harga);
 
                                     if (!isNaN(hargaSatuan)) {
-                                        var formattedHargaSatuan = formatRupiah(hargaSatuan);
-                                        tr_clone.find(".harga_satuan-item").text(
-                                            formattedHargaSatuan);
+                                        var formattedHargaSatuan = formatRupiah(
+                                        hargaSatuan);
+                                        if (data_i.promo.length > 0) {
+                                            tr_clone.find(".harga_satuan-item").html(`<span class="text-sm mx-2" style="text-decoration: line-through;">${formatRupiah(data_i.harga)}</span>${formattedHargaSatuan}`
+                                            );
+                                        } else {
+                                            tr_clone.find(".harga_satuan-item").text(
+                                                formattedHargaSatuan);
+                                        }
                                     } else {
                                         console.error('Harga tidak valid.');
                                     }
 
                                     tr_clone.find(".input_harga_satuan-item").val(data_i
-                                        .harga);
+                                        .promo.length > 0 ? data_i.promo[0].diskon : data_i.harga);
 
                                     tr_clone.find(".input_jumlah-item").on("input",
                                         function() {
@@ -448,12 +501,14 @@
                                             $(this).closest(".detail-list").find(
                                                 ".harga_total-item").text(
                                                 formatRupiah(hargaTotal)
-                                                );
+                                            );
                                             $(this).closest(".detail-list").find(
                                                 ".input_harga_total-item").val(
                                                 hargaTotal);
                                             updateTotalHarga();
-                                            updateTotalPembayaran($('#input_jumlah_total_pembayaran_transaksi').val());
+                                            updateTotalPembayaran($(
+                                                '#input_jumlah_total_pembayaran_transaksi'
+                                                ).val());
                                         });
 
                                     tr_clone.find(".harga_total-item").text('Rp ' + 0);
@@ -527,8 +582,8 @@
                             }
                             updateTotalHarga();
                             updateTotalPembayaran($(
-                                        '#input_jumlah_total_pembayaran_transaksi'
-                                    ).val());
+                                '#input_jumlah_total_pembayaran_transaksi'
+                            ).val());
                         }
                     });
                 });
@@ -606,6 +661,11 @@
                     accessErrorDetail.text(
                         'Setidaknya harus ada salah satu detail transaksi'
                     ); // Set the error message from the response
+
+                    var toasty = new Toasty(optionToast);
+                    toasty.configure(optionToast);
+                    toasty.error('Setidaknya harus ada salah satu detail transaksi');
+
                     console.log("Table body is empty");
                     indicatorNone();
                     return;
@@ -616,7 +676,32 @@
                     accessErrorDetail.text('');
                 }
 
+                const inputPembayaran = $("#input_jumlah_total_pembayaran_transaksi");
+                const jumlahPembayaran = parseRupiah(inputPembayaran.val())
+                const jumlahTotal = parseRupiah($('#jumlah_total_transaksi').val())
+                const accessErrorPembayaran = $("#accessErrorPembayaran");
+                if (jumlahPembayaran === 0 || (jumlahPembayaran < jumlahTotal)) {
+                    inputPembayaran.css("color",
+                    "#dc3545"); // Mengatur warna langsung menggunakan jQuery
+                    accessErrorPembayaran.addClass('invalid-feedback');
+                    inputPembayaran.addClass('is-invalid');
+                    accessErrorPembayaran.text(
+                        'Pembayaran tidak boleh kurang dari ' + formatRupiah(jumlahTotal)
+                    ); // Set the error message from the response
+                    console.log('Pembayaran tidak boleh kurang dari ' + formatRupiah(jumlahTotal));
 
+                    var toasty = new Toasty(optionToast);
+                    toasty.configure(optionToast);
+                    toasty.error('Pembayaran tidak boleh kurang dari ' + formatRupiah(jumlahTotal));
+
+                    indicatorNone();
+                    return;
+                } else {
+                    inputPembayaran.css("color", ""); // Menghapus properti warna menggunakan jQuery
+                    accessErrorPembayaran.removeClass('invalid-feedback');
+                    inputPembayaran.removeClass('is-invalid');
+                    accessErrorPembayaran.text('');
+                }
 
 
                 // Validate the form using Parsley
@@ -640,6 +725,9 @@
                                 errorMessage);
                         }
                     });
+                    var toasty = new Toasty(optionToast);
+                    toasty.configure(optionToast);
+                    toasty.error(validationErrors.join('\n'));
                     console.log("Validation errors:", validationErrors.join('\n'));
                 }
             });
@@ -666,7 +754,7 @@
                 submitButton.querySelector('.indicator-progress').style.display =
                     'inline-block';
             }
-            
+
             function formatRupiah(amount) {
                 // Use Number.prototype.toLocaleString() to format the number as currency
                 return 'Rp ' + Number(amount).toLocaleString('id-ID');
@@ -677,7 +765,7 @@
                 const parsedValue = parseInt(rupiahString.replace(/[^\d]/g, ''));
                 return isNaN(parsedValue) ? 0 : parsedValue;
             }
-            
+
             function formatNumber(number) {
                 // Use Number.prototype.toLocaleString() to format the number as currency
                 return Number(number).toLocaleString('id-ID');

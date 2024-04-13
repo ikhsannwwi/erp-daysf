@@ -79,13 +79,13 @@
                     </ul>
                 </li>
 
-                <li class="sidebar-item  has-sub {{ Route::is('admin.produk*', 'admin.produk_promo*') ? 'active' : '' }}">
+                <li class="sidebar-item  has-sub {{ Route::is('admin.produk*', 'admin.produk_promo*') && !Route::is('admin.produksi*') ? 'active' : '' }}">
                     <a href="#" class='sidebar-link'>
                         <i class="bi bi-stack"></i>
                         <span>Barang</span>
                     </a>
-                    <ul class="submenu" style="display: {{ Route::is('admin.produk*', 'admin.produk_promo*') ? 'block' : 'none' }};">
-                        <li class="submenu-item {{ Route::is('admin.produk*') && !Route::is('admin.produk_promo*') ? 'active' : '' }}">
+                    <ul class="submenu" style="display: {{ Route::is('admin.produk*', 'admin.produk_promo*') && !Route::is('admin.produksi*') ? 'block' : 'none' }};">
+                        <li class="submenu-item {{ Route::is('admin.produk*') && !Route::is('admin.produk_promo*', 'admin.produksi*') ? 'active' : '' }}">
                             <a href="{{route('admin.produk')}}">Produk</a>
                         </li>
                         <li class="submenu-item {{ Route::is('admin.produk_promo*') ? 'active' : '' }}">

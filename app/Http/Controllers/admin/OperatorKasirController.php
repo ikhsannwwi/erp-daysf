@@ -124,6 +124,7 @@ class OperatorKasirController extends Controller
             'status' => $request->status,
             'kode' => $request->kode,
             'remember_token' => Str::random(60),
+            'created_by' => auth()->user() ? auth()->user()->kode : '',
         ]);
 
         $profile = Profile::create([
@@ -135,8 +136,13 @@ class OperatorKasirController extends Controller
                 "facebook": ""
               }',
         ]);
+
+        $log = [
+            'Operator Kasir' => $data,
+            'Profile' => $profile
+        ];
     
-        createLog(static::$module, __FUNCTION__, $data->id, ['Data yang disimpan' => $data]);
+        createLog(static::$module, __FUNCTION__, $data->id, ['Data yang disimpan' => $log]);
         return redirect()->route('admin.operator_kasir')->with('success', 'Data berhasil disimpan.');
     }
     
@@ -177,9 +183,6 @@ class OperatorKasirController extends Controller
 
         $request->validate($rules);
 
-        // Simpan data sebelum diupdate
-        $previousData = $data->toArray();
-
         $updates = [
             'toko_id' => $request->toko,
             'name' => $request->name,
@@ -188,6 +191,7 @@ class OperatorKasirController extends Controller
             'status' => $request->status,
             'kode' => $request->kode,
             'remember_token' => Str::random(60),
+            'updated_by' => auth()->user() ? auth()->user()->kode : '',
         ];
 
         if ($request->password) {
@@ -200,22 +204,28 @@ class OperatorKasirController extends Controller
             'sosial_media' => '{"linkedin":"","twitter":"","instagram":"","facebook":""}',
         ]);
 
+        // Simpan data sebelum diupdate
+        $previousData = [
+            'Operator Kasir' => $data->toArray(),
+            'Profile' => $profile->toArray()
+        ];
+
         // Update the profile data
         $profile->user_kode = $updates['kode'];
-        $profile->save();
 
         // Filter only the updated data
-        $updatedData = array_intersect_key($updates, $data->getOriginal());
-
+        $updatedData = [
+            'Operator Kasir' => array_intersect_key($updates, $data->getOriginal()),
+            'Profile' => $profile->toArray()
+        ];
+        
+        $profile->save();
         $data->update($updates);
 
         createLog(static::$module, __FUNCTION__, $data->id, ['Data sebelum diupdate' => $previousData, 'Data sesudah diupdate' => $updatedData]);
         return redirect()->route('admin.operator_kasir')->with('success', 'Data berhasil diupdate.');
     }
 
-    
-    
-    
     public function delete(Request $request)
     {
         // Check permission
@@ -238,10 +248,13 @@ class OperatorKasirController extends Controller
         }
 
         // Store the data to be logged before deletion
-        $deletedData = $user->toArray();
-
+        
         // Delete the user.
+        $user->update([
+            'deleted_by' => auth()->user() ? auth()->user()->kode : '',
+        ]);
         $user->delete();
+        $deletedData = $user->toArray();
 
         $profile = Profile::where('user_kode', $user->kode)->first();
 
@@ -251,7 +264,7 @@ class OperatorKasirController extends Controller
         }
 
         // Write logs only for soft delete (not force delete)
-        createLog(static::$module, __FUNCTION__, $id, ['Data yang dihapus' => ['User' => $deletedData, 'User Profile' => $profile]]);
+        createLog(static::$module, __FUNCTION__, $id, ['Data yang dihapus' => ['Operator Kasir' => $deletedData, 'Profile' => $profile]]);
 
         return response()->json([
             'status' => 'success',

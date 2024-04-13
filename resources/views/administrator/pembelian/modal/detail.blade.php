@@ -80,7 +80,7 @@
                             '<td>' + (detail.produk ? detail.produk.nama : 'Not found') + '</td>' +
                             '<td>' + (detail.gudang ? detail.gudang.nama : '-') + '</td>' +
                             '<td class="text-end">' + formatNumber(detail.jumlah_unit) + '</td>' +
-                            '<td>' + ((detail.satuan_id === 0) ? detail.produk.satuan.nama : detail.satuan_konversi.nama_konversi) + '</td>' +
+                            '<td>' + ((detail.satuan_id === 0) ? (detail.produk ? (detail.produk.satuan ? detail.produk.satuan.nama : null) : '-') : detail.satuan_konversi.nama_konversi) + '</td>' +
                             '<td class="text-end">' + harga + '</td>' +
                             '<td>' + detail.keterangan + '</td>' +
                             '<td class="text-end">' + subtotal + '</td>' +

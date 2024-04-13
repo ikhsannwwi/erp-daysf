@@ -169,6 +169,7 @@ class ProdukController extends Controller
     
             if ($request->hasFile('img')) {
                 $no = 0;
+                $log_image = [];
                 foreach ($request->file('img') as $image) {
                     // Crop gambar
                     $croppedImage = Image::make($image->getRealPath())
@@ -192,12 +193,13 @@ class ProdukController extends Controller
                         'produk_id' => $data->id,
                         'image' => $fileName,
                     ]);
+                    $log_image[] = $imageModel;
 
                     $no++;
                 }
             }
     
-            createLog(static::$module, __FUNCTION__, $data->id, ['Data yang disimpan' => $data]);
+            createLog(static::$module, __FUNCTION__, $data->id, ['Data yang disimpan' => [$data, 'Image' => $log_image]]);
             DB::commit();
             return redirect()->route('admin.produk')->with('success', 'Data berhasil disimpan.');
         } catch (\Throwable $th) {
@@ -291,6 +293,7 @@ class ProdukController extends Controller
 
             if ($request->hasFile('img')) {
                 $no = 0;
+                $log_image = [];
                 foreach ($request->file('img') as $image) {
                     // Crop gambar
                     $croppedImage = Image::make($image->getRealPath())
@@ -300,23 +303,26 @@ class ProdukController extends Controller
                         ($request->dataImage[$no]['x'] !== null ? $request->dataImage[$no]['x'] : 488),
                         ($request->dataImage[$no]['y'] !== null ? $request->dataImage[$no]['y'] : 0)
                     );
-    
+                    
                     // Kompres gambar dengan kualitas tertentu (contoh: 80%)
                     $compressedImage = $croppedImage->encode('jpg', 80);
-    
+                    
                     // Simpan gambar hasil cropping dan kompresi
                     $fileName = $data->kode . '_' . $no . '_' . date('Y-m-d-H-i-s') . '_' . uniqid(2) . '.jpg';
                     $path = upload_path('produk') . $fileName;
                     $compressedImage->save($path);
-    
+                    
                     // Simpan data gambar ke database
                     $imageModel = ProdukImage::create([
                         'produk_id' => $data->id,
                         'image' => $fileName,
                     ]);
-
+                    
+                    $log_image[] = $imageModel;
                     $no++;
                 }
+            }else {
+                $log_image = [];
             }
     
             // Filter only the updated data
@@ -324,7 +330,7 @@ class ProdukController extends Controller
     
             $data->update($updates);
     
-            createLog(static::$module, __FUNCTION__, $data->id, ['Data sebelum diupdate' => $previousData, 'Data sesudah diupdate' => $updatedData]);
+            createLog(static::$module, __FUNCTION__, $data->id, ['Data sebelum diupdate' => $previousData, 'Data sesudah diupdate' => $updatedData, 'New Image' => $log_image]);
             DB::commit();
             return redirect()->route('admin.produk')->with('success', 'Data berhasil diupdate.');
         } catch (\Throwable $th) {
@@ -355,7 +361,7 @@ class ProdukController extends Controller
         }
 
         // Store the data to be logged before deletion
-        $deletedData = $data->toArray();
+        $log = $data->toArray();
 
         // Delete the data.
         $data->update([
@@ -364,7 +370,7 @@ class ProdukController extends Controller
         $data->delete();
 
         // Write logs only for soft delete (not force delete)
-        createLog(static::$module, __FUNCTION__, $id, ['Data yang dihapus' => $deletedData]);
+        createLog(static::$module, __FUNCTION__, $id, ['Data yang dihapus' => $log]);
 
         return response()->json([
             'status' => 'success',
@@ -389,14 +395,14 @@ class ProdukController extends Controller
             ], 404);
         }
 
-        $deletedData = $data->toArray();
+        $log = $data->toArray();
         $image_path = "./administrator/assets/media/produk/" . $data->image;
         if (File::exists($image_path)) {
             File::delete($image_path);
         }
         $data->delete();
 
-        createLog(static::$module, __FUNCTION__, $id, ['Data yang dihapus' => $deletedData]);
+        createLog(static::$module, __FUNCTION__, $id, ['Data yang dihapus' => $log]);
         return response()->json([
             'status' => 'success',
             'message' => 'Data telah dihapus.',
@@ -588,18 +594,20 @@ class ProdukController extends Controller
             return redirect()->route('admin.produk.arsip')->with('error', 'Data tidak ditemukan.');
         }
 
+        $log_image = [];
         foreach ($image as $key => $row) {
             $image_path = "./administrator/assets/media/produk/" . $row->image;
             if (File::exists($image_path)) {
                 File::delete($image_path);
             }
+            $log_image[] = $row->toArray();
             $row->delete();
         }
 
         $data->forceDelete();
 
         // Write logs if needed.
-        createLog(static::$module, __FUNCTION__, $id, $data);
+        createLog(static::$module, __FUNCTION__, $id, ['Data' => $data, 'Image' => $log_image]);
     
         return response()->json([
             'status' => 'success',

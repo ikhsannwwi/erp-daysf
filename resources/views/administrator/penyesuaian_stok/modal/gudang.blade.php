@@ -29,7 +29,37 @@
 
 @push('js')
     <script type="text/javascript">
-        function addSelectedClassByModuleIdentifiers(id) {
+    
+        var optionToast = {
+            classname: "toast",
+            transition: "fade",
+            insertBefore: true,
+            duration: 4000,
+            enableSounds: true,
+            autoClose: true,
+            progressBar: true,
+            sounds: {
+                info: toastMessages.path + "/sounds/info/1.mp3",
+                // path to sound for successfull message:
+                success: toastMessages.path + "/sounds/success/1.mp3",
+                // path to sound for warn message:
+                warning: toastMessages.path + "/sounds/warning/1.mp3",
+                // path to sound for error message:
+                error: toastMessages.path + "/sounds/error/1.mp3",
+            },
+
+            onShow: function(type) {
+                console.log("a toast " + type + " message is shown!");
+            },
+            onHide: function(type) {
+                console.log("the toast " + type + " message is hidden!");
+            },
+
+            // the placement where prepend the toast container:
+            prependTo: document.body.childNodes[0],
+        };
+
+        function addSelectedClassByGudang(id) {
             var table = $('#datatableGudangModal').DataTable();
 
             // Check if the 'select' extension is available
@@ -101,7 +131,7 @@
                 drawCallback: function(settings) {
                     // Add 'selected' class based on the content of the input fields
                     var id = $("#inputGudang").val();
-                    addSelectedClassByModuleIdentifiers(id);
+                    addSelectedClassByGudang(id);
                 },
             });
 
@@ -127,13 +157,22 @@
             // end click di baris tabel member
 
             // click Select button
-            $('#selectDataGudang').on('click', function() {
+            $('#selectDataGudang').off().on('click', function() {
                 // Get selected row data
                 var selectedRow = data_table.row('.selected').data();
 
                 if (selectedRow) {
-                    $("#inputGudang").val(selectedRow.id);
-                    $("#inputGudangName").val(selectedRow.nama);
+                    if (selectedRow.id !== parseInt($("#inputGudang").val())) {
+                        $("#inputGudang").val(selectedRow.id);
+                        $("#inputGudangName").val(selectedRow.nama);
+                    } else {
+                        $("#inputGudang").val('');
+                        $("#inputGudangName").val('');
+
+                        var toasty = new Toasty(optionToast);
+                        toasty.configure(optionToast);
+                        toasty.error('Gudang tidak boleh sama');
+                    }
                 }
 
                 $('#buttonCloseGudangModal').click();

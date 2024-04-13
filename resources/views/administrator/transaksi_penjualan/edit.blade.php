@@ -428,11 +428,15 @@
                             data: 'harga',
                             name: 'harga',
                             render: function(data, type, row, meta) {
-                                // Assuming data is a number, you can use toLocaleString to format it
-                                return formatRupiah(data);
+                                if (row.promo && row.promo.length > 0) {
+                                    let respon = `<div><span class="text-sm mx-2" style="text-decoration: line-through;">${formatRupiah(data)}</span>${formatRupiah(row.promo[0].diskon)}</div>`
+                                    return respon;
+                                } else {
+                                    return formatRupiah(data);
+                                }
                             },
                             class: 'text-end'
-                        },
+                        }
                     ],
                     'rowCallback': function(row, data, dataIndex) {
                         // Get row ID
@@ -534,19 +538,25 @@
                                     tr_clone.find(".input_id-item").val(data_i.id);
                                     tr_clone.find(".nama-item").text(data_i.nama);
                                     tr_clone.find(".input_jumlah-item").val('');
-                                    var hargaSatuan = parseFloat(data_i.harga);
+                                    var hargaSatuan = parseFloat(data_i.promo.length > 0 ? data_i
+                                        .promo[0].diskon : data_i.harga);
 
                                     if (!isNaN(hargaSatuan)) {
                                         var formattedHargaSatuan = formatRupiah(
-                                            hargaSatuan);
-                                        tr_clone.find(".harga_satuan-item").text(
-                                            formattedHargaSatuan);
+                                        hargaSatuan);
+                                        if (data_i.promo.length > 0) {
+                                            tr_clone.find(".harga_satuan-item").html(`<span class="text-sm mx-2" style="text-decoration: line-through;">${formatRupiah(data_i.harga)}</span>${formattedHargaSatuan}`
+                                            );
+                                        } else {
+                                            tr_clone.find(".harga_satuan-item").text(
+                                                formattedHargaSatuan);
+                                        }
                                     } else {
                                         console.error('Harga tidak valid.');
                                     }
 
                                     tr_clone.find(".input_harga_satuan-item").val(data_i
-                                        .harga);
+                                        .promo.length > 0 ? data_i.promo[0].diskon : data_i.harga);
 
                                     tr_clone.find(".input_jumlah-item").on("input",
                                         function() {

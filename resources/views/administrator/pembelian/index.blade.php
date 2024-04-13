@@ -95,7 +95,6 @@
                         data: 'total',
                         name: 'total',
                         render: function(data, type, row) {
-                            // Convert the number to currency format
                             return parseFloat(data).toLocaleString('id-ID', {
                                 style: 'currency',
                                 currency: 'IDR',

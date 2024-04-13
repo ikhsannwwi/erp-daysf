@@ -1,27 +1,26 @@
-<!-- Modal Detail Produk -->
-<div class="modal fade" id="ModalProduk" tabindex="-1" aria-labelledby="ModalProdukLabel" aria-hidden="true">
+<!-- Modal Detail Gudang -->
+<div class="modal fade" id="ModalGudangB" tabindex="-1" aria-labelledby="ModalGudangBLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="ModalProdukLabel">Data Produk</h5>
-                <button type="button" id="buttonCloseProdukModal" class="btn-close" data-bs-dismiss="modal"
+                <h5 class="modal-title" id="ModalGudangBLabel">Data Gudang</h5>
+                <button type="button" id="buttonCloseGudangBModal" class="btn-close" data-bs-dismiss="modal"
                     aria-label="Close"></button>
             </div>
-            <div class="modal-body" id="ModalProdukBody">
-                <table class="table" id="datatableProdukModal">
+            <div class="modal-body" id="ModalGudangBBody">
+                <table class="table" id="datatableGudangBModal">
                     <thead>
                         <tr>
                             <th>No</th>
-                            <th width="">Kategori</th>
                             <th width="">Nama</th>
-                            <th width="">Kode</th>
+                            <th width="">Penanggung Jawab</th>
                         </tr>
                     </thead>
                 </table>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="selectDataProduk">Pilih Data</button>
+                <button type="button" class="btn btn-primary" id="selectDataGudangB">Pilih Data</button>
                 {{-- <button type="button" class="btn btn-primary">Save changes</button> --}}
             </div>
         </div>
@@ -30,8 +29,37 @@
 
 @push('js')
     <script type="text/javascript">
-        function addSelectedClassByModuleIdentifiers(id) {
-            var table = $('#datatableProdukModal').DataTable();
+        var optionToast = {
+            classname: "toast",
+            transition: "fade",
+            insertBefore: true,
+            duration: 4000,
+            enableSounds: true,
+            autoClose: true,
+            progressBar: true,
+            sounds: {
+                info: toastMessages.path + "/sounds/info/1.mp3",
+                // path to sound for successfull message:
+                success: toastMessages.path + "/sounds/success/1.mp3",
+                // path to sound for warn message:
+                warning: toastMessages.path + "/sounds/warning/1.mp3",
+                // path to sound for error message:
+                error: toastMessages.path + "/sounds/error/1.mp3",
+            },
+
+            onShow: function(type) {
+                console.log("a toast " + type + " message is shown!");
+            },
+            onHide: function(type) {
+                console.log("the toast " + type + " message is hidden!");
+            },
+
+            // the placement where prepend the toast container:
+            prependTo: document.body.childNodes[0],
+        };
+
+        function addSelectedClassByGudangB(id) {
+            var table = $('#datatableGudangBModal').DataTable();
 
             // Check if the 'select' extension is available
             if ($.fn.dataTable.Select) {
@@ -59,13 +87,13 @@
             }
         }
 
-        $('#ModalProduk').on('show.bs.modal', function(event) {
+        $('#ModalGudangB').on('show.bs.modal', function(event) {
             var button = $(event.relatedTarget);
 
             // Now, you can initialize a new DataTable on the same table.
-            $("#datatableProdukModal").DataTable().destroy();
-            $('#datatableProdukModal tbody').remove();
-            var data_table = $('#datatableProdukModal').DataTable({
+            $("#datatableGudangBModal").DataTable().destroy();
+            $('#datatableGudangBModal tbody').remove();
+            var data_table = $('#datatableGudangBModal').DataTable({
                 "oLanguage": {
                     "oPaginate": {
                         "sFirst": "<i class='ti-angle-left'></i>",
@@ -81,7 +109,7 @@
                 ],
                 // scrollX: true, // Enable horizontal scrolling
                 ajax: {
-                    url: '{{ route('admin.penyesuaian_stok.getDataProduk') }}',
+                    url: '{{ route('admin.penyesuaian_stok.getDataGudang') }}',
                     dataType: "JSON",
                     type: "GET",
                 },
@@ -91,31 +119,27 @@
                         },
                     },
                     {
-                        data: 'kategori.nama',
-                        name: 'kategori.nama'
-                    },
-                    {
                         data: 'nama',
                         name: 'nama'
                     },
                     {
-                        data: 'kode',
-                        name: 'kode'
+                        data: 'penanggung_jawab',
+                        name: 'penanggung_jawab'
                     },
                 ],
                 drawCallback: function(settings) {
                     // Add 'selected' class based on the content of the input fields
-                    var id = $("#inputProduk").val();
-                    addSelectedClassByModuleIdentifiers(id);
+                    var id = $("#inputGudangB").val();
+                    addSelectedClassByGudangB(id);
                 },
             });
 
             // click di baris tabel member
-            $('#datatableProdukModal tbody').on('click', 'tr', function() {
+            $('#datatableGudangBModal tbody').on('click', 'tr', function() {
                 var $row = $(this);
 
                 // Remove 'selected' class from all rows
-                $('#datatableProdukModal tbody tr').removeClass('selected');
+                $('#datatableGudangBModal tbody tr').removeClass('selected');
 
                 // Add 'selected' class to the clicked row
                 $row.addClass('selected');
@@ -125,29 +149,32 @@
 
                 // if (selectedRow) {
                 //     // Set input values based on the selected row
-                //     $("#inputProduk").val(selectedRow.id);
-                //     $("#inputProdukName").val(selectedRow.nama);
+                //     $("#inputGudangB").val(selectedRow.id);
+                //     $("#inputGudangBName").val(selectedRow.nama);
                 // }
             });
             // end click di baris tabel member
 
             // click Select button
-            $('#selectDataProduk').on('click', function() {
+            $('#selectDataGudangB').off().on('click', function() {
                 // Get selected row data
                 var selectedRow = data_table.row('.selected').data();
 
                 if (selectedRow) {
-                    $("#inputProduk").val(selectedRow.id);
-                    $("#inputProdukName").val(selectedRow.nama);
+                    if (selectedRow.id !== parseInt($("#inputGudang").val())) {
+                        $("#inputGudangB").val(selectedRow.id);
+                        $("#inputGudangBName").val(selectedRow.nama);
+                    } else {
+                        $("#inputGudangB").val('');
+                        $("#inputGudangBName").val('');
 
-                    if ($("#inputProduk").val() !== '') {
-                        $('#triggerSatuan').removeClass('data_disabled')
-                    }else{
-                        $('#triggerSatuan').addClass('data_disabled')
+                        var toasty = new Toasty(optionToast);
+                        toasty.configure(optionToast);
+                        toasty.error('Gudang tidak boleh sama');
                     }
                 }
 
-                $('#buttonCloseProdukModal').click();
+                $('#buttonCloseGudangBModal').click();
             });
             // end click Select button
         });

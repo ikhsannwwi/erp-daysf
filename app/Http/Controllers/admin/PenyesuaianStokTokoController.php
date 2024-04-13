@@ -123,7 +123,7 @@ class PenyesuaianStokTokoController extends Controller
             ]);
             $data->update(['transaksi_stok_id' => $transaksi->id]);
             
-            createLog(static::$module, __FUNCTION__, $data->id, ['Data yang disimpan' => $data]);
+            createLog(static::$module, __FUNCTION__, $data->id, ['Data yang disimpan' => [$data, 'Transaksi Stok' => $transaksi]]);
             DB::commit();
             return redirect()->route('admin.penyesuaian_stok_toko')->with('success', 'Data berhasil disimpan.');
         } catch (\Throwable $th) {
@@ -229,16 +229,18 @@ class PenyesuaianStokTokoController extends Controller
             ], 404);
         }
 
-        $deletedData = $data->toArray();
-
+        $log = [];
+        $log[] = $data->toArray();
+        
         $stok = TransaksiStok::find($data->transaksi_stok_id);
         if ($stok) {
+            $log['Transaksi Stok'][] = $stok->toArray();
             $stok->delete();
         }
 
         $data->delete();
 
-        createLog(static::$module, __FUNCTION__, $id, ['Data yang dihapus' => $deletedData]);
+        createLog(static::$module, __FUNCTION__, $id, ['Data yang dihapus' => $log]);
 
         return response()->json([
             'status'  => 'success',

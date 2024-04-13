@@ -36,6 +36,9 @@
 </head>
 
 <body>
+    <div id="audioContainer" class="audioContainer">
+        <!-- Other content in the container -->
+     </div>
     <div id="app">
         <div id="main" class="layout-horizontal">
             @include('kasir.layouts.header')
@@ -65,21 +68,20 @@
 
     <script src="https://cdn.datatables.net/v/bs5/dt-1.13.6/datatables.min.js"></script>
 
-    <script src="{{ asset('templateAdmin/assets/extensions/sweetalert2/sweetalert2.min.js') }}"></script>
-
-    <script src="{{ asset('templateAdmin/assets/extensions/toastify-js/src/toastify.js') }}"></script>
-    <script src="{{ asset('templateAdmin/assets/js/pages/toastify.js') }}"></script>
-    <!-- Tautan ke calendarify JavaScript -->
     <script src="{{ asset_administrator('assets/plugins/calendarify/dist/calendarify.iife.js') }}"></script>
 
     <script src="{{asset('templateAdmin/assets/js/pages/horizontal-layout.js') }}"></script>
 
 
+    <script src="{{ asset_administrator('assets/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
+    <script src="{{ asset_administrator('assets/plugins/sweetalert2/toast.js') }}"></script>
+    <script src="{{ asset_administrator('assets/plugins/sweetalert2/page/toast.js') }}"></script>
 
-
+    
 
     <script>
         var toastMessages = {
+            path: "{{ asset_administrator('assets/plugins/toasty/') }}",
             errors: [],
             error: @json(session('error')),
             success: @json(session('success')),

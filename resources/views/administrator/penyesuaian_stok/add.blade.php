@@ -1,5 +1,15 @@
 @extends('administrator.layouts.main')
-
+@push('css')
+    <style>
+        .data_disabled {
+            border: 1px solid #6c757d!important;
+            background-color: #6c757d!important;
+            color: #fff!important;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+    </style>
+@endpush
 @section('content')
     <!-- Basic Tables start -->
     <section class="section">
@@ -36,16 +46,15 @@
                             </div>
                         </div>
 
-
-
                         <div class="row">
-                            <div class="form-group mandatory">
-                                <div class="col-md-4 col-12">
+                            <div class="col-md-4 col-12">
+                                <div class="form-group mandatory">
                                     <label for="triggerGudang" class="form-label">Gudang</label>
                                     <div class="input-group">
                                         <span class="input-group-text pb-3" id="searchGudang"><i
                                                 class="bi bi-search"></i></span>
-                                        <input type="text" class="form-control" id="inputGudangName" data-parsley-required="true" readonly>
+                                        <input type="text" class="form-control" id="inputGudangName"
+                                            data-parsley-required="true" readonly>
                                         <input type="text" class="d-none" name="gudang" id="inputGudang">
                                         <div class="input-group-append">
                                             <!-- Menggunakan input-group-append agar elemen berikutnya ditambahkan setelah input -->
@@ -53,6 +62,48 @@
                                                 data-bs-target="#ModalGudang" id="triggerGudang">
                                                 Search
                                             </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-12 d-flex d-none" id="migrasiGudangSection">
+                                <div class="col-2 text-center pt-4"><span>=></span></div>
+                                <div class="col-10">
+                                    <div class="form-group mandatory">
+                                        <label for="triggerGudangB" class="form-label">Gudang</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text pb-3" id="searchGudangB"><i
+                                                    class="bi bi-search"></i></span>
+                                            <input type="text" class="form-control" id="inputGudangBName" readonly>
+                                            <input type="text" class="d-none" name="migrasi_gudang" id="inputGudangB">
+                                            <div class="input-group-append">
+                                                <!-- Menggunakan input-group-append agar elemen berikutnya ditambahkan setelah input -->
+                                                <a href="#" class="btn btn-outline-secondary" data-bs-toggle="modal"
+                                                    data-bs-target="#ModalGudangB" id="triggerGudangB">
+                                                    Search
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-12 d-flex d-none" id="migrasiKeTokoSection">
+                                <div class="col-2 text-center pt-4"><span>=></span></div>
+                                <div class="col-10">
+                                    <div class="form-group mandatory">
+                                        <label for="triggerToko" class="form-label">Toko</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text pb-3" id="searchToko"><i
+                                                    class="bi bi-search"></i></span>
+                                            <input type="text" class="form-control" id="inputTokoName" readonly>
+                                            <input type="text" class="d-none" name="migrasi_toko" id="inputToko">
+                                            <div class="input-group-append">
+                                                <!-- Menggunakan input-group-append agar elemen berikutnya ditambahkan setelah input -->
+                                                <a href="#" class="btn btn-outline-secondary" data-bs-toggle="modal"
+                                                    data-bs-target="#ModalToko" id="triggerToko">
+                                                    Search
+                                                </a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -66,7 +117,8 @@
                                     <div class="input-group">
                                         <span class="input-group-text pb-3" id="searchProduk"><i
                                                 class="bi bi-search"></i></span>
-                                        <input type="text" class="form-control" id="inputProdukName" data-parsley-required="true" readonly>
+                                        <input type="text" class="form-control" id="inputProdukName"
+                                            data-parsley-required="true" readonly>
                                         <input type="text" class="d-none" name="produk" id="inputProduk">
                                         <div class="input-group-append">
                                             <!-- Menggunakan input-group-append agar elemen berikutnya ditambahkan setelah input -->
@@ -89,6 +141,8 @@
                                         <option value="">Please Select</option>
                                         <option value="masuk">Masuk</option>
                                         <option value="keluar">Keluar</option>
+                                        <option value="migrasi_gudang">Migrasi Gudang</option>
+                                        <option value="migrasi_ke_toko">Migrasi ke Toko</option>
                                     </select>
                                 </div>
                             </div>
@@ -97,13 +151,33 @@
                         <div class="row">
                             <div class="col-md-6 col-12">
                                 <div class="row">
-                                    <div class="col-12">
+                                    <div class="col-5">
                                         <div class="form-group mandatory">
                                             <label for="inputJumlah" class="form-label">Jumlah Unit</label>
                                             <input type="text" id="inputJumlah" class="form-control"
                                                 placeholder="Masukan Jumlah Unit" name="jumlah" autocomplete="off"
                                                 data-parsley-required="true">
                                             <div class="" style="color: #dc3545" id="accessErorrJumlah"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-7">
+                                        <div class="form-group mandatory">
+                                            <label for="triggerSatuan" class="form-label">Satuan</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text pb-3" id="searchSatuan"><i
+                                                        class="bi bi-search"></i></span>
+                                                <input type="text" class="form-control" id="inputSatuanName"
+                                                    data-parsley-required="true" readonly>
+                                                <input type="text" class="d-none" name="satuan" id="inputSatuan">
+                                                <div class="input-group-append">
+                                                    <!-- Menggunakan input-group-append agar elemen berikutnya ditambahkan setelah input -->
+                                                    <a href="#" class="btn btn-outline-secondary data_disabled"
+                                                        data-bs-toggle="modal" data-bs-target="#ModalSatuan"
+                                                        id="triggerSatuan">
+                                                        Search
+                                                    </a>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -145,6 +219,9 @@
 
     @include('administrator.penyesuaian_stok.modal.produk')
     @include('administrator.penyesuaian_stok.modal.gudang')
+    @include('administrator.penyesuaian_stok.modal.gudang_b')
+    @include('administrator.penyesuaian_stok.modal.toko')
+    @include('administrator.penyesuaian_stok.modal.satuan')
 @endsection
 
 @push('css')
@@ -152,7 +229,6 @@
 @endpush
 
 @push('js')
-
     <script src="{{ asset_administrator('assets/plugins/daterangepicker/daterangepicker.js') }}"></script>
 
     <script src="{{ asset('templateAdmin/assets/extensions/parsleyjs/parsley.min.js') }}"></script>
@@ -218,26 +294,26 @@
 
                 indicatorBlock();
 
-                
-                    // Perform remote validation
-                    const remoteValidationCheckStock = await validateRemoteCheckStock();
-                    const inputJumlah = $("#inputJumlah");
-                    const accessErorrJumlah = $("#accessErorrJumlah");
-                    if (!remoteValidationCheckStock.valid) {
-                        // Remote validation failed, display the error message
-                        accessErorrJumlah.addClass('invalid-feedback');
-                        inputJumlah.addClass('is-invalid');
 
-                        accessErorrJumlah.text(remoteValidationCheckStock
-                            .errorMessage); // Set the error message from the response
-                        indicatorNone();
+                // Perform remote validation
+                const remoteValidationCheckStock = await validateRemoteCheckStock();
+                const inputJumlah = $("#inputJumlah");
+                const accessErorrJumlah = $("#accessErorrJumlah");
+                if (!remoteValidationCheckStock.valid) {
+                    // Remote validation failed, display the error message
+                    accessErorrJumlah.addClass('invalid-feedback');
+                    inputJumlah.addClass('is-invalid');
 
-                        return;
-                    } else {
-                        accessErorrJumlah.removeClass('invalid-feedback');
-                        inputJumlah.removeClass('is-invalid');
-                        accessErorrJumlah.text('');
-                    }
+                    accessErorrJumlah.text(remoteValidationCheckStock
+                        .errorMessage); // Set the error message from the response
+                    indicatorNone();
+
+                    return;
+                } else {
+                    accessErorrJumlah.removeClass('invalid-feedback');
+                    inputJumlah.removeClass('is-invalid');
+                    accessErorrJumlah.text('');
+                }
 
                 // Validate the form using Parsley
                 if ($(form).parsley().validate()) {
@@ -318,6 +394,36 @@
                     };
                 }
             }
+
+            $('#inputMetodeTransaksi').on('change', function() {
+                if ($(this).val() === 'migrasi_gudang') {
+                    $('#migrasiGudangSection').removeClass('d-none')
+                    $('#inputGudangBName').attr('data-parsley-required', true)
+
+                    $('#migrasiKeTokoSection').addClass('d-none')
+                    $('#inputTokoName').attr('data-parsley-required', false)
+                    $('#inputTokoName').val('')
+                    $('#inputToko').val('')
+                } else if ($(this).val() === 'migrasi_ke_toko') {
+                    $('#migrasiKeTokoSection').removeClass('d-none')
+                    $('#inputTokoName').attr('data-parsley-required', true)
+
+                    $('#migrasiGudangSection').addClass('d-none')
+                    $('#inputGudangBName').attr('data-parsley-required', false)
+                    $('#inputGudangBName').val('')
+                    $('#inputGudangB').val('')
+                } else {
+                    $('#migrasiGudangSection').addClass('d-none')
+                    $('#inputGudangBName').attr('data-parsley-required', false)
+                    $('#inputGudangBName').val('')
+                    $('#inputGudangB').val('')
+
+                    $('#migrasiKeTokoSection').addClass('d-none')
+                    $('#inputTokoName').attr('data-parsley-required', false)
+                    $('#inputTokoName').val('')
+                    $('#inputToko').val('')
+                }
+            })
 
             var options = {
                 searchable: true,

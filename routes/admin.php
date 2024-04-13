@@ -274,6 +274,7 @@ Route::prefix('admin')->group(function () {
         Route::get('penyesuaian-stok/getDetail-{id}', [PenyesuaianStokController::class, 'getDetail'])->name('admin.penyesuaian_stok.getDetail');
         Route::get('penyesuaian-stok/getDataGudang', [PenyesuaianStokController::class, 'getDataGudang'])->name('admin.penyesuaian_stok.getDataGudang');
         Route::get('penyesuaian-stok/getDataProduk', [PenyesuaianStokController::class, 'getDataProduk'])->name('admin.penyesuaian_stok.getDataProduk');
+        Route::get('penyesuaian-stok/getDataSatuan', [PenyesuaianStokController::class, 'getDataSatuan'])->name('admin.penyesuaian_stok.getDataSatuan');
         Route::post('penyesuaian-stok/checkStock', [PenyesuaianStokController::class, 'checkStock'])->name('admin.penyesuaian_stok.checkStock');
         
         //Penyesuaian Stok Toko

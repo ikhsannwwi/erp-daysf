@@ -32,7 +32,7 @@
             loadingSpinner.show(); // Tampilkan elemen animasi
 
             $.ajax({
-                url: '{{ route('admin.transaksi_penjualan.getDetail', ':id') }}'.replace(':id', id),
+                url: '{{ route('kasir.transaksi.history.getDetail', ':id') }}'.replace(':id', id),
                 method: 'GET',
                 success: function(response) {
                     var data = response.data;
@@ -98,15 +98,6 @@
                         '</div>' +
                         '<div class="col-md-10 col-7">' +
                         '<div class="data">: ' + data.id + '</div>' +
-                        '</div>' +
-                        '</div>' +
-
-                        '<div class="row">' +
-                        '<div class="col-md-2 col-5">' +
-                        '<div class="title">Operator</div>' +
-                        '</div>' +
-                        '<div class="col-md-10 col-7">' +
-                        '<div class="data">: ' + data.created_by + '</div>' +
                         '</div>' +
                         '</div>' +
 

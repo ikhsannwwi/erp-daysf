@@ -30,5 +30,8 @@ Route::prefix('kasir')->group(function () {
         Route::post('transaksi/uploadBarcode', [TransaksiController::class, 'uploadBarcode'])->name('kasir.transaksi.uploadBarcode');
         Route::get('transaksi/getDataProduk', [TransaksiController::class, 'getDataProduk'])->name('kasir.transaksi.getDataProduk');
         Route::get('transaksi/getDataMember', [TransaksiController::class, 'getDataMember'])->name('kasir.transaksi.getDataMember');
+        Route::get('transaksi/history', [TransaksiController::class, 'history'])->name('kasir.transaksi.history');
+        Route::get('transaksi/history/getData', [TransaksiController::class, 'getData'])->name('kasir.transaksi.history.getData');
+        Route::get('transaksi/history/getDetail-{id}', [TransaksiController::class, 'getDetail'])->name('kasir.transaksi.history.getDetail');
     });
 });

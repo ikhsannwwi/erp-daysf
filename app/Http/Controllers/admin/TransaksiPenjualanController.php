@@ -494,7 +494,19 @@ class TransaksiPenjualanController extends Controller
 
     public function getDataProduk(Request $request)
     {
-        $data = Produk::query()->with('kategori')->where('status', 1)->where('penjualan', 1)->get();
+        $data = Produk::query()->with('kategori')->with([
+            'promo' => function ($queryPromo) {
+                $today = now('Asia/Jakarta');
+
+                $queryPromo->whereHas('master', function ($queryPromoMaster) use ($today) {
+                    // Check if 'master' relationship is not null and apply date conditions
+                    $queryPromoMaster->where('tanggal_mulai', '<=', $today)
+                        ->where('tanggal_berakhir', '>=', $today)
+                        ->orderBy('tanggal_berakhir', 'asc') // Order within the subquery
+                        ->take(1);
+                });
+            },
+        ])->where('status', 1)->where('penjualan', 1)->get();
 
         return DataTables::of($data)
             ->make(true);
