@@ -1,14 +1,14 @@
-<!-- Modal Detail Toko -->
-<div class="modal fade" id="ModalToko" tabindex="-1" aria-labelledby="ModalTokoLabel" aria-hidden="true">
+<!-- Modal Detail Gudang -->
+<div class="modal fade" id="ModalGudang" tabindex="-1" aria-labelledby="ModalGudangLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="ModalTokoLabel">Data Toko</h5>
-                <button type="button" id="buttonCloseTokoModal" class="btn-close" data-bs-dismiss="modal"
+                <h5 class="modal-title" id="ModalGudangLabel">Data Gudang</h5>
+                <button type="button" id="buttonCloseGudangModal" class="btn-close" data-bs-dismiss="modal"
                     aria-label="Close"></button>
             </div>
-            <div class="modal-body" id="ModalTokoBody">
-                <table class="table" id="datatableTokoModal">
+            <div class="modal-body" id="ModalGudangBody">
+                <table class="table" id="datatableGudangModal">
                     <thead>
                         <tr>
                             <th>No</th>
@@ -20,7 +20,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="selectDataToko">Pilih Data</button>
+                <button type="button" class="btn btn-primary" id="selectDataGudang">Pilih Data</button>
                 {{-- <button type="button" class="btn btn-primary">Save changes</button> --}}
             </div>
         </div>
@@ -29,6 +29,7 @@
 
 @push('js')
     <script type="text/javascript">
+    
         var optionToast = {
             classname: "toast",
             transition: "fade",
@@ -58,8 +59,8 @@
             prependTo: document.body.childNodes[0],
         };
 
-        function addSelectedClassByModuleIdentifiers(id) {
-            var table = $('#datatableTokoModal').DataTable();
+        function addSelectedClassByGudang(id) {
+            var table = $('#datatableGudangModal').DataTable();
 
             // Check if the 'select' extension is available
             if ($.fn.dataTable.Select) {
@@ -87,13 +88,13 @@
             }
         }
 
-        $('#ModalToko').on('show.bs.modal', function(event) {
+        $('#ModalGudang').on('show.bs.modal', function(event) {
             var button = $(event.relatedTarget);
 
             // Now, you can initialize a new DataTable on the same table.
-            $("#datatableTokoModal").DataTable().destroy();
-            $('#datatableTokoModal tbody').remove();
-            var data_table = $('#datatableTokoModal').DataTable({
+            $("#datatableGudangModal").DataTable().destroy();
+            $('#datatableGudangModal tbody').remove();
+            var data_table = $('#datatableGudangModal').DataTable({
                 "oLanguage": {
                     "oPaginate": {
                         "sFirst": "<i class='ti-angle-left'></i>",
@@ -109,7 +110,7 @@
                 ],
                 // scrollX: true, // Enable horizontal scrolling
                 ajax: {
-                    url: '{{ route('admin.penyesuaian_stok_toko.getDataToko') }}',
+                    url: '{{ route('admin.penyesuaian_stok.getDataGudang') }}',
                     dataType: "JSON",
                     type: "GET",
                 },
@@ -129,17 +130,17 @@
                 ],
                 drawCallback: function(settings) {
                     // Add 'selected' class based on the content of the input fields
-                    var id = $("#inputToko").val();
-                    addSelectedClassByModuleIdentifiers(id);
+                    var id = $("#inputGudang").val();
+                    addSelectedClassByGudang(id);
                 },
             });
 
             // click di baris tabel member
-            $('#datatableTokoModal tbody').on('click', 'tr', function() {
+            $('#datatableGudangModal tbody').on('click', 'tr', function() {
                 var $row = $(this);
 
                 // Remove 'selected' class from all rows
-                $('#datatableTokoModal tbody tr').removeClass('selected');
+                $('#datatableGudangModal tbody tr').removeClass('selected');
 
                 // Add 'selected' class to the clicked row
                 $row.addClass('selected');
@@ -149,32 +150,32 @@
 
                 // if (selectedRow) {
                 //     // Set input values based on the selected row
-                //     $("#inputToko").val(selectedRow.id);
-                //     $("#inputTokoName").val(selectedRow.nama);
+                //     $("#inputGudang").val(selectedRow.id);
+                //     $("#inputGudangName").val(selectedRow.nama);
                 // }
             });
             // end click di baris tabel member
 
             // click Select button
-            $('#selectDataToko').off().on('click', function() {
+            $('#selectDataGudang').off().on('click', function() {
                 // Get selected row data
                 var selectedRow = data_table.row('.selected').data();
 
                 if (selectedRow) {
-                    if (selectedRow.id !== parseInt($("#inputTokoB").val())) {
-                        $("#inputToko").val(selectedRow.id);
-                        $("#inputTokoName").val(selectedRow.nama);
+                    if (selectedRow.id !== parseInt($("#inputGudang").val())) {
+                        $("#inputGudang").val(selectedRow.id);
+                        $("#inputGudangName").val(selectedRow.nama);
                     } else {
-                        $("#inputToko").val('');
-                        $("#inputTokoName").val('');
+                        $("#inputGudang").val('');
+                        $("#inputGudangName").val('');
 
                         var toasty = new Toasty(optionToast);
                         toasty.configure(optionToast);
-                        toasty.error('Toko tidak boleh sama');
+                        toasty.error('Gudang tidak boleh sama');
                     }
                 }
 
-                $('#buttonCloseTokoModal').click();
+                $('#buttonCloseGudangModal').click();
             });
             // end click Select button
         });

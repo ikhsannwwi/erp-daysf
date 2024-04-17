@@ -162,7 +162,7 @@
                 var selectedRow = data_table.row('.selected').data();
 
                 if (selectedRow) {
-                    if (selectedRow.id !== parseInt($("#inputGudang").val())) {
+                    if (selectedRow.id !== parseInt($("#inputGudangB").val())) {
                         $("#inputGudang").val(selectedRow.id);
                         $("#inputGudangName").val(selectedRow.nama);
                     } else {

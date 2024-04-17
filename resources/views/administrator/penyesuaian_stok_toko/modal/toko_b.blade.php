@@ -1,14 +1,14 @@
-<!-- Modal Detail Toko -->
-<div class="modal fade" id="ModalToko" tabindex="-1" aria-labelledby="ModalTokoLabel" aria-hidden="true">
+<!-- Modal Detail TokoB -->
+<div class="modal fade" id="ModalTokoB" tabindex="-1" aria-labelledby="ModalTokoBLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="ModalTokoLabel">Data Toko</h5>
-                <button type="button" id="buttonCloseTokoModal" class="btn-close" data-bs-dismiss="modal"
+                <h5 class="modal-title" id="ModalTokoBLabel">Data Toko</h5>
+                <button type="button" id="buttonCloseTokoBModal" class="btn-close" data-bs-dismiss="modal"
                     aria-label="Close"></button>
             </div>
-            <div class="modal-body" id="ModalTokoBody">
-                <table class="table" id="datatableTokoModal">
+            <div class="modal-body" id="ModalTokoBBody">
+                <table class="table" id="datatableTokoBModal">
                     <thead>
                         <tr>
                             <th>No</th>
@@ -20,7 +20,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="selectDataToko">Pilih Data</button>
+                <button type="button" class="btn btn-primary" id="selectDataTokoB">Pilih Data</button>
                 {{-- <button type="button" class="btn btn-primary">Save changes</button> --}}
             </div>
         </div>
@@ -59,7 +59,7 @@
         };
 
         function addSelectedClassByModuleIdentifiers(id) {
-            var table = $('#datatableTokoModal').DataTable();
+            var table = $('#datatableTokoBModal').DataTable();
 
             // Check if the 'select' extension is available
             if ($.fn.dataTable.Select) {
@@ -87,13 +87,13 @@
             }
         }
 
-        $('#ModalToko').on('show.bs.modal', function(event) {
+        $('#ModalTokoB').on('show.bs.modal', function(event) {
             var button = $(event.relatedTarget);
 
             // Now, you can initialize a new DataTable on the same table.
-            $("#datatableTokoModal").DataTable().destroy();
-            $('#datatableTokoModal tbody').remove();
-            var data_table = $('#datatableTokoModal').DataTable({
+            $("#datatableTokoBModal").DataTable().destroy();
+            $('#datatableTokoBModal tbody').remove();
+            var data_table = $('#datatableTokoBModal').DataTable({
                 "oLanguage": {
                     "oPaginate": {
                         "sFirst": "<i class='ti-angle-left'></i>",
@@ -129,17 +129,17 @@
                 ],
                 drawCallback: function(settings) {
                     // Add 'selected' class based on the content of the input fields
-                    var id = $("#inputToko").val();
+                    var id = $("#inputTokoB").val();
                     addSelectedClassByModuleIdentifiers(id);
                 },
             });
 
             // click di baris tabel member
-            $('#datatableTokoModal tbody').on('click', 'tr', function() {
+            $('#datatableTokoBModal tbody').on('click', 'tr', function() {
                 var $row = $(this);
 
                 // Remove 'selected' class from all rows
-                $('#datatableTokoModal tbody tr').removeClass('selected');
+                $('#datatableTokoBModal tbody tr').removeClass('selected');
 
                 // Add 'selected' class to the clicked row
                 $row.addClass('selected');
@@ -149,24 +149,24 @@
 
                 // if (selectedRow) {
                 //     // Set input values based on the selected row
-                //     $("#inputToko").val(selectedRow.id);
-                //     $("#inputTokoName").val(selectedRow.nama);
+                //     $("#inputTokoB").val(selectedRow.id);
+                //     $("#inputTokoBName").val(selectedRow.nama);
                 // }
             });
             // end click di baris tabel member
 
             // click Select button
-            $('#selectDataToko').off().on('click', function() {
+            $('#selectDataTokoB').off().on('click', function() {
                 // Get selected row data
                 var selectedRow = data_table.row('.selected').data();
 
                 if (selectedRow) {
-                    if (selectedRow.id !== parseInt($("#inputTokoB").val())) {
-                        $("#inputToko").val(selectedRow.id);
-                        $("#inputTokoName").val(selectedRow.nama);
+                    if (selectedRow.id !== parseInt($("#inputToko").val())) {
+                        $("#inputTokoB").val(selectedRow.id);
+                        $("#inputTokoBName").val(selectedRow.nama);
                     } else {
-                        $("#inputToko").val('');
-                        $("#inputTokoName").val('');
+                        $("#inputTokoB").val('');
+                        $("#inputTokoBName").val('');
 
                         var toasty = new Toasty(optionToast);
                         toasty.configure(optionToast);
@@ -174,7 +174,7 @@
                     }
                 }
 
-                $('#buttonCloseTokoModal').click();
+                $('#buttonCloseTokoBModal').click();
             });
             // end click Select button
         });

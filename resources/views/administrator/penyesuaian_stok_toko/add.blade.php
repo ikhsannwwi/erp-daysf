@@ -1,5 +1,15 @@
 @extends('administrator.layouts.main')
-
+@push('css')
+    <style>
+        .data_disabled {
+            border: 1px solid #6c757d!important;
+            background-color: #6c757d!important;
+            color: #fff!important;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+    </style>
+@endpush
 @section('content')
     <!-- Basic Tables start -->
     <section class="section">
@@ -36,16 +46,15 @@
                             </div>
                         </div>
 
-
-
                         <div class="row">
-                            <div class="form-group mandatory">
-                                <div class="col-md-4 col-12">
+                            <div class="col-md-4 col-12">
+                                <div class="form-group mandatory">
                                     <label for="triggerToko" class="form-label">Toko</label>
                                     <div class="input-group">
                                         <span class="input-group-text pb-3" id="searchToko"><i
                                                 class="bi bi-search"></i></span>
-                                        <input type="text" class="form-control" id="inputTokoName" data-parsley-required="true" readonly>
+                                        <input type="text" class="form-control" id="inputTokoName"
+                                            data-parsley-required="true" readonly>
                                         <input type="text" class="d-none" name="toko" id="inputToko">
                                         <div class="input-group-append">
                                             <!-- Menggunakan input-group-append agar elemen berikutnya ditambahkan setelah input -->
@@ -53,6 +62,48 @@
                                                 data-bs-target="#ModalToko" id="triggerToko">
                                                 Search
                                             </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-12 d-flex d-none" id="migrasiTokoSection">
+                                <div class="col-2 text-center pt-4"><span>=></span></div>
+                                <div class="col-10">
+                                    <div class="form-group mandatory">
+                                        <label for="triggerTokoB" class="form-label">Toko</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text pb-3" id="searchTokoB"><i
+                                                    class="bi bi-search"></i></span>
+                                            <input type="text" class="form-control" id="inputTokoBName" readonly>
+                                            <input type="text" class="d-none" name="migrasi_toko" id="inputTokoB">
+                                            <div class="input-group-append">
+                                                <!-- Menggunakan input-group-append agar elemen berikutnya ditambahkan setelah input -->
+                                                <a href="#" class="btn btn-outline-secondary" data-bs-toggle="modal"
+                                                    data-bs-target="#ModalTokoB" id="triggerTokoB">
+                                                    Search
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-12 d-flex d-none" id="migrasiKeGudangSection">
+                                <div class="col-2 text-center pt-4"><span>=></span></div>
+                                <div class="col-10">
+                                    <div class="form-group mandatory">
+                                        <label for="triggerGudang" class="form-label">Gudang</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text pb-3" id="searchGudang"><i
+                                                    class="bi bi-search"></i></span>
+                                            <input type="text" class="form-control" id="inputGudangName" readonly>
+                                            <input type="text" class="d-none" name="migrasi_ke_gudang" id="inputGudang">
+                                            <div class="input-group-append">
+                                                <!-- Menggunakan input-group-append agar elemen berikutnya ditambahkan setelah input -->
+                                                <a href="#" class="btn btn-outline-secondary" data-bs-toggle="modal"
+                                                    data-bs-target="#ModalGudang" id="triggerGudang">
+                                                    Search
+                                                </a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -89,6 +140,8 @@
                                         <option value="">Please Select</option>
                                         <option value="masuk">Masuk</option>
                                         <option value="keluar">Keluar</option>
+                                        <option value="migrasi_toko">Migrasi Toko</option>
+                                        <option value="migrasi_ke_gudang">Migrasi ke Gudang</option>
                                     </select>
                                 </div>
                             </div>
@@ -97,13 +150,33 @@
                         <div class="row">
                             <div class="col-md-6 col-12">
                                 <div class="row">
-                                    <div class="col-12">
+                                    <div class="col-5">
                                         <div class="form-group mandatory">
                                             <label for="inputJumlah" class="form-label">Jumlah Unit</label>
                                             <input type="text" id="inputJumlah" class="form-control"
                                                 placeholder="Masukan Jumlah Unit" name="jumlah" autocomplete="off"
                                                 data-parsley-required="true">
                                             <div class="" style="color: #dc3545" id="accessErorrJumlah"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-7">
+                                        <div class="form-group mandatory">
+                                            <label for="triggerSatuan" class="form-label">Satuan</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text pb-3" id="searchSatuan"><i
+                                                        class="bi bi-search"></i></span>
+                                                <input type="text" class="form-control" id="inputSatuanName"
+                                                    data-parsley-required="true" readonly>
+                                                <input type="text" class="d-none" name="satuan" id="inputSatuan">
+                                                <div class="input-group-append">
+                                                    <!-- Menggunakan input-group-append agar elemen berikutnya ditambahkan setelah input -->
+                                                    <a href="#" class="btn btn-outline-secondary data_disabled"
+                                                        data-bs-toggle="modal" data-bs-target="#ModalSatuan"
+                                                        id="triggerSatuan">
+                                                        Search
+                                                    </a>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -145,6 +218,9 @@
 
     @include('administrator.penyesuaian_stok_toko.modal.produk')
     @include('administrator.penyesuaian_stok_toko.modal.toko')
+    @include('administrator.penyesuaian_stok_toko.modal.toko_b')
+    @include('administrator.penyesuaian_stok_toko.modal.satuan')
+    @include('administrator.penyesuaian_stok_toko.modal.gudang')
 @endsection
 
 @push('css')
@@ -318,6 +394,36 @@
                     };
                 }
             }
+
+            $('#inputMetodeTransaksi').on('change', function() {
+                if ($(this).val() === 'migrasi_toko') {
+                    $('#migrasiTokoSection').removeClass('d-none')
+                    $('#inputTokoBName').attr('data-parsley-required', true)
+
+                    $('#migrasiKeGudangSection').addClass('d-none')
+                    $('#inputGudangName').attr('data-parsley-required', false)
+                    $('#inputGudangName').val('')
+                    $('#inputGudang').val('')
+                } else if ($(this).val() === 'migrasi_ke_gudang') {
+                    $('#migrasiKeGudangSection').removeClass('d-none')
+                    $('#inputGudangName').attr('data-parsley-required', true)
+
+                    $('#migrasiTokoSection').addClass('d-none')
+                    $('#inputTokoBName').attr('data-parsley-required', false)
+                    $('#inputTokoBName').val('')
+                    $('#inputTokoB').val('')
+                } else {
+                    $('#migrasiTokoSection').addClass('d-none')
+                    $('#inputTokoBName').attr('data-parsley-required', false)
+                    $('#inputTokoBName').val('')
+                    $('#inputTokoB').val('')
+
+                    $('#migrasiKeGudangSection').addClass('d-none')
+                    $('#inputGudangName').attr('data-parsley-required', false)
+                    $('#inputGudangName').val('')
+                    $('#inputGudang').val('')
+                }
+            })
 
             var options = {
                 searchable: true,

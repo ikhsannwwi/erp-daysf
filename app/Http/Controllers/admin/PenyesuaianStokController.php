@@ -258,7 +258,7 @@ class PenyesuaianStokController extends Controller
                         'metode_transaksi' => 'masuk',
                         'jenis_transaksi' => static::$module,
                         'jumlah_unit' => str_replace(['.', ','], '', $jumlah_penyesuaian),
-                        'created_by' => auth()->user() ? auth()->user()->kode : '',
+                        'updated_by' => auth()->user() ? auth()->user()->kode : '',
                     ]);
                     $data->update(['migrasi_transaksi_stok_id' => $migrasi_transaksi_stok->id]);
                 } else {
@@ -270,7 +270,7 @@ class PenyesuaianStokController extends Controller
                         'metode_transaksi' => 'masuk',
                         'jenis_transaksi' => static::$module,
                         'jumlah_unit' => str_replace(['.', ','], '', $jumlah_penyesuaian),
-                        'created_by' => auth()->user() ? auth()->user()->kode : '',
+                        'updated_by' => auth()->user() ? auth()->user()->kode : '',
                     ];
                     $migrasi_transaksi_stok->update($update_stok_migrasi);
                 }

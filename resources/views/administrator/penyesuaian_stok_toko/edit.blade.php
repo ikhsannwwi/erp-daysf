@@ -9,19 +9,20 @@
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-                        <li class="breadcrumb-item"><a href="{{ route('admin.penyesuaian_stok_toko') }}">Penyesuaian Stok</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('admin.penyesuaian_stok_toko') }}">Penyesuaian Stok</a>
+                        </li>
                         <li class="breadcrumb-item active" aria-current="page">Edit</li>
                     </ol>
                 </nav>
             </div>
             <div class="card-content">
                 <div class="card-body">
-                    <form action="{{ route('admin.penyesuaian_stok_toko.update') }}" method="post" enctype="multipart/form-data"
-                        class="form" id="form" data-parsley-validate>
+                    <form action="{{ route('admin.penyesuaian_stok_toko.update') }}" method="post"
+                        enctype="multipart/form-data" class="form" id="form" data-parsley-validate>
                         @csrf
                         @method('PUT')
 
-                        <input type="hidden" name="id" id="inputId" value="{{$data->id}}">
+                        <input type="hidden" name="id" id="inputId" value="{{ $data->id }}">
 
                         <div class="row">
                             <div class="col-md-6 col-12">
@@ -29,7 +30,8 @@
                                     <div class="col-12">
                                         <div class="form-group mandatory">
                                             <label for="inputTanggal" class="form-label">Tanggal</label>
-                                            <input type="text" id="inputTanggal" class="form-control datepicker" value="{{date('d-m-Y',strtotime($data->tanggal))}}"
+                                            <input type="text" id="inputTanggal" class="form-control datepicker"
+                                                value="{{ date('d-m-Y', strtotime($data->tanggal)) }}"
                                                 placeholder="Masukan Tanggal" name="tanggal" autocomplete="off"
                                                 data-parsley-required="true">
                                         </div>
@@ -41,20 +43,67 @@
 
 
                         <div class="row">
-                            <div class="form-group mandatory">
-                                <div class="col-md-4 col-12">
+                            <div class="col-md-4 col-12">
+                                <div class="form-group mandatory">
                                     <label for="triggerToko" class="form-label">Toko</label>
                                     <div class="input-group">
                                         <span class="input-group-text pb-3" id="searchToko"><i
                                                 class="bi bi-search"></i></span>
-                                        <input type="text" class="form-control" id="inputTokoName" value="{{!empty($data->toko) ? $data->toko->nama : '-'}}" data-parsley-required="true" readonly>
-                                        <input type="text" class="d-none" name="toko" id="inputToko" value="{{$data->toko_id}}">
+                                        <input type="text" class="form-control" id="inputTokoName"
+                                            value="{{ !empty($data->toko) ? $data->toko->nama : '-' }}"
+                                            data-parsley-required="true" readonly>
+                                        <input type="text" class="d-none" name="toko" id="inputToko"
+                                            value="{{ $data->toko_id }}">
                                         <div class="input-group-append">
                                             <!-- Menggunakan input-group-append agar elemen berikutnya ditambahkan setelah input -->
                                             <a href="#" class="btn btn-outline-secondary" data-bs-toggle="modal"
                                                 data-bs-target="#ModalToko" id="triggerToko">
                                                 Search
                                             </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-12 d-flex {{ $data->metode_transaksi !== 'migrasi_toko' ? 'd-none' : '' }}" id="migrasiTokoSection">
+                                <div class="col-2 text-center pt-4"><span>=></span></div>
+                                <div class="col-10">
+                                    <div class="form-group mandatory">
+                                        <label for="triggerTokoB" class="form-label">Toko</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text pb-3" id="searchTokoB"><i
+                                                    class="bi bi-search"></i></span>
+                                            <input type="text" class="form-control" id="inputTokoBName"
+                                            value="{{ !empty($data->migrasiToko) ? $data->migrasiToko->nama : '-' }}" readonly>
+                                            <input type="text" class="d-none" name="migrasi_toko" value="{{ $data->migrasi_id }}" id="inputTokoB">
+                                            <div class="input-group-append">
+                                                <!-- Menggunakan input-group-append agar elemen berikutnya ditambahkan setelah input -->
+                                                <a href="#" class="btn btn-outline-secondary" data-bs-toggle="modal"
+                                                    data-bs-target="#ModalTokoB" id="triggerTokoB">
+                                                    Search
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-12 d-flex {{ $data->metode_transaksi !== 'migrasi_ke_gudang' ? 'd-none' : '' }}" id="migrasiKeGudangSection">
+                                <div class="col-2 text-center pt-4"><span>=></span></div>
+                                <div class="col-10">
+                                    <div class="form-group mandatory">
+                                        <label for="triggerGudang" class="form-label">Gudang</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text pb-3" id="searchGudang"><i
+                                                    class="bi bi-search"></i></span>
+                                            <input type="text" class="form-control" id="inputGudangName"
+                                            value="{{ !empty($data->migrasiGudang) ? $data->migrasiGudang->nama : '-' }}" readonly>
+                                            <input type="text" class="d-none" name="migrasi_ke_gudang" value="{{ $data->migrasi_id }}" id="inputGudang">
+                                            <div class="input-group-append">
+                                                <!-- Menggunakan input-group-append agar elemen berikutnya ditambahkan setelah input -->
+                                                <a href="#" class="btn btn-outline-secondary" data-bs-toggle="modal"
+                                                    data-bs-target="#ModalGudang" id="triggerGudang">
+                                                    Search
+                                                </a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -68,8 +117,11 @@
                                     <div class="input-group">
                                         <span class="input-group-text pb-3" id="searchProduk"><i
                                                 class="bi bi-search"></i></span>
-                                        <input type="text" class="form-control" id="inputProdukName" value="{{!empty($data->produk) ? $data->produk->nama : '-'}}" data-parsley-required="true" readonly>
-                                        <input type="text" class="d-none" name="produk" id="inputProduk" value="{{$data->produk_id}}">
+                                        <input type="text" class="form-control" id="inputProdukName"
+                                            value="{{ !empty($data->produk) ? $data->produk->nama : '-' }}"
+                                            data-parsley-required="true" readonly>
+                                        <input type="text" class="d-none" name="produk" id="inputProduk"
+                                            value="{{ $data->produk_id }}">
                                         <div class="input-group-append">
                                             <!-- Menggunakan input-group-append agar elemen berikutnya ditambahkan setelah input -->
                                             <a href="#" class="btn btn-outline-secondary" data-bs-toggle="modal"
@@ -89,8 +141,16 @@
                                     <select class="wide mb-2" name="metode" id="inputMetodeTransaksi"
                                         data-parsley-required="true">
                                         <option value="">Please Select</option>
-                                        <option value="masuk" {{$data->metode_transaksi === 'masuk' ? 'selected' : ''}}>Masuk</option>
-                                        <option value="keluar" {{$data->metode_transaksi === 'keluar' ? 'selected' : ''}}>Keluar</option>
+                                        <option value="masuk" {{ $data->metode_transaksi === 'masuk' ? 'selected' : '' }}>
+                                            Masuk</option>
+                                        <option value="keluar"
+                                            {{ $data->metode_transaksi === 'keluar' ? 'selected' : '' }}>Keluar</option>
+                                        <option value="migrasi_toko"
+                                            {{ $data->metode_transaksi === 'migrasi_toko' ? 'selected' : '' }}>Migrasi Toko
+                                        </option>
+                                        <option value="migrasi_ke_gudang"
+                                            {{ $data->metode_transaksi === 'migrasi_ke_gudang' ? 'selected' : '' }}>Migrasi
+                                            ke Gudang</option>
                                     </select>
                                 </div>
                             </div>
@@ -99,13 +159,35 @@
                         <div class="row">
                             <div class="col-md-6 col-12">
                                 <div class="row">
-                                    <div class="col-12">
+                                    <div class="col-5">
                                         <div class="form-group mandatory">
                                             <label for="inputJumlah" class="form-label">Jumlah Unit</label>
-                                            <input type="text" id="inputJumlah" class="form-control" value="{{number_format($data->jumlah_unit, 0, ',', '.')}}"
+                                            <input type="text" id="inputJumlah" class="form-control"
+                                                value="{{ number_format($data->jumlah_unit, 0, ',', '.') }}"
                                                 placeholder="Masukan Jumlah Unit" name="jumlah" autocomplete="off"
                                                 data-parsley-required="true">
                                             <div class="" style="color: #dc3545" id="accessErorrJumlah"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-7">
+                                        <div class="form-group mandatory">
+                                            <label for="triggerSatuan" class="form-label">Satuan</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text pb-3" id="searchSatuan"><i
+                                                        class="bi bi-search"></i></span>
+                                                <input type="text" class="form-control" id="inputSatuanName"
+                                                value="{{ $data->satuan_id === 0 ? (!empty($data->produk) ? (!empty($data->produk->satuan) ? $data->produk->satuan->nama : '-') : '-') : (!empty($data->satuan_konversi) ? $data->satuan_konversi->nama_konversi : '-') }}"
+                                                    data-parsley-required="true" readonly>
+                                                <input type="text" class="d-none" name="satuan" value="{{$data->satuan_id}}" id="inputSatuan">
+                                                <div class="input-group-append">
+                                                    <!-- Menggunakan input-group-append agar elemen berikutnya ditambahkan setelah input -->
+                                                    <a href="#" class="btn btn-outline-secondary data_disabled"
+                                                        data-bs-toggle="modal" data-bs-target="#ModalSatuan"
+                                                        id="triggerSatuan">
+                                                        Search
+                                                    </a>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -117,7 +199,7 @@
                                 <div class="form-group">
                                     <label for="inputKeterangan" class="form-label">Keterangan</label>
                                     <textarea id="inputKeterangan" class="form-control" placeholder="Masukkan Keterangan" name="keterangan"
-                                        style="height: 150px;">{{$data->keterangan}}</textarea>
+                                        style="height: 150px;">{{ $data->keterangan }}</textarea>
                                 </div>
                             </div>
                         </div>
@@ -147,6 +229,9 @@
 
     @include('administrator.penyesuaian_stok_toko.modal.produk')
     @include('administrator.penyesuaian_stok_toko.modal.toko')
+    @include('administrator.penyesuaian_stok_toko.modal.toko_b')
+    @include('administrator.penyesuaian_stok_toko.modal.satuan')
+    @include('administrator.penyesuaian_stok_toko.modal.gudang')
 @endsection
 
 @push('css')
@@ -219,26 +304,26 @@
 
                 indicatorBlock();
 
-                
-                    // Perform remote validation
-                    const remoteValidationCheckStock = await validateRemoteCheckStock();
-                    const inputJumlah = $("#inputJumlah");
-                    const accessErorrJumlah = $("#accessErorrJumlah");
-                    if (!remoteValidationCheckStock.valid) {
-                        // Remote validation failed, display the error message
-                        accessErorrJumlah.addClass('invalid-feedback');
-                        inputJumlah.addClass('is-invalid');
 
-                        accessErorrJumlah.text(remoteValidationCheckStock
-                            .errorMessage); // Set the error message from the response
-                        indicatorNone();
+                // Perform remote validation
+                const remoteValidationCheckStock = await validateRemoteCheckStock();
+                const inputJumlah = $("#inputJumlah");
+                const accessErorrJumlah = $("#accessErorrJumlah");
+                if (!remoteValidationCheckStock.valid) {
+                    // Remote validation failed, display the error message
+                    accessErorrJumlah.addClass('invalid-feedback');
+                    inputJumlah.addClass('is-invalid');
 
-                        return;
-                    } else {
-                        accessErorrJumlah.removeClass('invalid-feedback');
-                        inputJumlah.removeClass('is-invalid');
-                        accessErorrJumlah.text('');
-                    }
+                    accessErorrJumlah.text(remoteValidationCheckStock
+                        .errorMessage); // Set the error message from the response
+                    indicatorNone();
+
+                    return;
+                } else {
+                    accessErorrJumlah.removeClass('invalid-feedback');
+                    inputJumlah.removeClass('is-invalid');
+                    accessErorrJumlah.text('');
+                }
 
                 // Validate the form using Parsley
                 if ($(form).parsley().validate()) {
@@ -286,6 +371,7 @@
             }
 
             async function validateRemoteCheckStock() {
+                const inputId = $('#inputId');
                 const inputJumlah = $('#inputJumlah');
                 const inputToko = $('#inputToko');
                 const inputProduk = $('#inputProduk');
@@ -299,6 +385,7 @@
                         url: remoteValidationUrl,
                         data: {
                             _token: csrfToken,
+                            id: inputId.val(),
                             jumlah: inputJumlah.val(),
                             gudang: inputToko.val(),
                             produk: inputProduk.val(),
@@ -319,6 +406,36 @@
                     };
                 }
             }
+
+            $('#inputMetodeTransaksi').on('change', function() {
+                if ($(this).val() === 'migrasi_toko') {
+                    $('#migrasiTokoSection').removeClass('d-none')
+                    $('#inputTokoBName').attr('data-parsley-required', true)
+
+                    $('#migrasiKeGudangSection').addClass('d-none')
+                    $('#inputGudangName').attr('data-parsley-required', false)
+                    $('#inputGudangName').val('')
+                    $('#inputGudang').val('')
+                } else if ($(this).val() === 'migrasi_ke_gudang') {
+                    $('#migrasiKeGudangSection').removeClass('d-none')
+                    $('#inputGudangName').attr('data-parsley-required', true)
+
+                    $('#migrasiTokoSection').addClass('d-none')
+                    $('#inputTokoBName').attr('data-parsley-required', false)
+                    $('#inputTokoBName').val('')
+                    $('#inputTokoB').val('')
+                } else {
+                    $('#migrasiTokoSection').addClass('d-none')
+                    $('#inputTokoBName').attr('data-parsley-required', false)
+                    $('#inputTokoBName').val('')
+                    $('#inputTokoB').val('')
+
+                    $('#migrasiKeGudangSection').addClass('d-none')
+                    $('#inputGudangName').attr('data-parsley-required', false)
+                    $('#inputGudangName').val('')
+                    $('#inputGudang').val('')
+                }
+            })
 
             var options = {
                 searchable: true,

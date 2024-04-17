@@ -139,6 +139,12 @@
                 if (selectedRow) {
                     $("#inputProduk").val(selectedRow.id);
                     $("#inputProdukName").val(selectedRow.nama);
+
+                    if ($("#inputProduk").val() !== '') {
+                        $('#triggerSatuan').removeClass('data_disabled')
+                    }else{
+                        $('#triggerSatuan').addClass('data_disabled')
+                    }
                 }
 
                 $('#buttonCloseProdukModal').click();

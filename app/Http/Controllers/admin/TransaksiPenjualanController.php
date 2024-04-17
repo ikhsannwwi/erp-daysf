@@ -77,6 +77,34 @@ class TransaksiPenjualanController extends Controller
 
         return view('administrator.transaksi_penjualan.add');
     }
+
+    function convertToRoman($number)
+    {
+        $romans = [
+            'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'
+        ];
+
+        return $romans[$number - 1];
+    }
+
+    function generateNoTransaksi()
+    {
+        $today = Carbon::now();
+        $formattedDate = $today->format('Y') . '/'. $this->convertToRoman($today->format('m')) . '/' . $today->format('d');
+
+        // Cari nomor urut transaksi terakhir pada hari ini
+        $lastTransaction = TransaksiPenjualanTitikPenjualan::whereDate('tanggal_transaksi', $today)
+            ->latest('created_at') // Mencari yang terakhir
+            ->first();
+
+        // Nomor urut transaksi
+        $nomorUrut = $lastTransaction ? (int)substr($lastTransaction->no_transaksi, -4) + 1 : 1;
+
+        // Format nomor transaksi
+        $nomorTransaksi = 'TP' . '/' . $formattedDate . '/' . str_pad($nomorUrut, 4, '0', STR_PAD_LEFT);
+
+        return $nomorTransaksi;
+    }
     
     public function save(Request $request){
         //Check permission
@@ -99,38 +127,12 @@ class TransaksiPenjualanController extends Controller
 
         // dd($request);
 
-        function convertToRoman($number)
-        {
-            $romans = [
-                'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'
-            ];
-
-            return $romans[$number - 1];
-        }
-
-        function generateNoTransaksi()
-        {
-            $today = Carbon::now();
-            $formattedDate = $today->format('Y') . '/'. convertToRoman($today->format('m')) . '/' . $today->format('d');
-
-            // Cari nomor urut transaksi terakhir pada hari ini
-            $lastTransaction = TransaksiPenjualanTitikPenjualan::whereDate('tanggal_transaksi', $today)
-                ->latest('created_at') // Mencari yang terakhir
-                ->first();
-
-            // Nomor urut transaksi
-            $nomorUrut = $lastTransaction ? (int)substr($lastTransaction->no_transaksi, -4) + 1 : 1;
-
-            // Format nomor transaksi
-            $nomorTransaksi = 'TP' . '/' . $formattedDate . '/' . str_pad($nomorUrut, 4, '0', STR_PAD_LEFT);
-
-            return $nomorTransaksi;
-        }
+        
 
         try {
             DB::beginTransaction();
             $data = TransaksiPenjualanTitikPenjualan::create([
-                'no_transaksi' => generateNoTransaksi(),
+                'no_transaksi' => $this->generateNoTransaksi(),
                 'member_id' => $request->member ? $request->member : 0,
                 'toko_id' => $request->toko,
                 'tanggal_transaksi' => Carbon::now(),
@@ -235,6 +237,7 @@ class TransaksiPenjualanController extends Controller
                     // Jika 'id' ada, maka ini adalah detail yang sudah ada dan perlu diupdate
                     $update_items = [
                         'transaksi_id' => $transaksi->id,
+                        'no_transaksi' => $this->generateNoTransaksi(),
                         'produk_id' => $row['input_id'],
                         'jumlah' => $row['input_jumlah'],
                         'harga_satuan' => $row['input_harga_satuan'],
@@ -283,7 +286,7 @@ class TransaksiPenjualanController extends Controller
     
             $pembayaran_update = [
                 'nominal_pembayaran' => $request->jumlah_total_pembayaran_transaksi,
-                'nominal_kembalian' => $request->jumlah_total_kembalian_transaksi,
+                'nominal_kembalian' => $request->jumlah_total_kembalian_transaksi ? $request->jumlah_total_kembalian_transaksi : 0,
                 'updated_by' => auth()->user() ? auth()->user()->kode : '',
             ];
     

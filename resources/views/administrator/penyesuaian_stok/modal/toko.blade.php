@@ -127,7 +127,7 @@
             // end click di baris tabel member
 
             // click Select button
-            $('#selectDataToko').on('click', function() {
+            $('#selectDataToko').off().on('click', function() {
                 // Get selected row data
                 var selectedRow = data_table.row('.selected').data();
 
