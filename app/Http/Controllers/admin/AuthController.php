@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\admin;
 
+use App\Models\admin\User;
 use Illuminate\Http\Request;
 use App\Models\admin\UserMember;
 use App\Models\admin\OperatorKasir;
@@ -40,6 +41,7 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             // Admin login successful
+            User::where('kode', Auth::user()->kode)->update(['is_online' => 1]);
             return redirect()->route('admin.dashboard')->with('success', 'Berhasil Login.');
         } else if (Auth::guard('operator_kasir')->attempt($credentials)) {
             // Operator Kasir login successful
@@ -62,6 +64,7 @@ class AuthController extends Controller
     {
         if (auth()->user() || auth()->guard('operator_kasir')->user() || auth()->guard('user_member')->user()) {
             if (auth()->user()) {
+                User::where('kode', Auth::user()->kode)->update(['is_online' => 0]);
                 Auth::logout();
                 return redirect()->route('admin.login')->with('success', 'Berhasil Logout.'); // Ganti 'login' dengan rute halaman masuk yang sesuai
             } else if (auth()->guard('operator_kasir')->user()) {

@@ -23,6 +23,7 @@ use App\Http\Controllers\admin\PembelianController;
 use App\Http\Controllers\admin\UserGroupController;
 use App\Http\Controllers\admin\DepartemenController;
 use App\Http\Controllers\admin\ProdukPromoController;
+use App\Http\Controllers\admin\UserActivityController;
 use App\Http\Controllers\admin\OperatorKasirController;
 use App\Http\Controllers\admin\TransaksiStokController;
 use App\Http\Controllers\admin\SatuanKonversiController;
@@ -440,5 +441,11 @@ Route::prefix('admin')->group(function () {
         Route::get('produk-promo/getDataToko', [ProdukPromoController::class, 'getDataToko'])->name('admin.produk_promo.getDataToko');
         Route::get('produk-promo/getDataProduk', [ProdukPromoController::class, 'getDataProduk'])->name('admin.produk_promo.getDataProduk');
         Route::delete('produk-promo/deleteDetail', [ProdukPromoController::class, 'deleteDetail'])->name('admin.produk_promo.deleteDetail');
+
+        //User Activity
+        Route::get('user-activity', [UserActivityController::class, 'index'])->name('admin.user_activity');
+        Route::get('user-activity/getData', [UserActivityController::class, 'getData'])->name('admin.user_activity.getData');
+        Route::get('user-activity/getDetail-{id}', [UserActivityController::class, 'getDetail'])->name('admin.user_activity.getDetail');
+        Route::get('user-activity/getUserGroup', [UserActivityController::class, 'getUserGroup'])->name('admin.user_activity.getUserGroup');
     });
 });

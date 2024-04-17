@@ -206,14 +206,17 @@
                     </ul>
                 </li>
 
-                <li class="sidebar-item  has-sub {{ Route::is('admin.logSystems*') ? 'active' : '' }}">
+                <li class="sidebar-item  has-sub {{ Route::is('admin.logSystems*', 'admin.user_activity*') ? 'active' : '' }}">
                     <a href="#" class='sidebar-link'>
                         <i class="bi bi-collection-fill"></i>
                         <span>Systems</span>
                     </a>
-                    <ul class="submenu" style="display: {{ Route::is('admin.logSystems*') ? 'block' : 'none' }};">
+                    <ul class="submenu" style="display: {{ Route::is('admin.logSystems*', 'admin.user_activity*') ? 'block' : 'none' }};">
                         <li class="submenu-item {{ Route::is('admin.logSystems*') ? 'active' : '' }}">
                             <a href="{{ route('admin.logSystems') }}">Logs</a>
+                        </li>
+                        <li class="submenu-item {{ Route::is('admin.user_activity*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.user_activity') }}">User Activity</a>
                         </li>
                     </ul>
                 </li>
