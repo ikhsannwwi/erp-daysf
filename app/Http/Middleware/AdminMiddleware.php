@@ -34,7 +34,7 @@ class AdminMiddleware
             $user = auth()->guard('operator_kasir')->user();
             // Check if the operator_kasir user's status is 1
             if ($user->status == 1) {
-                auth()->guard('operator_kasir')->login($user);
+                // auth()->guard('operator_kasir')->login($user);
                 // If the status is 1, allow access to the requested route
                 return $next($request);
             } else {
@@ -47,7 +47,7 @@ class AdminMiddleware
             $user = auth()->guard('user_member')->user();
             // Check if the user_member user's status is 1
             if ($user->status == 1) {
-                auth()->guard('user_member')->login($user);
+                // auth()->guard('user_member')->login($user);
                 // If the status is 1, allow access to the requested route
                 return $next($request);
             } else {

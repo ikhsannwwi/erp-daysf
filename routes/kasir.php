@@ -27,6 +27,7 @@ Route::prefix('kasir')->group(function () {
 
         Route::get('transaksi', [TransaksiController::class, 'index'])->name('kasir.transaksi');
         Route::post('transaksi/save', [TransaksiController::class, 'save'])->name('kasir.transaksi.save');
+        Route::post('transaksi/checkStock', [TransaksiController::class, 'checkStock'])->name('kasir.transaksi.checkStock');
         Route::post('transaksi/uploadBarcode', [TransaksiController::class, 'uploadBarcode'])->name('kasir.transaksi.uploadBarcode');
         Route::get('transaksi/getDataProduk', [TransaksiController::class, 'getDataProduk'])->name('kasir.transaksi.getDataProduk');
         Route::get('transaksi/getDataMember', [TransaksiController::class, 'getDataMember'])->name('kasir.transaksi.getDataMember');

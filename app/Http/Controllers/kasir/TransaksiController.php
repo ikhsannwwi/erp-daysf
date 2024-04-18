@@ -200,4 +200,37 @@ class TransaksiController extends Controller
             'message' => 'Sukses memuat detail data.',
         ]);
     }
+
+    public function checkStock(Request $request){
+        $jumlah = 0;
+
+        $data_stok_masuk = TransaksiStok::where('produk_id', $request->produk)
+            ->where('toko_id', auth()->guard('operator_kasir')->user()->toko_id)
+            ->whereIn('metode_transaksi', ['masuk']);
+
+        $stok_masuk = $data_stok_masuk->sum('jumlah_unit');
+
+        // Ambil jumlah stok keluar
+        $data_stok_keluar = TransaksiStok::where('produk_id', $request->produk)
+            ->where('toko_id', auth()->guard('operator_kasir')->user()->toko_id)
+            ->whereIn('metode_transaksi', ['keluar']);
+
+        $stok_keluar = $data_stok_keluar->sum('jumlah_unit');
+
+        $jumlah += $stok_masuk - $stok_keluar;
+
+        if ($jumlah < 0 || $jumlah < intVal(str_replace(['.',','], '', $request->jumlah))) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Stok tidak mencukupi! Jumlah Stok : ' . $jumlah,
+                'valid' => false
+            ]);
+        }else {
+            return response()->json([
+                'message' => 'Stok Tersedia. Jumlah Stok : ' . $jumlah,
+                'valid' => true
+            ]);
+        }
+        
+    }
 }

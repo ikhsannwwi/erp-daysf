@@ -580,6 +580,7 @@
                                 data_selected.splice(indexToRemove, 1);
                                 rows_selected.splice(indexToRemove, 1);
                             }
+                            resetData();
                             updateTotalHarga();
                             updateTotalPembayaran($(
                                 '#input_jumlah_total_pembayaran_transaksi'
@@ -621,6 +622,28 @@
                             '[' + index + ']');
                         $(another).attr("childidx", index);
                     });
+
+                    $(another).find('.input_jumlah-item').on('keyup', async function() {
+                        let jumlah_item = $(this).val()
+                        let produk = $(another).find('.input_id-item').val()
+                        let remoteValidationCheckStock = await validateRemoteCheckStock(
+                            jumlah_item, produk)
+
+                        let accessErorrJumlah = $(another).find('.error_message_jumlah-item')
+                        if (!remoteValidationCheckStock.valid) {
+                            // Remote validation failed, display the error message
+                            accessErorrJumlah.addClass('invalid-feedback');
+                            $(another).find('.input_jumlah-item').addClass('is-invalid');
+
+                            var toasty = new Toasty(optionToast);
+                            toasty.configure(optionToast);
+                            toasty.error(remoteValidationCheckStock.errorMessage);
+
+                            return;
+                        } else {
+                            $(another).find('.input_jumlah-item').removeClass('is-invalid');
+                        }
+                    })
 
                     index++;
                 });
@@ -703,6 +726,24 @@
                     accessErrorPembayaran.text('');
                 }
 
+                // Check if all input_jumlah-item are still invalid
+                let allInputInvalid = true;
+                $(".input_jumlah-item").each(function() {
+                    if ($(this).hasClass('is-invalid')) {
+                        allInputInvalid = false;
+                        return false; // Break the loop
+                    }
+                });
+
+                if (allInputInvalid === false) {
+                    var toasty = new Toasty(optionToast);
+                    toasty.configure(optionToast);
+                    toasty.error('Ada produk yang stok nya tidak tersedia');
+
+                    indicatorNone();
+                    return;
+                }
+
 
                 // Validate the form using Parsley
                 if ($(form).parsley().validate()) {
@@ -753,6 +794,35 @@
                 submitButton.querySelector('.indicator-label').style.display = 'none';
                 submitButton.querySelector('.indicator-progress').style.display =
                     'inline-block';
+            }
+
+            async function validateRemoteCheckStock(inputJumlah, inputProduk) {
+                const remoteValidationUrl = "{{ route('kasir.transaksi.checkStock') }}";
+                const csrfToken = "{{ csrf_token() }}";
+
+                try {
+                    const response = await $.ajax({
+                        method: "POST",
+                        url: remoteValidationUrl,
+                        data: {
+                            _token: csrfToken,
+                            jumlah: inputJumlah,
+                            produk: inputProduk,
+                        }
+                    });
+
+                    // Assuming the response is JSON and contains a "valid" key
+                    return {
+                        valid: response.valid === true,
+                        errorMessage: response.message
+                    };
+                } catch (error) {
+                    console.error("Remote validation error:", error);
+                    return {
+                        valid: false,
+                        errorMessage: "An error occurred during validation."
+                    };
+                }
             }
 
             function formatRupiah(amount) {
