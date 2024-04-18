@@ -139,6 +139,12 @@
                 if (selectedRow) {
                     $("#inputToko").val(selectedRow.id);
                     $("#inputTokoName").val(selectedRow.nama);
+
+                    if ($("#inputToko").val() !== '') {
+                        $('.more-item').removeClass('data_disabled')
+                    }else{
+                        $('.more-item').addClass('data_disabled')
+                    }
                 }
 
                 $('#buttonCloseTokoModal').click();

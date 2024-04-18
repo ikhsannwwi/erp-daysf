@@ -1,5 +1,15 @@
 @extends('administrator.layouts.main')
-
+@push('css')
+    <style>
+        .data_disabled {
+            border: 1px solid #6c757d!important;
+            background-color: #6c757d!important;
+            color: #fff!important;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+    </style>
+@endpush
 @section('content')
     <!-- Basic Tables start -->
     <section class="section">
@@ -17,8 +27,8 @@
             </div>
             <div class="card-content">
                 <div class="card-body">
-                    <form action="{{ route('admin.transaksi_penjualan.save') }}" method="post" enctype="multipart/form-data"
-                        class="form" id="form" data-parsley-validate>
+                    <form action="{{ route('admin.transaksi_penjualan.save') }}" method="post"
+                        enctype="multipart/form-data" class="form" id="form" data-parsley-validate>
                         @csrf
                         @method('POST')
 
@@ -75,7 +85,7 @@
                                             <label for="inputNama" class="form-label">Detail</label>
                                         </div>
                                         <div class="col-md-6 d-flex justify-content-end">
-                                            <button class="more-item btn btn-primary btn-sm" type="button"
+                                            <button class="more-item btn btn-primary btn-sm data_disabled" type="button"
                                                 data-bs-toggle="modal" data-bs-target="#ModalProduk"><i
                                                     class="fa fa-plus"></i> Tambah Item</button>
                                         </div>
@@ -138,7 +148,8 @@
                                     </span>
                                 </button>
                                 <button type="reset" class="btn btn-light-secondary me-1 mb-1">Reset</button>
-                                <a href="{{ route('admin.transaksi_penjualan') }}" class="btn btn-danger me-1 mb-1">Cancel</a>
+                                <a href="{{ route('admin.transaksi_penjualan') }}"
+                                    class="btn btn-danger me-1 mb-1">Cancel</a>
                             </div>
                         </div>
                     </form>
@@ -162,6 +173,7 @@
                     data-parsley-type-message="Field ini hanya boleh diisi dengan angka"
                     onkeypress="return event.charCode >= 48 && event.charCode <= 57">
             </td>
+            <span class="error_message_jumlah-item"></span>
             <td class="harga_satuan-item text-end" style="vertical-align:middle;"></td>
             <input type="hidden" class="input_harga_satuan-item" name="detail[0][input_harga_satuan]"
                 id="input_harga_satuan-item">
@@ -391,7 +403,8 @@
                             name: 'harga',
                             render: function(data, type, row, meta) {
                                 if (row.promo && row.promo.length > 0) {
-                                    let respon = `<div><span class="text-sm mx-2" style="text-decoration: line-through;">${formatRupiah(data)}</span>${formatRupiah(row.promo[0].diskon)}</div>`
+                                    let respon =
+                                        `<div><span class="text-sm mx-2" style="text-decoration: line-through;">${formatRupiah(data)}</span>${formatRupiah(row.promo[0].diskon)}</div>`
                                     return respon;
                                 } else {
                                     return formatRupiah(data);
@@ -500,14 +513,16 @@
                                     tr_clone.find(".input_id-item").val(data_i.id);
                                     tr_clone.find(".nama-item").text(data_i.nama);
                                     tr_clone.find(".input_jumlah-item").val('');
-                                    var hargaSatuan = parseFloat(data_i.promo.length > 0 ? data_i
+                                    var hargaSatuan = parseFloat(data_i.promo.length > 0 ?
+                                        data_i
                                         .promo[0].diskon : data_i.harga);
 
                                     if (!isNaN(hargaSatuan)) {
                                         var formattedHargaSatuan = formatRupiah(
-                                        hargaSatuan);
+                                            hargaSatuan);
                                         if (data_i.promo.length > 0) {
-                                            tr_clone.find(".harga_satuan-item").html(`<span class="text-sm mx-2" style="text-decoration: line-through;">${formatRupiah(data_i.harga)}</span>${formattedHargaSatuan}`
+                                            tr_clone.find(".harga_satuan-item").html(
+                                                `<span class="text-sm mx-2" style="text-decoration: line-through;">${formatRupiah(data_i.harga)}</span>${formattedHargaSatuan}`
                                             );
                                         } else {
                                             tr_clone.find(".harga_satuan-item").text(
@@ -518,7 +533,8 @@
                                     }
 
                                     tr_clone.find(".input_harga_satuan-item").val(data_i
-                                        .promo.length > 0 ? data_i.promo[0].diskon : data_i.harga);
+                                        .promo.length > 0 ? data_i.promo[0].diskon :
+                                        data_i.harga);
 
                                     tr_clone.find(".input_jumlah-item").on("input",
                                         function() {
@@ -556,6 +572,7 @@
                                     $("#daftar_detail").append(tr_clone);
 
                                     resetData();
+                                    updateTotalHarga();
 
                                     $('#buttonCloseProdukModal').click();
                                     $('#datatableProdukModal').DataTable().rows('.selected')
@@ -572,10 +589,6 @@
                         );
                     }
                 });
-
-
-
-
 
                 $('#daftar_detail').on('click', '.removeData', function() {
                     const swalWithBootstrapButtons = Swal.mixin({
@@ -609,7 +622,11 @@
                                 data_selected.splice(indexToRemove, 1);
                                 rows_selected.splice(indexToRemove, 1);
                             }
+                            resetData();
                             updateTotalHarga();
+                            updateTotalPembayaran($(
+                                '#input_jumlah_total_pembayaran_transaksi'
+                            ).val());
                         }
                     });
                 });
@@ -647,6 +664,29 @@
                             '[' + index + ']');
                         $(another).attr("childidx", index);
                     });
+
+                    $(another).find('.input_jumlah-item').on('keyup', async function() {
+                        let jumlah_item = $(this).val()
+                        let produk = $(another).find('.input_id-item').val()
+                        let remoteValidationCheckStock = await validateRemoteCheckStock(
+                            jumlah_item, produk)
+
+                        let accessErorrJumlah = $(another).find('.error_message_jumlah-item')
+                        if (!remoteValidationCheckStock.valid) {
+                            // Remote validation failed, display the error message
+                            accessErorrJumlah.addClass('invalid-feedback');
+                            $(another).find('.input_jumlah-item').addClass('is-invalid');
+
+                            var toasty = new Toasty(optionToast);
+                            toasty.configure(optionToast);
+                            toasty.error(remoteValidationCheckStock.errorMessage);
+
+                            return;
+                        } else {
+                            $(another).find('.input_jumlah-item').removeClass('is-invalid');
+                        }
+                    })
+
 
                     index++;
                 });
@@ -706,8 +746,9 @@
                 const jumlahPembayaran = parseRupiah(inputPembayaran.val())
                 const jumlahTotal = parseRupiah($('#jumlah_total_transaksi').val())
                 const accessErrorPembayaran = $("#accessErrorPembayaran");
-                if ( jumlahPembayaran === 0 || (jumlahPembayaran < jumlahTotal)) {
-                    inputPembayaran.css("color", "#dc3545"); // Mengatur warna langsung menggunakan jQuery
+                if (jumlahPembayaran === 0 || (jumlahPembayaran < jumlahTotal)) {
+                    inputPembayaran.css("color",
+                        "#dc3545"); // Mengatur warna langsung menggunakan jQuery
                     accessErrorPembayaran.addClass('invalid-feedback');
                     inputPembayaran.addClass('is-invalid');
                     accessErrorPembayaran.text(
@@ -726,6 +767,24 @@
                     accessErrorPembayaran.removeClass('invalid-feedback');
                     inputPembayaran.removeClass('is-invalid');
                     accessErrorPembayaran.text('');
+                }
+
+                // Check if all input_jumlah-item are still invalid
+                let allInputInvalid = true;
+                $(".input_jumlah-item").each(function() {
+                    if ($(this).hasClass('is-invalid')) {
+                        allInputInvalid = false;
+                        return false; // Break the loop
+                    }
+                });
+
+                if (allInputInvalid === false) {
+                    var toasty = new Toasty(optionToast);
+                    toasty.configure(optionToast);
+                    toasty.error('Ada produk yang stok nya tidak tersedia');
+
+                    indicatorNone();
+                    return;
                 }
 
                 // Validate the form using Parsley
@@ -774,6 +833,37 @@
                 submitButton.querySelector('.indicator-label').style.display = 'none';
                 submitButton.querySelector('.indicator-progress').style.display =
                     'inline-block';
+            }
+
+            async function validateRemoteCheckStock(inputJumlah, inputProduk) {
+                const inputToko = $('#inputToko');
+                const remoteValidationUrl = "{{ route('admin.transaksi_penjualan.checkStock') }}";
+                const csrfToken = "{{ csrf_token() }}";
+
+                try {
+                    const response = await $.ajax({
+                        method: "POST",
+                        url: remoteValidationUrl,
+                        data: {
+                            _token: csrfToken,
+                            toko: inputToko.val(),
+                            jumlah: inputJumlah,
+                            produk: inputProduk,
+                        }
+                    });
+
+                    // Assuming the response is JSON and contains a "valid" key
+                    return {
+                        valid: response.valid === true,
+                        errorMessage: response.message
+                    };
+                } catch (error) {
+                    console.error("Remote validation error:", error);
+                    return {
+                        valid: false,
+                        errorMessage: "An error occurred during validation."
+                    };
+                }
             }
 
             function addSelectedClassByModuleIdentifiers(id) {

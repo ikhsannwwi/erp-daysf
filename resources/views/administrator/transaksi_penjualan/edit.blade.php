@@ -30,8 +30,10 @@
                                     <div class="input-group">
                                         <span class="input-group-text pb-3" id="searchMember"><i
                                                 class="bi bi-search"></i></span>
-                                        <input type="text" class="form-control" id="inputMemberName" value="{{ $data->member ? $data->member->nama : '' }}" readonly>
-                                        <input type="text" class="d-none" name="toko" id="inputMember" value="{{ $data->member ? $data->member->id : '' }}">
+                                        <input type="text" class="form-control" id="inputMemberName"
+                                            value="{{ $data->member ? $data->member->nama : '' }}" readonly>
+                                        <input type="text" class="d-none" name="toko" id="inputMember"
+                                            value="{{ $data->member ? $data->member->id : '' }}">
                                         <div class="input-group-append">
                                             <!-- Menggunakan input-group-append agar elemen berikutnya ditambahkan setelah input -->
                                             <a href="#" class="btn btn-outline-secondary" data-bs-toggle="modal"
@@ -51,9 +53,11 @@
                                     <div class="input-group">
                                         <span class="input-group-text pb-3" id="searchToko"><i
                                                 class="bi bi-search"></i></span>
-                                        <input type="text" class="form-control" id="inputTokoName" value="{{!empty($data->toko) ? $data->toko->nama : '-'}}"
+                                        <input type="text" class="form-control" id="inputTokoName"
+                                            value="{{ !empty($data->toko) ? $data->toko->nama : '-' }}"
                                             data-parsley-required="true" readonly>
-                                        <input type="text" class="d-none" name="toko" id="inputToko" value="{{$data->toko_id}}">
+                                        <input type="text" class="d-none" name="toko" id="inputToko"
+                                            value="{{ $data->toko_id }}">
                                         <div class="input-group-append">
                                             <!-- Menggunakan input-group-append agar elemen berikutnya ditambahkan setelah input -->
                                             <a href="#" class="btn btn-outline-secondary" data-bs-toggle="modal"
@@ -105,10 +109,11 @@
                                                         <td class="nama-item" style="vertical-align:middle;">
                                                             {{ !empty($row->produk) ? $row->produk->nama : '-' }}</td>
                                                         <input type="hidden" class="input_id-item"
-                                                            name="detail[{{ $index }}][input_id]" id="input_id-item"
-                                                            value="{{ $row->produk_id }}">
+                                                            name="detail[{{ $index }}][input_id]"
+                                                            id="input_id-item" value="{{ $row->produk_id }}">
                                                         <input type="hidden" class="transaksi_stok_id-item"
-                                                            name="detail[{{ $index }}][transaksi_stok_id]" id="transaksi_stok_id-item"
+                                                            name="detail[{{ $index }}][transaksi_stok_id]"
+                                                            id="transaksi_stok_id-item"
                                                             value="{{ $row->transaksi_stok_id }}">
                                                         <td class="jumlah-item" style="vertical-align:middle;">
                                                             <input type="text" class="input_jumlah-item form-control"
@@ -239,7 +244,7 @@
                 id="input_harga_total-item">
             <input type="hidden" class="id-item" name="detail[0][id]" id="id-item">
             <td>
-                <button class='btn btn-danger removeData' type='button'><i class='fa fa-times'
+                <button class='btn btn-danger removeData' data-ix="" type='button'><i class='fa fa-times'
                         style="color:#fff!important;"></i>
             </td>
         </tr>
@@ -266,6 +271,35 @@
 
     <script type="text/javascript">
         $(document).ready(function() {
+
+            var optionToast = {
+                classname: "toast",
+                transition: "fade",
+                insertBefore: true,
+                duration: 4000,
+                enableSounds: true,
+                autoClose: true,
+                progressBar: true,
+                sounds: {
+                    info: toastMessages.path + "/sounds/info/1.mp3",
+                    // path to sound for successfull message:
+                    success: toastMessages.path + "/sounds/success/1.mp3",
+                    // path to sound for warn message:
+                    warning: toastMessages.path + "/sounds/warning/1.mp3",
+                    // path to sound for error message:
+                    error: toastMessages.path + "/sounds/error/1.mp3",
+                },
+
+                onShow: function(type) {
+                    console.log("a toast " + type + " message is shown!");
+                },
+                onHide: function(type) {
+                    console.log("the toast " + type + " message is hidden!");
+                },
+
+                // the placement where prepend the toast container:
+                prependTo: document.body.childNodes[0],
+            };
 
             $('#input_jumlah_total_pembayaran_transaksi').on('keyup', function() {
                 let pembayaran = this.value;
@@ -305,8 +339,6 @@
                     buttonsStyling: false
                 });
 
-
-
                 swalWithBootstrapButtons.fire({
                     title: 'Apakah anda yakin ingin menghapus data ini',
                     icon: 'warning',
@@ -329,6 +361,7 @@
                                 success: function() {
                                     $(another).closest('.detail-list')
                                         .remove();
+                                    resetData();
                                     updateTotalHarga();
                                     updateTotalPembayaran($(
                                         '#input_jumlah_total_pembayaran_transaksi'
@@ -429,7 +462,8 @@
                             name: 'harga',
                             render: function(data, type, row, meta) {
                                 if (row.promo && row.promo.length > 0) {
-                                    let respon = `<div><span class="text-sm mx-2" style="text-decoration: line-through;">${formatRupiah(data)}</span>${formatRupiah(row.promo[0].diskon)}</div>`
+                                    let respon =
+                                        `<div><span class="text-sm mx-2" style="text-decoration: line-through;">${formatRupiah(data)}</span>${formatRupiah(row.promo[0].diskon)}</div>`
                                     return respon;
                                 } else {
                                     return formatRupiah(data);
@@ -538,14 +572,16 @@
                                     tr_clone.find(".input_id-item").val(data_i.id);
                                     tr_clone.find(".nama-item").text(data_i.nama);
                                     tr_clone.find(".input_jumlah-item").val('');
-                                    var hargaSatuan = parseFloat(data_i.promo.length > 0 ? data_i
+                                    var hargaSatuan = parseFloat(data_i.promo.length > 0 ?
+                                        data_i
                                         .promo[0].diskon : data_i.harga);
 
                                     if (!isNaN(hargaSatuan)) {
                                         var formattedHargaSatuan = formatRupiah(
-                                        hargaSatuan);
+                                            hargaSatuan);
                                         if (data_i.promo.length > 0) {
-                                            tr_clone.find(".harga_satuan-item").html(`<span class="text-sm mx-2" style="text-decoration: line-through;">${formatRupiah(data_i.harga)}</span>${formattedHargaSatuan}`
+                                            tr_clone.find(".harga_satuan-item").html(
+                                                `<span class="text-sm mx-2" style="text-decoration: line-through;">${formatRupiah(data_i.harga)}</span>${formattedHargaSatuan}`
                                             );
                                         } else {
                                             tr_clone.find(".harga_satuan-item").text(
@@ -556,7 +592,8 @@
                                     }
 
                                     tr_clone.find(".input_harga_satuan-item").val(data_i
-                                        .promo.length > 0 ? data_i.promo[0].diskon : data_i.harga);
+                                        .promo.length > 0 ? data_i.promo[0].diskon :
+                                        data_i.harga);
 
                                     tr_clone.find(".input_jumlah-item").on("input",
                                         function() {
@@ -665,6 +702,7 @@
                                             rows_selected.splice(indexToRemove,
                                                 1);
                                         }
+                                        resetData();
                                         updateTotalHarga();
                                         updateTotalPembayaran($(
                                             '#input_jumlah_total_pembayaran_transaksi'
@@ -708,6 +746,7 @@
                                     data_selected.splice(indexToRemove, 1);
                                     rows_selected.splice(indexToRemove, 1);
                                 }
+                                resetData();
                                 updateTotalHarga();
                                 updateTotalPembayaran($(
                                     '#input_jumlah_total_pembayaran_transaksi'
@@ -772,6 +811,29 @@
                             ).val());
                         });
 
+                    $(another).find('.input_jumlah-item').on('keyup', async function() {
+                        let jumlah_item = $(this).val()
+                        let produk = $(another).find('.input_id-item').val()
+                        let id = $(another).find('.transaksi_stok_id-item').val()
+                        let remoteValidationCheckStock = await validateRemoteCheckStock(
+                            jumlah_item, produk, id)
+
+                        let accessErorrJumlah = $(another).find('.error_message_jumlah-item')
+                        if (!remoteValidationCheckStock.valid) {
+                            // Remote validation failed, display the error message
+                            accessErorrJumlah.addClass('invalid-feedback');
+                            $(another).find('.input_jumlah-item').addClass('is-invalid');
+
+                            var toasty = new Toasty(optionToast);
+                            toasty.configure(optionToast);
+                            toasty.error(remoteValidationCheckStock.errorMessage);
+
+                            return;
+                        } else {
+                            $(another).find('.input_jumlah-item').removeClass('is-invalid');
+                        }
+                    })
+
                     index++;
                 });
             }
@@ -821,7 +883,24 @@
                     accessErrorDetail.text('');
                 }
 
+                
+                // Check if all input_jumlah-item are still invalid
+                let allInputInvalid = true;
+                $(".input_jumlah-item").each(function() {
+                    if ($(this).hasClass('is-invalid')) {
+                        allInputInvalid = false;
+                        return false; // Break the loop
+                    }
+                });
 
+                if (allInputInvalid === false) {
+                    var toasty = new Toasty(optionToast);
+                    toasty.configure(optionToast);
+                    toasty.error('Ada produk yang stok nya tidak tersedia');
+
+                    indicatorNone();
+                    return;
+                }
 
 
                 // Validate the form using Parsley
@@ -870,6 +949,38 @@
                 submitButton.querySelector('.indicator-label').style.display = 'none';
                 submitButton.querySelector('.indicator-progress').style.display =
                     'inline-block';
+            }
+
+            async function validateRemoteCheckStock(inputJumlah, inputProduk, id) {
+                const inputToko = $('#inputToko');
+                const remoteValidationUrl = "{{ route('admin.transaksi_penjualan.checkStock') }}";
+                const csrfToken = "{{ csrf_token() }}";
+
+                try {
+                    const response = await $.ajax({
+                        method: "POST",
+                        url: remoteValidationUrl,
+                        data: {
+                            _token: csrfToken,
+                            toko: inputToko.val(),
+                            id: id,
+                            jumlah: inputJumlah,
+                            produk: inputProduk,
+                        }
+                    });
+
+                    // Assuming the response is JSON and contains a "valid" key
+                    return {
+                        valid: response.valid === true,
+                        errorMessage: response.message
+                    };
+                } catch (error) {
+                    console.error("Remote validation error:", error);
+                    return {
+                        valid: false,
+                        errorMessage: "An error occurred during validation."
+                    };
+                }
             }
 
             function addSelectedClassByModuleIdentifiers(id) {

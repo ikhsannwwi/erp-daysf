@@ -375,7 +375,7 @@
                         data: {
                             _token: csrfToken,
                             jumlah: inputJumlah.val(),
-                            gudang: inputToko.val(),
+                            toko: inputToko.val(),
                             produk: inputProduk.val(),
                             metode: inputMetodeTransaksi.val()
                         }

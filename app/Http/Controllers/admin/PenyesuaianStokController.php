@@ -443,22 +443,33 @@ class PenyesuaianStokController extends Controller
     // }
 
     public function checkStock(Request $request){
-        $jumlah = TransaksiStok::where('produk_id', $request->produk)
-            ->where('gudang_id', $request->gudang);
-    
+        $jumlah = 0;
+
+        $data_stok_masuk = TransaksiStok::where('produk_id', $request->produk)
+            ->where('gudang_id', $request->gudang)
+            ->whereIn('metode_transaksi', ['masuk']);
+        
         if (!empty($request->id)) {
             $data = PenyesuaianStok::find($request->id);
-            $jumlah->whereNotIn('id', [$data->transaksi_stok_id]);
+            $data_stok_masuk->whereNot('id', $data->transaksi_stok_id);
         }
-    
-        if ($request->metode === 'keluar' || $request->metode === 'migrasi_gudang' || $request->metode === 'migrasi_ke_toko') {
-            $jumlah->whereIn('metode_transaksi', ['masuk', 'keluar']);
-        } else {
-            $jumlah->whereIn('metode_transaksi', ['masuk']);
+
+        $stok_masuk = $data_stok_masuk->sum('jumlah_unit');
+
+        // Ambil jumlah stok keluar
+        $data_stok_keluar = TransaksiStok::where('produk_id', $request->produk)
+            ->where('gudang_id', $request->gudang)
+            ->whereIn('metode_transaksi', ['keluar']);
+
+        if (!empty($request->id)) {
+            $data = PenyesuaianStok::find($request->id);
+            $data_stok_keluar->whereNot('id', $data->transaksi_stok_id);
         }
-    
-        $jumlah = $jumlah->where('metode_transaksi', 'masuk')->sum('jumlah_unit') - $jumlah->where('metode_transaksi', 'keluar')->sum('jumlah_unit');
-    
+
+        $stok_keluar = $data_stok_keluar->sum('jumlah_unit');
+
+        $jumlah += $stok_masuk - $stok_keluar;
+
         if ($request->metode === 'keluar' || $request->metode === 'migrasi_gudang' || $request->metode === 'migrasi_ke_toko') {
             if ($jumlah < 0 || $jumlah < intVal(str_replace(['.',','], '', $request->jumlah))) {
                 return response()->json([
@@ -466,15 +477,15 @@ class PenyesuaianStokController extends Controller
                     'message' => 'Stok tidak mencukupi',
                     'valid' => false
                 ]);
-            } else {
+            }else {
                 return response()->json([
-                    'message' => '1',
+                    'message' => 'Stok Tersedia',
                     'valid' => true
                 ]);
             }
-        } else {
+        }else {
             return response()->json([
-                'message' => '2',
+                'message' => 'Metode masuk tidak mengecek stok',
                 'valid' => true
             ]);
         }

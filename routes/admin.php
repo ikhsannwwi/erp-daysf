@@ -223,6 +223,7 @@ Route::prefix('admin')->group(function () {
         Route::get('transaksi-penjualan/getProduk', [TransaksiPenjualanController::class, 'getProduk'])->name('admin.transaksi_penjualan.getProduk');
         Route::get('transaksi-penjualan/getProductDetails', [TransaksiPenjualanController::class, 'getProductDetails'])->name('admin.transaksi_penjualan.getProductDetails');
         Route::post('transaksi-penjualan/uploadBarcode', [TransaksiPenjualanController::class, 'uploadBarcode'])->name('admin.transaksi_penjualan.uploadBarcode');
+        Route::post('transaksi-penjualan/checkStock', [TransaksiPenjualanController::class, 'checkStock'])->name('admin.transaksi_penjualan.checkStock');
         
         //Transaksi Stok
         Route::get('transaksi-stok', [TransaksiStokController::class, 'index'])->name('admin.transaksi_stok');

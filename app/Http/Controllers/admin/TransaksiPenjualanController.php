@@ -515,6 +515,50 @@ class TransaksiPenjualanController extends Controller
             ->make(true);
     }
 
+    public function checkStock(Request $request){
+        $jumlah = 0;
+
+        $data_stok_masuk = TransaksiStok::where('produk_id', $request->produk)
+            ->where('toko_id', $request->toko)
+            ->whereIn('metode_transaksi', ['masuk']);
+        
+        if (!empty($request->id)) {
+            // $data = PenyesuaianStok::find($request->id);
+            $data_stok_masuk->whereNotIn('id', [$request->id]);
+            // dd($request->id);
+        }
+
+        $stok_masuk = $data_stok_masuk->sum('jumlah_unit');
+
+        // Ambil jumlah stok keluar
+        $data_stok_keluar = TransaksiStok::where('produk_id', $request->produk)
+            ->where('toko_id', $request->toko)
+            ->whereIn('metode_transaksi', ['keluar']);
+
+        if (!empty($request->id)) {
+            // $data = PenyesuaianStok::find($request->id);
+            $data_stok_keluar->whereNotIn('id', [$request->id]);
+        }
+
+        $stok_keluar = $data_stok_keluar->sum('jumlah_unit');
+
+        $jumlah += $stok_masuk - $stok_keluar;
+
+        if ($jumlah < 0 || $jumlah < intVal(str_replace(['.',','], '', $request->jumlah))) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Stok tidak mencukupi! Jumlah Stok : ' . $jumlah,
+                'valid' => false
+            ]);
+        }else {
+            return response()->json([
+                'message' => 'Stok Tersedia. Jumlah Stok : ' . $jumlah,
+                'valid' => true
+            ]);
+        }
+        
+    }
+
     // public function uploadBarcode(Request $request)
     // {
     //     // Memastikan bahwa berkas telah diterima
