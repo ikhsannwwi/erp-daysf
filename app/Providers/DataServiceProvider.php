@@ -33,7 +33,8 @@ class DataServiceProvider extends ServiceProvider
             'administrator.logs.export',
             
             'member.layouts.main',
-            'member.verify.template_mail'
+            'member.verify.template_mail',
+            'administrator.authentication.reset.template_mail'
         ], function ($view) {
             $settings = Setting::get()->toArray();
         

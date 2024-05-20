@@ -38,7 +38,7 @@
                                             <tr>
                                                 <th style="width:50px">No</th>
                                                 <th>Module</th>
-                                                <th>All</th>
+                                                <th><input type="checkbox" id="checkbox-all-item"></th>
                                                 <th>Access</th>
                                             </tr>
                                         </thead>
@@ -266,6 +266,29 @@
 
 
 
+            $("#checkbox-all-item").on("click", function() {
+                var isChecked = $(this).is(':checked');
+                $(".check_all").prop('checked', isChecked);
+
+                // Declare key_all outside the if block
+                var key_all;
+
+                // If "Check All" is checked, also check individual access checkboxes
+                if (isChecked) {
+                    $(".permission-list").each(function() {
+                        key_all = $(this).find(".check_all").data('key_all');
+                        $(this).find('.access_' + key_all).prop('checked', true);
+                    });
+                } else {
+                    $(".permission-list").each(function() {
+                        key_all = $(this).find(".check_all").data('key_all');
+                        $(this).find('.access_' + key_all).prop('checked', false);
+                    });
+                }
+                checkAllItemLength()
+            });
+
+
             // Ambil semua checkbox "All"
             $('.permission-list').each(function() {
                 var that = this;
@@ -278,6 +301,7 @@
                     } else {
                         $(that).find('.access_' + $(this).val()).prop('checked', true);
                     }
+                    checkAllItemLength()
                 });
 
                 // Event handler for individual access checkboxes
@@ -292,6 +316,7 @@
                     if (total_access != 0 && total_access == total_given_access) {
                         $(that).find('.check_all').prop('checked', true);
                     }
+                    checkAllItemLength()
                 });
 
                 total_access = $(that).find(".access_" + key_all).length;
@@ -301,6 +326,19 @@
                     $(that).find('.check_all').prop('checked', true);
                 }
             });
+            checkAllItemLength()
+
+            function checkAllItemLength() {
+                total_access = $('.permission-list').find(".check_all").length;
+                total_given_access = $('.permission-list').find(".check_all:checked").length;
+
+
+                if (total_access != 0 && total_access == total_given_access) {
+                    $('#checkbox-all-item').prop('checked', true);
+                } else {
+                    $('#checkbox-all-item').prop('checked', false);
+                }
+            }
 
         });
     </script>

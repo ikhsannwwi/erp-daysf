@@ -50,6 +50,12 @@ Route::prefix('admin')->group(function () {
     Route::get('login', [AuthController::class, 'login'])->name('admin.login');
     Route::post('loginProses', [AuthController::class, 'loginProses'])->name('admin.loginProses');
     Route::get('logout', [AuthController::class, 'logout'])->name('admin.logout');
+
+    Route::post('accounts/checkEmail', [AuthController::class, 'checkEmail'])->name('admin.accounts.checkEmail');
+    Route::get('accounts/reset/email', [AuthController::class, 'email'])->name('admin.accounts.reset.email');
+    Route::post('accounts/reset/send-link', [AuthController::class, 'sendlink'])->name('admin.accounts.reset.sendlink');
+    Route::get('accounts/reset/{token}', [AuthController::class, 'resetPassword'])->name('admin.accounts.reset');
+    Route::put('accounts/reset/{token}', [AuthController::class, 'updatePassword'])->name('admin.accounts.update');
     
     Route::get('main-admin', [viewController::class, 'main_admin'])->name('main_admin');
 
