@@ -2,12 +2,12 @@
     <div class="row">
         <div class="col-8" style="padding-right: 0;">
             <!-- Menggunakan col-8 agar input lebih lebar dan menghapus padding kanan -->
-            <input type="text" class="form-control" id="inputUserGroupName" value="{{Route::is('admin.member.edit*') ? $userMember->user_group->name : ''}}" placeholder="Pilih User Group" data-parsley-required="true" readonly>
-            <input type="text" class="d-none" name="user_group" value="{{Route::is('admin.member.edit*') ? $userMember->user_group->id : ''}}" id="inputUserGroup">
+            <input type="text" class="form-control {{Route::is('admin.member.edit*') ? ($userMember->user_group_id === "0" ? 'data_disabled' : '') : ''}}" id="inputUserGroupName" value="{{Route::is('admin.member.edit*') ? ($userMember->user_group_id === "0" ? '' : $userMember->user_group->name) : ''}}" placeholder="{{Route::is('admin.member.edit*') ? ($userMember->user_group_id === "0" ? 'Moderator' : 'Pilih User Group') : 'Pilih User Group'}}" data-parsley-required="true" readonly>
+            <input type="text" class="d-none" name="user_group" value="{{Route::is('admin.member.edit*') ? ($userMember->user_group ? $userMember->user_group->id : 0) : ''}}" id="inputUserGroup">
         </div>
         <div class="col-4" style="padding-left: 0;">
             <!-- Menggunakan col-4 agar tombol "Search" lebih kecil dan menghapus padding kiri -->
-            <a href="#" class="btn btn-secondary btn-sm" data-bs-toggle="modal"
+            <a href="#" class="btn btn-secondary btn-sm {{Route::is('admin.member.edit*') ? ($userMember->user_group_id === "0" ? 'data_disabled' : '') : ''}}" data-bs-toggle="modal" id="triggerUserGroup"
                 data-bs-target="#UserGroupModal">
                 Search
             </a>

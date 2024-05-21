@@ -22,6 +22,11 @@
                         @method('POST')
                         <div class="row">
                             <div class="col-md-6 col-12">
+                                Moderator <input type="checkbox" class="form-check-input" name="user_group" value="0" id="modCheckbox">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 col-12">
                                 <div class="form-group mandatory">
                                     <label for="userGroupField" class="form-label">User Group</label>
                                     <select class="form-select form-select-solid" name="user_group" id="userGroupField"
@@ -169,6 +174,17 @@
 
     <script type="text/javascript">
         $(document).ready(function() {
+            $('#modCheckbox').on('click', function(){
+                if ($(this).is(':checked')) {
+                    $('#userGroupField').attr('disabled', true)
+                    $('#userGroupField').attr('data-parsley-required', false)
+                    $('#userGroupField').val(0)
+                }else {
+                    $('#userGroupField').attr('data-parsley-required', true)
+                    $('#userGroupField').attr('disabled', false)
+                }
+            })
+            
             // Add an event listener to the "Generate" button
             const generateKodeButton = document.getElementById("buttonGenerateKode");
             const kodeField = document.getElementById("kodeField");

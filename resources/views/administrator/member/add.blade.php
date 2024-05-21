@@ -1,5 +1,15 @@
 @extends('administrator.layouts.main')
-
+@push('css')
+    <style>
+        .data_disabled {
+            border: 1px solid #6c757d!important;
+            background-color: #6c757d!important;
+            color: #fff!important;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+    </style>
+@endpush
 @section('content')
     <!-- Basic Tables start -->
     <section class="section">
@@ -20,6 +30,11 @@
                         class="form" id="form" data-parsley-validate>
                         @csrf
                         @method('POST')
+                        <div class="row">
+                            <div class="col-md-6 col-12">
+                                Moderator <input type="checkbox" class="form-check-input" name="user_group" value="0" id="modCheckbox">
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="col-md-6 col-12">
                                 <div class="form-group mandatory">
@@ -154,6 +169,19 @@
 
     <script type="text/javascript">
         $(document).ready(function() {
+
+            $('#modCheckbox').on('click', function(){
+                if ($(this).is(':checked')) {
+                    $('#triggerUserGroup').addClass('data_disabled')
+                    $('#inputUserGroupName').addClass('data_disabled')
+                    $('#inputUserGroup').attr('data-parsley-required', false)
+                    $('#inputUserGroup').val(0)
+                }else {
+                    $('#inputUserGroup').attr('data-parsley-required', true)
+                    $('#triggerUserGroup').removeClass('data_disabled')
+                    $('#inputUserGroupName').removeClass('data_disabled')
+                }
+            })
 
             // Add an event listener to the "Generate" button
             const generateKodeButton = document.getElementById("buttonGenerateKode");
