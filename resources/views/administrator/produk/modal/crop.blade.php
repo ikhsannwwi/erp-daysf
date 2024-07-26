@@ -76,8 +76,10 @@
                 aspectRatio: aspectRatio,
 
                 data: {
-                    width: 400, // Set an initial width
-                    height: 600, // Set an initial height
+                    width: triggerCrop.parent().parent().find('.width-item').val() !== '' ? parseInt(triggerCrop.parent().parent().find('.width-item').val()) : 400,
+                    height: triggerCrop.parent().parent().find('.height-item').val() !== '' ? parseInt(triggerCrop.parent().parent().find('.height-item').val()) : 600,
+                    x: triggerCrop.parent().parent().find('.x-item').val() !== '' ? parseInt(triggerCrop.parent().parent().find('.x-item').val()) : 0,
+                    y: triggerCrop.parent().parent().find('.y-item').val() !== '' ? parseInt(triggerCrop.parent().parent().find('.y-item').val()) : 0,
                 },
 
                 crop: function (event) {

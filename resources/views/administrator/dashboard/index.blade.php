@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="page-heading">
-        <h3>fissyianti cantik banget massya allah banget ya allah yaaaaaa aamiinn      kiekjawbkjfbejsbgjebfj</h3>
+        <h3>Hi {{auth()->user()->name}}, Welcome back!</h3>
     </div>
     <div class="page-content">
         <section class="row">

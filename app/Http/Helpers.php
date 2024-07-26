@@ -6,6 +6,7 @@ use Illuminate\Support\Str;
 use Jenssegers\Agent\Agent;
 use Illuminate\Http\Request;
 use App\Models\admin\UserGroup;
+use App\Models\admin\UserMember;
 use App\Models\admin\ModuleAccess;
 use Illuminate\Support\Facades\DB;
 use App\Models\admin\OperatorKasir;
@@ -105,8 +106,10 @@ function isAllowed($modul, $modul_akses)
 {
 	if (auth()->user()) {
 		$data_user = User::find(auth()->user()->id);
-	}else {
+	}else if(auth()->guard('operator_kasir')->user()){
 		$data_user = OperatorKasir::find(auth()->guard('operator_kasir')->user()->id);
+	}else if(auth()->guard('user_member')->user()){
+		$data_user = UserMember::find(auth()->guard('user_member')->user()->id);
 	}
 	$grup_pengguna_id = $data_user->user_group_id;
 	$permission = getPermissionGroup($grup_pengguna_id);
@@ -217,8 +220,10 @@ function getPermissionModuleGroup()
 {
 	if (auth()->user()) {
 		$data_user = User::find(auth()->user()->id);
-	}else {
+	}else if(auth()->guard('operator_kasir')->user()){
 		$data_user = OperatorKasir::find(auth()->guard('operator_kasir')->user()->id);
+	}else if(auth()->guard('user_member')->user()){
+		$data_user = UserMember::find(auth()->guard('user_member')->user()->id);
 	}
 	$grup_pengguna_id = $data_user->user_group_id;
 	$data_akses = ModuleAccess::select(DB::raw('
@@ -256,8 +261,10 @@ function showModule($module, $permission_module)
 {
 	if (auth()->user()) {
 		$data_user = User::find(auth()->user()->id);
-	}else {
+	}else if(auth()->guard('operator_kasir')->user()){
 		$data_user = OperatorKasir::find(auth()->guard('operator_kasir')->user()->id);
+	}else if(auth()->guard('user_member')->user()){
+		$data_user = UserMember::find(auth()->guard('user_member')->user()->id);
 	}
 	$grup_pengguna_id = $data_user->user_group_id;
 	if ($grup_pengguna_id == 0) {
